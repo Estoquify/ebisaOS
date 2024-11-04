@@ -1,0 +1,25 @@
+{
+  "annotations": {
+    "changelogDate": "20241104132439"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [],
+  "name": "SolicitacaoEquipe",
+  "relationships": [
+    {
+      "otherEntityName": "equipe",
+      "otherEntityRelationshipName": "solicitacaoEquipe",
+      "relationshipName": "equipe",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "solicitacao",
+      "otherEntityRelationshipName": "solicitacaoEquipe",
+      "relationshipName": "solicitacao",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

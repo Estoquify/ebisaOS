@@ -1,0 +1,29 @@
+{
+  "ebisaOsApp": {
+    "stock": {
+      "home": {
+        "title": "Stocks",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Stock",
+        "createOrEditLabel": "Criar ou editar Stock",
+        "notFound": "Nenhum Stock encontrado"
+      },
+      "created": "Um novo Stock foi criado com o identificador {{ param }}",
+      "updated": "Um Stock foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Stock foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Stock {{ id }}?"
+      },
+      "detail": {
+        "title": "Stock"
+      },
+      "id": "ID",
+      "quantItem": "Quant Item",
+      "logStockItens": "Log Stock Itens",
+      "solicitacaoItem": "Solicitacao Item",
+      "solicitacaoCompra": "Solicitacao Compra",
+      "item": "Item",
+      "setor": "Setor"
+    }
+  }
+}

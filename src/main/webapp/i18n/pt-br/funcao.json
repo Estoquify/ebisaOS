@@ -1,0 +1,25 @@
+{
+  "ebisaOsApp": {
+    "funcao": {
+      "home": {
+        "title": "Funcaos",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Funcao",
+        "createOrEditLabel": "Criar ou editar Funcao",
+        "notFound": "Nenhum Funcao encontrado"
+      },
+      "created": "Um novo Funcao foi criado com o identificador {{ param }}",
+      "updated": "Um Funcao foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Funcao foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Funcao {{ id }}?"
+      },
+      "detail": {
+        "title": "Funcao"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "colaborador": "Colaborador"
+    }
+  }
+}

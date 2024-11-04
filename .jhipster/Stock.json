@@ -1,0 +1,51 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131039"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "quantItem",
+      "fieldType": "Long"
+    }
+  ],
+  "name": "Stock",
+  "relationships": [
+    {
+      "otherEntityName": "logStockItens",
+      "otherEntityRelationshipName": "stock",
+      "relationshipName": "logStockItens",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "solicitacaoItem",
+      "otherEntityRelationshipName": "stock",
+      "relationshipName": "solicitacaoItem",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "solicitacaoCompra",
+      "otherEntityRelationshipName": "stock",
+      "relationshipName": "solicitacaoCompra",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "item",
+      "otherEntityRelationshipName": "stock",
+      "relationshipName": "item",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "setor",
+      "otherEntityRelationshipName": "stock",
+      "relationshipName": "setor",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

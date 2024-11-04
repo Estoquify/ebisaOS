@@ -1,0 +1,31 @@
+{
+  "annotations": {
+    "changelogDate": "20241104132039"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "descricao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "aberta",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "SolicitacaoCompra",
+  "relationships": [
+    {
+      "otherEntityName": "stock",
+      "otherEntityRelationshipName": "solicitacaoCompra",
+      "relationshipName": "stock",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

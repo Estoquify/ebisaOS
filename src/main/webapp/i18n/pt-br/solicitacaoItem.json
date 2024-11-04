@@ -1,0 +1,25 @@
+{
+  "ebisaOsApp": {
+    "solicitacaoItem": {
+      "home": {
+        "title": "Solicitacao Items",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Solicitacao Item",
+        "createOrEditLabel": "Criar ou editar Solicitacao Item",
+        "notFound": "Nenhum Solicitacao Item encontrado"
+      },
+      "created": "Um novo Solicitacao Item foi criado com o identificador {{ param }}",
+      "updated": "Um Solicitacao Item foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Solicitacao Item foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Solicitacao Item {{ id }}?"
+      },
+      "detail": {
+        "title": "Solicitacao Item"
+      },
+      "id": "ID",
+      "stock": "Stock",
+      "solicitacao": "Solicitacao"
+    }
+  }
+}

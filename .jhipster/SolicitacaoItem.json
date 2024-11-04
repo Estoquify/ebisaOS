@@ -1,0 +1,25 @@
+{
+  "annotations": {
+    "changelogDate": "20241104132539"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [],
+  "name": "SolicitacaoItem",
+  "relationships": [
+    {
+      "otherEntityName": "stock",
+      "otherEntityRelationshipName": "solicitacaoItem",
+      "relationshipName": "stock",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "solicitacao",
+      "otherEntityRelationshipName": "solicitacaoItem",
+      "relationshipName": "solicitacao",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

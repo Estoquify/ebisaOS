@@ -1,0 +1,28 @@
+{
+  "ebisaOsApp": {
+    "logStockItens": {
+      "home": {
+        "title": "Log Stock Itens",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Log Stock Itens",
+        "createOrEditLabel": "Criar ou editar Log Stock Itens",
+        "notFound": "Nenhum Log Stock Itens encontrado"
+      },
+      "created": "Um novo Log Stock Itens foi criado com o identificador {{ param }}",
+      "updated": "Um Log Stock Itens foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Log Stock Itens foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Log Stock Itens {{ id }}?"
+      },
+      "detail": {
+        "title": "Log Stock Itens"
+      },
+      "id": "ID",
+      "createDade": "Create Dade",
+      "quantAtual": "Quant Atual",
+      "quantAnterior": "Quant Anterior",
+      "updateDate": "Update Date",
+      "stock": "Stock"
+    }
+  }
+}

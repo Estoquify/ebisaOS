@@ -1,0 +1,23 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131639"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Orgao",
+  "relationships": [
+    {
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "orgao",
+      "relationshipName": "unidade",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

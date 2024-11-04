@@ -1,0 +1,27 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131939"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "respostas",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Comentario",
+  "relationships": [
+    {
+      "otherEntityName": "avaliacao",
+      "otherEntityRelationshipName": "comentario",
+      "relationshipName": "avaliacao",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

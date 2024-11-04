@@ -1,0 +1,41 @@
+{
+  "generator-jhipster": {
+    "applicationIndex": 0,
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "ebisaOS",
+    "buildTool": "gradle",
+    "clientFramework": "react",
+    "devServerPort": 9060,
+    "entities": [
+      "Item",
+      "Stock",
+      "Setor",
+      "LogStockItens",
+      "Municipio",
+      "Endereco",
+      "Unidade",
+      "Orgao",
+      "Solicitacao",
+      "Avaliacao",
+      "Comentario",
+      "SolicitacaoCompra",
+      "Equipe",
+      "Colaborador",
+      "Funcao",
+      "SolicitacaoEquipe",
+      "SolicitacaoItem"
+    ],
+    "jhipsterVersion": "8.4.0",
+    "jwtSecretKey": "MmE2YTY2MzY4YzhjMTQ2YjY0NTE3ZjM0ODYwZGE3NmUxN2E0NDlmM2M3ZmEzYWFjNGUxMTEzYTE3ZWYzYjk2ZTkxZjI3MTdjYmEyMjY0YjJmZmRhNmViNDJlZGVhNjAzYWUwYjE2MDQzZTlkZDJkZGM5MzNiZGY0YzEzOGNmYmM=",
+    "languages": ["pt-br"],
+    "lastLiquibaseTimestamp": 1730726739000,
+    "monorepository": true,
+    "nativeLanguage": "pt-br",
+    "packageFolder": "com/ebisaos",
+    "packageName": "com.ebisaos",
+    "prodDatabaseType": "postgresql",
+    "serverPort": "8080",
+    "skipCommitHook": true
+  }
+}

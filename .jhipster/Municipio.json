@@ -1,0 +1,27 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131339"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "codigoIBGE",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "nomeMunicipio",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Municipio",
+  "relationships": [
+    {
+      "otherEntityName": "endereco",
+      "otherEntityRelationshipName": "municipio",
+      "relationshipName": "endereco",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

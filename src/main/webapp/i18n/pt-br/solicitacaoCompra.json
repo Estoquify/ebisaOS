@@ -1,0 +1,27 @@
+{
+  "ebisaOsApp": {
+    "solicitacaoCompra": {
+      "home": {
+        "title": "Solicitacao Compras",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Solicitacao Compra",
+        "createOrEditLabel": "Criar ou editar Solicitacao Compra",
+        "notFound": "Nenhum Solicitacao Compra encontrado"
+      },
+      "created": "Um novo Solicitacao Compra foi criado com o identificador {{ param }}",
+      "updated": "Um Solicitacao Compra foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Solicitacao Compra foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Solicitacao Compra {{ id }}?"
+      },
+      "detail": {
+        "title": "Solicitacao Compra"
+      },
+      "id": "ID",
+      "descricao": "Descricao",
+      "createDate": "Create Date",
+      "aberta": "Aberta",
+      "stock": "Stock"
+    }
+  }
+}

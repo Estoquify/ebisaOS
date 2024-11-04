@@ -1,0 +1,23 @@
+{
+  "annotations": {
+    "changelogDate": "20241104132339"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Funcao",
+  "relationships": [
+    {
+      "otherEntityName": "colaborador",
+      "otherEntityRelationshipName": "funcao",
+      "relationshipName": "colaborador",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

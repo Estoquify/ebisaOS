@@ -1,0 +1,25 @@
+{
+  "ebisaOsApp": {
+    "solicitacaoEquipe": {
+      "home": {
+        "title": "Solicitacao Equipes",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Solicitacao Equipe",
+        "createOrEditLabel": "Criar ou editar Solicitacao Equipe",
+        "notFound": "Nenhum Solicitacao Equipe encontrado"
+      },
+      "created": "Um novo Solicitacao Equipe foi criado com o identificador {{ param }}",
+      "updated": "Um Solicitacao Equipe foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Solicitacao Equipe foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Solicitacao Equipe {{ id }}?"
+      },
+      "detail": {
+        "title": "Solicitacao Equipe"
+      },
+      "id": "ID",
+      "equipe": "Equipe",
+      "solicitacao": "Solicitacao"
+    }
+  }
+}

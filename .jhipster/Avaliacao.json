@@ -1,0 +1,38 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131839"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "avalicao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "aprovacao",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "creatDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Avaliacao",
+  "relationships": [
+    {
+      "otherEntityName": "comentario",
+      "otherEntityRelationshipName": "avaliacao",
+      "relationshipName": "comentario",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "solicitacao",
+      "otherEntityRelationshipName": "avaliacao",
+      "relationshipName": "solicitacao",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

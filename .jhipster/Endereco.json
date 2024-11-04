@@ -1,0 +1,42 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131439"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "logradouro",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cep",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "numero",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "bairro",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Endereco",
+  "relationships": [
+    {
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "endereco",
+      "relationshipName": "unidade",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "municipio",
+      "otherEntityRelationshipName": "endereco",
+      "relationshipName": "municipio",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

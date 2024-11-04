@@ -1,0 +1,42 @@
+{
+  "annotations": {
+    "changelogDate": "20241104132139"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "apelido",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ocupada",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "ativa",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "Equipe",
+  "relationships": [
+    {
+      "otherEntityName": "solicitacaoEquipe",
+      "otherEntityRelationshipName": "equipe",
+      "relationshipName": "solicitacaoEquipe",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "colaborador",
+      "otherEntityRelationshipName": "equipe",
+      "relationshipName": "colaborador",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

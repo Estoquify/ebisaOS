@@ -1,0 +1,31 @@
+{
+  "annotations": {
+    "changelogDate": "20241104130939"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "nomeItem",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "updatedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Item",
+  "relationships": [
+    {
+      "otherEntityName": "stock",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "stock",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

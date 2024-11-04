@@ -1,0 +1,161 @@
+application {
+  config {
+    baseName ebisaOS
+    applicationType monolith
+    packageName com.ebisaos
+    authenticationType jwt
+    prodDatabaseType postgresql
+    clientFramework react
+    buildTool gradle
+    nativeLanguage pt-br
+    serverPort 8080
+  }
+  entities *
+}
+
+entity Item {
+	nomeItem String,
+    createDate Instant,
+    updatedDate Instant
+}
+
+entity Stock {
+	quantItem Long
+}
+
+entity Setor {
+	nome String,
+    descricao String
+}
+
+entity LogStockItens {
+	createDade Instant,
+    quantAtual Long,
+    quantAnterior Long,
+    updateDate Instant
+}
+
+entity Municipio {
+	codigoIBGE Long,
+	nomeMunicipio String
+}
+
+entity Endereco {
+	logradouro String,
+    cep String,
+    numero String,
+    bairro String
+}
+
+entity Unidade {
+	nome String,
+    cnpj String,
+}
+
+entity Orgao {
+	nome String,
+}
+
+entity Solicitacao {
+	prazoDate Instant,
+    createDate Instant,
+    updatedDate Instant,
+    finishDate Instant,
+    aberta Boolean,
+    descricao String,
+    observacao String,
+}
+
+entity Avaliacao {
+	avalicao String,
+    aprovacao Boolean,
+    creatDate Instant
+}
+
+entity Comentario {
+	respostas String,
+    createdDate Instant
+}
+
+entity SolicitacaoCompra {
+	descricao String,
+    createDate Instant,
+    aberta Boolean
+}
+
+entity Equipe {
+	apelido String,
+    descricao String,
+    ocupada Boolean,
+    ativa Boolean
+}
+
+entity Colaborador {
+	nome String,
+    cpf String
+}
+
+entity Funcao {
+	nome String
+}
+
+entity SolicitacaoEquipe {
+}
+
+entity SolicitacaoItem {
+}
+
+relationship OneToMany {
+	Municipio to Endereco,
+}
+
+relationship OneToMany {
+    Unidade to Solicitacao
+}
+
+relationship OneToMany {
+	Endereco to Unidade,
+    Orgao to Unidade
+}
+
+relationship OneToMany {
+	Stock to LogStockItens
+}
+
+relationship OneToMany {
+    Item to Stock
+}
+
+relationship OneToMany {
+	Setor to Stock
+}
+
+relationship OneToMany {
+    Solicitacao to Avaliacao
+}
+
+relationship OneToMany {
+    Avaliacao to Comentario
+}
+
+relationship OneToMany {
+	Stock to SolicitacaoItem,
+    Solicitacao to SolicitacaoItem
+}
+
+relationship OneToMany {
+	Colaborador to Equipe
+}
+
+relationship OneToMany {
+	Funcao to Colaborador
+}
+
+relationship OneToMany {
+	Equipe to SolicitacaoEquipe
+    Solicitacao to SolicitacaoEquipe
+}
+
+relationship OneToMany {
+	Stock to SolicitacaoCompra
+}

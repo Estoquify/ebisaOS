@@ -1,0 +1,41 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131539"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cnpj",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Unidade",
+  "relationships": [
+    {
+      "otherEntityName": "solicitacao",
+      "otherEntityRelationshipName": "unidade",
+      "relationshipName": "solicitacao",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "endereco",
+      "otherEntityRelationshipName": "unidade",
+      "relationshipName": "endereco",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "orgao",
+      "otherEntityRelationshipName": "unidade",
+      "relationshipName": "orgao",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

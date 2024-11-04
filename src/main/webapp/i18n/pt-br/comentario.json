@@ -1,0 +1,26 @@
+{
+  "ebisaOsApp": {
+    "comentario": {
+      "home": {
+        "title": "Comentarios",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Comentario",
+        "createOrEditLabel": "Criar ou editar Comentario",
+        "notFound": "Nenhum Comentario encontrado"
+      },
+      "created": "Um novo Comentario foi criado com o identificador {{ param }}",
+      "updated": "Um Comentario foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Comentario foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Comentario {{ id }}?"
+      },
+      "detail": {
+        "title": "Comentario"
+      },
+      "id": "ID",
+      "respostas": "Respostas",
+      "createdDate": "Created Date",
+      "avaliacao": "Avaliacao"
+    }
+  }
+}

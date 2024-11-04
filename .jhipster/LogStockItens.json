@@ -1,0 +1,35 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131239"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "createDade",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "quantAtual",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "quantAnterior",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "updateDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "LogStockItens",
+  "relationships": [
+    {
+      "otherEntityName": "stock",
+      "otherEntityRelationshipName": "logStockItens",
+      "relationshipName": "stock",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

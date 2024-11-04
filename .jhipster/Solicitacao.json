@@ -1,0 +1,68 @@
+{
+  "annotations": {
+    "changelogDate": "20241104131739"
+  },
+  "applications": ["ebisaOS"],
+  "fields": [
+    {
+      "fieldName": "prazoDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "updatedDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "finishDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "aberta",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observacao",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Solicitacao",
+  "relationships": [
+    {
+      "otherEntityName": "avaliacao",
+      "otherEntityRelationshipName": "solicitacao",
+      "relationshipName": "avaliacao",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "solicitacaoItem",
+      "otherEntityRelationshipName": "solicitacao",
+      "relationshipName": "solicitacaoItem",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "solicitacaoEquipe",
+      "otherEntityRelationshipName": "solicitacao",
+      "relationshipName": "solicitacaoEquipe",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "solicitacao",
+      "relationshipName": "unidade",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}
