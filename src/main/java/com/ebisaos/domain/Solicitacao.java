@@ -43,6 +43,9 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
     @Column(name = "observacao")
     private String observacao;
 
+    @Column(name = "titulo")
+    private String titulo;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "solicitacaos" }, allowSetters = true)
@@ -128,6 +131,19 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
         this.observacao = observacao;
     }
 
+    public String getTitulo() {
+        return this.titulo;
+    }
+
+    public Solicitacao titulo(String titulo) {
+        this.setTitulo(titulo);
+        return this;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
     public Unidade getUnidade() {
         return this.unidade;
     }
@@ -170,6 +186,7 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
             ", aberta='" + getAberta() + "'" +
             ", descricao='" + getDescricao() + "'" +
             ", observacao='" + getObservacao() + "'" +
+            ", titulo='" + getTitulo() + "'" +
             "}";
     }
 }

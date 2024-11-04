@@ -136,6 +136,9 @@ public class SolicitacaoResource {
                 if (solicitacao.getObservacao() != null) {
                     existingSolicitacao.setObservacao(solicitacao.getObservacao());
                 }
+                if (solicitacao.getTitulo() != null) {
+                    existingSolicitacao.setTitulo(solicitacao.getTitulo());
+                }
 
                 return existingSolicitacao;
             })
