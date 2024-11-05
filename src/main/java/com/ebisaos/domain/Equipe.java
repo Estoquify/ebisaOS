@@ -37,11 +37,6 @@ public class Equipe implements Serializable {
     @Column(name = "ativa")
     private Boolean ativa;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties(value = { "equipes" }, allowSetters = true)
-    private Colaborador colaborador;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -107,19 +102,6 @@ public class Equipe implements Serializable {
 
     public void setAtiva(Boolean ativa) {
         this.ativa = ativa;
-    }
-
-    public Colaborador getColaborador() {
-        return this.colaborador;
-    }
-
-    public void setColaborador(Colaborador colaborador) {
-        this.colaborador = colaborador;
-    }
-
-    public Equipe colaborador(Colaborador colaborador) {
-        this.setColaborador(colaborador);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
