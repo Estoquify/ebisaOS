@@ -33,8 +33,8 @@ export const App = () => {
   const ribbonEnv = useAppSelector(state => state.applicationProfile.ribbonEnv);
   const isInProduction = useAppSelector(state => state.applicationProfile.inProduction);
   const isOpenAPIEnabled = useAppSelector(state => state.applicationProfile.isOpenAPIEnabled);
+  const userName = useAppSelector(state => state?.authentication?.account?.firstName)
 
-  // const paddingTop = '60px';
   return (
     <BrowserRouter basename={baseHref}>
       <div className="app-container" >
@@ -48,6 +48,7 @@ export const App = () => {
               ribbonEnv={ribbonEnv}
               isInProduction={isInProduction}
               isOpenAPIEnabled={isOpenAPIEnabled}
+              userName={userName}
             />
           )}
         </ErrorBoundary>
@@ -57,7 +58,7 @@ export const App = () => {
             <AppRoutes />
           </ErrorBoundary>
           {/* </Card> */}
-          {isAuthenticated && <Footer />}
+          {/* {isAuthenticated && <Footer />} */}
         </div>
       </div>
     </BrowserRouter>
