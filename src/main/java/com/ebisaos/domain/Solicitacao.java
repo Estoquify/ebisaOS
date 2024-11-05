@@ -43,6 +43,9 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
     @Column(name = "titulo")
     private String titulo;
 
+    @Column(name = "prioridade")
+    private Boolean prioridade;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "solicitacaos" }, allowSetters = true)
@@ -141,6 +144,19 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
         this.titulo = titulo;
     }
 
+    public Boolean getPrioridade() {
+        return this.prioridade;
+    }
+
+    public Solicitacao prioridade(Boolean prioridade) {
+        this.setPrioridade(prioridade);
+        return this;
+    }
+
+    public void setPrioridade(Boolean prioridade) {
+        this.prioridade = prioridade;
+    }
+
     public Unidade getUnidade() {
         return this.unidade;
     }
@@ -184,6 +200,7 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
             ", descricao='" + getDescricao() + "'" +
             ", observacao='" + getObservacao() + "'" +
             ", titulo='" + getTitulo() + "'" +
+            ", prioridade='" + getPrioridade() + "'" +
             "}";
     }
 }
