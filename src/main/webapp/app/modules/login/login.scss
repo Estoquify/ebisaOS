@@ -1,0 +1,96 @@
+$primary-color: var(--primary-color);
+
+.login-container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: end;
+
+  > .login {
+    width: 40%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(80, 86, 191, 0.8);
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+    gap: 1.5em;
+
+    > .login-image {
+      width: 45%;
+    }
+
+    > .login-container-data {
+      width: 70%;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+
+      gap: 1em;
+
+      > .login-container-data-inputs {
+        width: 100%;
+
+        > input {
+          background: transparent;
+          border: none;
+
+          color: #fff;
+          border-bottom: 1px solid #fff;
+
+          &::placeholder {
+            color: #fff;
+            font-weight: bold;
+          }
+        }
+      }
+
+      > .login-container-data-forgetPassword {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        color: #fff;
+
+        > span:last-child {
+          font-weight: 100;
+          text-decoration: underline;
+        }
+      }
+
+      > .login-container-data-button {
+        width: 100%;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        > button {
+          width: 40%;
+          height: 100%;
+
+          background: #fff !important;
+          color: $primary-color;
+
+          font-weight: 700;
+
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+}

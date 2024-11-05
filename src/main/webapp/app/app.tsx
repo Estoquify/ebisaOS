@@ -34,28 +34,30 @@ export const App = () => {
   const isInProduction = useAppSelector(state => state.applicationProfile.inProduction);
   const isOpenAPIEnabled = useAppSelector(state => state.applicationProfile.isOpenAPIEnabled);
 
-  const paddingTop = '60px';
+  // const paddingTop = '60px';
   return (
     <BrowserRouter basename={baseHref}>
-      <div className="app-container" style={{ paddingTop }}>
+      <div className="app-container" >
         <ToastContainer position="top-left" className="toastify-container" toastClassName="toastify-toast" />
         <ErrorBoundary>
-          <Header
-            isAuthenticated={isAuthenticated}
-            isAdmin={isAdmin}
-            currentLocale={currentLocale}
-            ribbonEnv={ribbonEnv}
-            isInProduction={isInProduction}
-            isOpenAPIEnabled={isOpenAPIEnabled}
-          />
+          {isAuthenticated && (
+            <Header
+              isAuthenticated={isAuthenticated}
+              isAdmin={isAdmin}
+              currentLocale={currentLocale}
+              ribbonEnv={ribbonEnv}
+              isInProduction={isInProduction}
+              isOpenAPIEnabled={isOpenAPIEnabled}
+            />
+          )}
         </ErrorBoundary>
         <div className="container-fluid view-container" id="app-view-container">
-          <Card className="jh-card">
-            <ErrorBoundary>
-              <AppRoutes />
-            </ErrorBoundary>
-          </Card>
-          <Footer />
+          {/* <Card className="jh-card"> */}
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
+          {/* </Card> */}
+          {isAuthenticated && <Footer />}
         </div>
       </div>
     </BrowserRouter>

@@ -5,6 +5,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppThunk } from 'app/config/store';
 import { setLocale } from 'app/shared/reducers/locale';
 import { serializeAxiosError } from './reducer.utils';
+import { toast } from 'react-toastify';
 
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
@@ -47,7 +48,7 @@ interface IAuthParams {
 
 export const authenticate = createAsyncThunk(
   'authentication/login',
-  async (auth: IAuthParams) => axios.post<any>('api/authenticate', auth),
+  async (auth: IAuthParams) => axios.post<any>('api/authenticate', auth).catch(err => toast.error(err?.response?.data?.detail)),
   {
     serializeError: serializeAxiosError,
   },
