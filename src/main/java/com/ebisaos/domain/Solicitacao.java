@@ -44,12 +44,17 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
     private String titulo;
 
     @Column(name = "prioridade")
-    private Boolean prioridade;
+    private Long prioridade;
 
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "solicitacaos" }, allowSetters = true)
     private Unidade unidade;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "solicitacaos" }, allowSetters = true)
+    private TipoSolicitacao tipoSolicitacao;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -144,16 +149,16 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
         this.titulo = titulo;
     }
 
-    public Boolean getPrioridade() {
+    public Long getPrioridade() {
         return this.prioridade;
     }
 
-    public Solicitacao prioridade(Boolean prioridade) {
+    public Solicitacao prioridade(Long prioridade) {
         this.setPrioridade(prioridade);
         return this;
     }
 
-    public void setPrioridade(Boolean prioridade) {
+    public void setPrioridade(Long prioridade) {
         this.prioridade = prioridade;
     }
 
@@ -167,6 +172,19 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
 
     public Solicitacao unidade(Unidade unidade) {
         this.setUnidade(unidade);
+        return this;
+    }
+
+    public TipoSolicitacao getTipoSolicitacao() {
+        return this.tipoSolicitacao;
+    }
+
+    public void setTipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
+        this.tipoSolicitacao = tipoSolicitacao;
+    }
+
+    public Solicitacao tipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
+        this.setTipoSolicitacao(tipoSolicitacao);
         return this;
     }
 

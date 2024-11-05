@@ -2,6 +2,8 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.repository.SolicitacaoRepository;
+import com.ebisaos.service.dto.SolicitacaoAvaliacaoDTO;
+import com.ebisaos.service.dto.SolicitacaoUnidadeDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -172,6 +174,18 @@ public class SolicitacaoResource {
         log.debug("REST request to get Solicitacao : {}", id);
         Optional<Solicitacao> solicitacao = solicitacaoRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(solicitacao);
+    }
+
+    @GetMapping("solicitacaoUnidade")
+    public List<SolicitacaoUnidadeDTO> getAllSolicitacaoUnidade() {
+        log.debug("REST request to get all Solicitacaos da unidade");
+        return solicitacaoRepository.getListagemSolicitacaoUnidade();
+    }
+
+    @GetMapping("solicitacaoavaliacao")
+    public List<SolicitacaoAvaliacaoDTO> getAllSolicitacaoAvaliacao() {
+        log.debug("REST request to get all Solicitacaos para avaliacao");
+        return solicitacaoRepository.getListagemSolicitacaoAvaliacao();
     }
 
     /**
