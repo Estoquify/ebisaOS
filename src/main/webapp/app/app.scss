@@ -40,9 +40,18 @@ a {
       padding: 1rem;
     }
     .view-routes {
+      // height: 90%;
       height: 100%;
+      display: flex;
+      flex-direction: column;
       > div {
-        height: 100%;
+        height: 90%;
+        margin-top: 65px;
+
+        padding: 1.5em;
+
+        border-radius: 10px;
+        background-color: #ccc;
       }
     }
   }
