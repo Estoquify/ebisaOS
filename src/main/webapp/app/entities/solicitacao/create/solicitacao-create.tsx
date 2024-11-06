@@ -1,11 +1,14 @@
-import { faMinus, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faFloppyDisk, faMinus, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Button, Col, Input, Label, Row } from 'reactstrap';
 
 import './solicitacao-create.scss';
+import { useNavigate } from 'react-router';
 
 const SolicitacaoCreate = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="solicitacao-create-container">
       <h2>Criar Solicitação</h2>
@@ -93,6 +96,18 @@ const SolicitacaoCreate = () => {
             </div>
           </Col>
         </Row>
+      </div>
+
+      <div className='buttons-container'>
+        <Button onClick={() => navigate(-1)}>
+          <FontAwesomeIcon icon={faChevronLeft}/>
+          <span> Voltar </span>
+        </Button>
+
+        <Button>
+          <span> Salvar </span>
+          <FontAwesomeIcon icon={faFloppyDisk}/>
+        </Button>
       </div>
     </div>
   );

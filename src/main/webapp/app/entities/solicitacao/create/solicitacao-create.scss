@@ -28,7 +28,7 @@
     > .row {
       display: flex;
 
-      >.descricao-container {
+      > .descricao-container {
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -211,6 +211,25 @@
           }
         }
       }
+    }
+  }
+
+  > .buttons-container {
+    width: 100%;
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    > button {
+      color: #fff;
+      background: #60a3eb;
+
+      font-size: 1.2em;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+
+      border: inherit;
     }
   }
 }
