@@ -1,0 +1,356 @@
+.modal-container {
+  > .modal-content {
+    > .modal-header-container {
+      background: #cccccc;
+      border: 1px solid #000;
+
+      width: 100%;
+      height: 100%;
+
+      font-weight: bold;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    > .modal-body-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      gap: 1.5em;
+
+      > .modal-body-buttons-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+
+        > button {
+          width: 40%;
+          height: 100%;
+
+          font-size: 1.2em;
+
+          padding: 1em;
+
+          &:first-child {
+            background: #43aa8b;
+            border: inherit;
+
+            &:hover {
+              background: #388f75;
+            }
+          }
+
+          &:last-child {
+            background: #f94144;
+            border: inherit;
+
+            &:hover {
+              background: #ce383b;
+            }
+          }
+        }
+      }
+
+      > .modal-body-text-container {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        border-radius: 10px;
+        border: 1px solid #ccc;
+
+        > .modal-body-text-header-container {
+          width: 100%;
+          height: 10%;
+
+          border-bottom: 0.2px solid #000;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+
+          background: #cccccc7e;
+
+          padding: 0.5em;
+
+          > h5 {
+            margin: 0;
+          }
+        }
+
+        > .modal-body-text-content-container {
+          width: 100%;
+          height: 100%;
+          display: flex;
+
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+
+          > textarea {
+            background: rgba(204, 204, 204, 0.2);
+          }
+        }
+      }
+
+      > .modal-body-text-isServico-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+
+        gap: 1em;
+
+        > .modal-body-text-container {
+          padding: 0;
+
+          width: 100%;
+          height: 100%;
+
+          display: flex;
+          flex-direction: column;
+
+          border-radius: 10px;
+          border: 1px solid #ccc;
+
+          > .modal-body-text-header-container {
+            width: 100%;
+            height: 10%;
+
+            border-bottom: 0.2px solid #000;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+
+            background: #cccccc7e;
+
+            padding: 0.5em;
+
+            > h5 {
+              margin: 0;
+            }
+          }
+
+          > .modal-body-text-content-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+
+            > textarea {
+              height: 100%;
+              background: rgba(204, 204, 204, 0.2);
+            }
+          }
+        }
+
+        > .modal-body-text-isServico-equipes-container {
+          width: 100%;
+          height: 100%;
+
+          display: flex;
+          flex-direction: column;
+
+          border-radius: 10px;
+          border: 1px solid #ccc;
+
+          padding: 0;
+
+          > .modal-body-text-isServico-equipes-header-container {
+            width: 100%;
+            height: 10%;
+
+            border-bottom: 0.2px solid #000;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+
+            background: #cccccc7e;
+
+            padding: 0.5em;
+
+            > h5 {
+              margin: 0;
+            }
+          }
+
+          > .modal-body-text-isServico-equipes-data-container {
+            width: 100%;
+            height: 100%;
+
+            padding: 1em;
+
+            display: flex;
+            flex-direction: column;
+
+            background: rgba(204, 204, 204, 0.2);
+
+            gap: 1em;
+
+            > .modal-body-text-isServico-equipes-data-searchbar-container {
+              width: 100%;
+
+              display: flex;
+              align-items: center;
+
+              > div {
+                width: 12%;
+                height: 100%;
+
+                display: flex;
+
+                color: #fff;
+                background: #60a3eb;
+
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+
+                padding: 0.2em;
+
+                > svg {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+
+              > input {
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+              }
+            }
+
+            > .modal-body-text-isServico-equipes-data-list-container {
+                width: 100%;
+                height: 100%;
+
+                display: flex;
+                flex-direction: column;
+
+                background: #60a3eb80;
+                border: 1px solid #60A3EB;
+
+                border-radius: 10px;
+
+                overflow-y: auto;
+
+                gap: 1em;
+
+                padding: 1em;
+
+                > .modal-body-text-isServico-equipes-list-data-container {
+                    width: 100%;
+                    height: 100%;
+
+                    display: flex;
+                    align-items: center;
+
+                    justify-content: space-between;
+
+                    background: #fff;
+
+                    border-radius: 6px;
+                    
+                    > .modal-body-text-isServico-equipes-list-data-header {
+                        padding: 1em;
+                        background: #c7c7c780;
+
+                        border-top-left-radius: 6px;
+                        border-bottom-left-radius: 6px;
+                        
+                        border: 1px solid #000;
+                    }
+
+                    > button {
+                        margin-right: 10px;
+                        background: #60a3eb80;
+                        border: inherit;
+
+                        color: #000;
+                    }
+                }
+            }
+
+            > .modal-body-text-isServico-equipe-data-list-container {
+                width: 100%;
+                height: 100%;
+
+                display: flex;
+                flex-direction: column;
+
+                background: #5056bf80;
+                border: 1px solid #5056BF;
+
+                border-radius: 10px;
+
+                overflow-y: auto;
+
+                gap: 1em;
+
+                padding: 1em;
+
+                > .modal-body-text-isServico-equipe-list-data-container {
+                    width: 100%;
+                    height: 100%;
+
+                    display: flex;
+                    align-items: center;
+
+                    justify-content: space-between;
+
+                    background: #fff;
+
+                    border-radius: 6px;
+                    
+                    > .modal-body-text-isServico-equipe-list-data-header {
+                        padding: 1em;
+                        background: #c7c7c780;
+
+                        border-top-left-radius: 6px;
+                        border-bottom-left-radius: 6px;
+                        
+                        border: 1px solid #000;
+                    }
+
+                    > button {
+                        margin-right: 10px;
+                        background: #eb6a6080;
+                        border: inherit;
+
+                        color: #000;
+                    }
+                }
+            }
+
+            
+          }
+        }
+      }
+
+      > .modal-footer-buttons-container {
+        width: 100%;
+
+        display: flex;
+
+        justify-content: space-between;
+
+        > button {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+
+          background: #60a3eb;
+          border: inherit;
+
+          padding: 0.5em;
+
+          width: 25%;
+
+          font-size: 1.1em;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
