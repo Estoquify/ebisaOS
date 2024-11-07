@@ -2,7 +2,9 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.repository.SolicitacaoRepository;
+import com.ebisaos.service.SolicitacaoService;
 import com.ebisaos.service.dto.SolicitacaoAvaliacaoDTO;
+import com.ebisaos.service.dto.SolicitacaoDTO;
 import com.ebisaos.service.dto.SolicitacaoUnidadeDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -12,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,9 @@ public class SolicitacaoResource {
 
     private final SolicitacaoRepository solicitacaoRepository;
 
+    @Autowired
+    SolicitacaoService solicitacaoService;
+
     public SolicitacaoResource(SolicitacaoRepository solicitacaoRepository) {
         this.solicitacaoRepository = solicitacaoRepository;
     }
@@ -48,12 +54,16 @@ public class SolicitacaoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<Solicitacao> createSolicitacao(@RequestBody Solicitacao solicitacao) throws URISyntaxException {
-        log.debug("REST request to save Solicitacao : {}", solicitacao);
-        if (solicitacao.getId() != null) {
+    public ResponseEntity<Solicitacao> createSolicitacao(@RequestBody SolicitacaoDTO solicitacaoDTO) throws URISyntaxException {
+        log.debug("REST request to save Solicitacao : {}", solicitacaoDTO.getSolicitacao());
+        if (solicitacaoDTO.getSolicitacao().getId() != null) {
             throw new BadRequestAlertException("A new solicitacao cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        solicitacao = solicitacaoRepository.save(solicitacao);
+
+        solicitacaoDTO.getSolicitacao().setAberta(true);
+        Solicitacao solicitacao = solicitacaoService.save(solicitacaoDTO.getSolicitacao());
+        solicitacaoDTO.setSolicitacao(solicitacao);
+        solicitacaoService.montarSolicicao(solicitacaoDTO);
         return ResponseEntity.created(new URI("/api/solicitacaos/" + solicitacao.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, solicitacao.getId().toString()))
             .body(solicitacao);

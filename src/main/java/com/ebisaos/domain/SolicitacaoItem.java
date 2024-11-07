@@ -26,8 +26,8 @@ public class SolicitacaoItem extends AbstractAuditingEntity<Long> {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = { "logStockItens" }, allowSetters = true)
-    private Stock stock;
+    @JsonIgnoreProperties(value = { "solicitacaoItems" }, allowSetters = true)
+    private Item item;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -49,16 +49,16 @@ public class SolicitacaoItem extends AbstractAuditingEntity<Long> {
         this.id = id;
     }
 
-    public Stock getStock() {
-        return this.stock;
+    public Item getItem() {
+        return this.item;
     }
 
-    public void setStock(Stock stock) {
-        this.stock = stock;
+    public void setItem(Item item) {
+        this.item = item;
     }
 
-    public SolicitacaoItem stock(Stock stock) {
-        this.setStock(stock);
+    public SolicitacaoItem item(Item item) {
+        this.setItem(item);
         return this;
     }
 
