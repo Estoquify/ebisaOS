@@ -53,9 +53,9 @@ public class AvaliacaoService {
         avaliacaoRepository.delete(obj);
     }
 
-    public Avaliacao avaliacaoPorSolicitacao(Long idSolicitacao) {
-        return avaliacaoRepository.getAvalicaoBySolicitacao(idSolicitacao);
-    }
+    public Avaliacao avaliacaoPorSolicitacao(Long solicitacaoId) {
+        return avaliacaoRepository.findBySolicitacaoId(solicitacaoId);
+    }    
 
     public void avaliacaoInicial(Solicitacao solicitacao) {
         Avaliacao avaliacao = new Avaliacao();
@@ -64,5 +64,15 @@ public class AvaliacaoService {
         avaliacao.setSolicitacao(solicitacao);
 
         save(avaliacao);
+    }
+
+    public Avaliacao avaliacaoGinfra(Long idSolicitacao, Boolean aprovacao, String justificativa) {
+        Avaliacao avaliacao = avaliacaoPorSolicitacao(idSolicitacao);
+
+        avaliacao.setAprovacao(aprovacao);
+        avaliacao.setAvalicao(justificativa);
+        save(avaliacao);
+
+        return avaliacao;
     }
 }

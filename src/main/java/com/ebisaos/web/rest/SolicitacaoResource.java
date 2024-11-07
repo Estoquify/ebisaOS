@@ -187,8 +187,8 @@ public class SolicitacaoResource {
         return ResponseUtil.wrapOrNotFound(solicitacao);
     }
 
-    @GetMapping("solicitacaoView/{id}")
-    public SolicitacaoViewDTO getSolicitacaoView(@PathVariable("id") Long id) {
+    @GetMapping("solicitacaoView")
+    public SolicitacaoViewDTO getSolicitacaoView(@RequestParam("id") Long id) {
         log.debug("REST request to get Solicitacao : {}", id);
         SolicitacaoViewDTO solicitacaoViewDTO = solicitacaoService.montarSolicitacaoView(id);
         return solicitacaoViewDTO;

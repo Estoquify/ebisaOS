@@ -14,11 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
 
-    @Query(value = """
-        SELECT ava.*
-        FROM public.avaliacao AS ava
-        WHERE ava.solicitacao_id = ?1;
-    """, nativeQuery = true)
-    Avaliacao getAvalicaoBySolicitacao(Long idSolicitacao);
+    Avaliacao findBySolicitacaoId(Long solicitacaoId);
+
 
 }

@@ -6,6 +6,7 @@ import com.ebisaos.domain.SolicitacaoItem;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,12 +16,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SolicitacaoItemRepository extends JpaRepository<SolicitacaoItem, Long> {
 
-    @Query(value = """
-        SELECT it.*
-        FROM public.solicitacao_item AS soli
-        LEFT JOIN public.item AS it ON soli.item_id = it.id
-        WHERE soli.solicitacao_id = ?1;
-    """, nativeQuery = true)
-    List<Item> getItemPorSolicitacao(Long idSolicitacao);
+    @Query("SELECT i FROM SolicitacaoItem si LEFT JOIN si.item i WHERE si.solicitacao.id = :solicitacaoId")
+    List<Item> getItemPorSolicitacao(@Param("solicitacaoId") Long solicitacaoId);
+
 
 }

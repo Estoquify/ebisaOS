@@ -2,6 +2,7 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Avaliacao;
 import com.ebisaos.repository.AvaliacaoRepository;
+import com.ebisaos.service.AvaliacaoService;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,9 @@ public class AvaliacaoResource {
     private String applicationName;
 
     private final AvaliacaoRepository avaliacaoRepository;
+
+    @Autowired
+    private AvaliacaoService avaliacaoService;
 
     public AvaliacaoResource(AvaliacaoRepository avaliacaoRepository) {
         this.avaliacaoRepository = avaliacaoRepository;
@@ -89,6 +94,28 @@ public class AvaliacaoResource {
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, avaliacao.getId().toString()))
             .body(avaliacao);
     }
+
+    @PatchMapping("avaliacaoGinfra/{idSolicitacao}/{aprovacao}/{avaliacao}")
+    public ResponseEntity<Avaliacao> avaliacaoGinfra(
+        @PathVariable(value = "idSolicitacao") Long idSolicitacao,
+        @PathVariable(value = "aprovacao") Boolean aprovacao,
+        @PathVariable(value = "avaliacao") String avaliacao
+    ) throws URISyntaxException {
+
+        // Verifica se algum dos parâmetros obrigatórios está nulo
+        if (idSolicitacao == null || aprovacao == null || avaliacao == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        // Chama o serviço de avaliação com os parâmetros validados
+        Avaliacao avaliacaoGinfra = avaliacaoService.avaliacaoGinfra(idSolicitacao, aprovacao, avaliacao);
+
+        // Retorna a resposta com os headers e o corpo
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, avaliacaoGinfra.getId().toString()))
+            .body(avaliacaoGinfra);
+    }
+
 
     /**
      * {@code PATCH  /avaliacaos/:id} : Partial updates given fields of an existing avaliacao, field will ignore if it is null
