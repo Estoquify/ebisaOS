@@ -1,6 +1,9 @@
 package com.ebisaos.repository;
 
 import com.ebisaos.domain.Avaliacao;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +12,13 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {}
+public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
+
+    @Query(value = """
+        SELECT ava.*
+        FROM public.avaliacao AS ava
+        WHERE ava.solicitacao_id = ?1;
+    """, nativeQuery = true)
+    Avaliacao getAvalicaoBySolicitacao(Long idSolicitacao);
+
+}

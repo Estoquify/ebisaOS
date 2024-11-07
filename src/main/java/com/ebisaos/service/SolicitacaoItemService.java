@@ -61,6 +61,10 @@ public class SolicitacaoItemService {
         solicitacaoItemRepository.delete(obj);
     }
 
+    public List<Item> listaDeItensPorSolicitacao(Long idSolicitacao) {
+        return solicitacaoItemRepository.getItemPorSolicitacao(idSolicitacao);
+    }
+
     public void montarSolicitacaoItem(Item item, Solicitacao solicitacao) {
         SolicitacaoItem solicitacaoItem = new SolicitacaoItem();
 

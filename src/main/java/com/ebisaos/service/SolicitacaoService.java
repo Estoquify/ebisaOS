@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ebisaos.domain.Item;
 import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.domain.Unidade;
+import com.ebisaos.repository.ComentarioRepository;
 import com.ebisaos.repository.SolicitacaoRepository;
 import com.ebisaos.service.dto.SolicitacaoDTO;
+import com.ebisaos.service.dto.SolicitacaoViewDTO;
 
 @Service
 @Transactional
@@ -35,6 +37,9 @@ public class SolicitacaoService {
 
     @Autowired
     SolicitacaoItemService solicitacaoItemService;
+
+    @Autowired
+    ComentarioRepository comentarioRepository;
 
     public List<Solicitacao> findAll(Pageable pageable) {
         return solicitacaoRepository.findAll(pageable).getContent();
@@ -67,6 +72,17 @@ public class SolicitacaoService {
             solicitacaoItemService.montarSolicitacaoItem(item, solicitacaoDTO.getSolicitacao());
         }
 
+    }
+
+    public SolicitacaoViewDTO montarSolicitacaoView(Long idSoliciacao) {
+        SolicitacaoViewDTO solicitacaoViewDTO = new SolicitacaoViewDTO();
+
+        solicitacaoViewDTO.setSolicitacao(findById(idSoliciacao));
+        solicitacaoViewDTO.setAvaliacao(avaliacaoService.avaliacaoPorSolicitacao(idSoliciacao));
+        solicitacaoViewDTO.setComentarios(comentarioRepository.getListComentarios(idSoliciacao));
+        solicitacaoViewDTO.setItens(solicitacaoItemService.listaDeItensPorSolicitacao(idSoliciacao));
+
+        return solicitacaoViewDTO;
     }
 
 }

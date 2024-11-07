@@ -53,6 +53,10 @@ public class AvaliacaoService {
         avaliacaoRepository.delete(obj);
     }
 
+    public Avaliacao avaliacaoPorSolicitacao(Long idSolicitacao) {
+        return avaliacaoRepository.getAvalicaoBySolicitacao(idSolicitacao);
+    }
+
     public void avaliacaoInicial(Solicitacao solicitacao) {
         Avaliacao avaliacao = new Avaliacao();
 
