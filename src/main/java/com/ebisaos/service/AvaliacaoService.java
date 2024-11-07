@@ -69,6 +69,16 @@ public class AvaliacaoService {
     public Avaliacao avaliacaoGinfra(Long idSolicitacao, Boolean aprovacao, String justificativa) {
         Avaliacao avaliacao = avaliacaoPorSolicitacao(idSolicitacao);
 
+        avaliacao.setAprovacaoGinfra(aprovacao);
+        avaliacao.setAvalicaoGinfra(justificativa);
+        save(avaliacao);
+
+        return avaliacao;
+    }
+
+    public Avaliacao avaliacaoGestor(Long idSolicitacao, Boolean aprovacao, String justificativa) {
+        Avaliacao avaliacao = avaliacaoPorSolicitacao(idSolicitacao);
+
         avaliacao.setAprovacao(aprovacao);
         avaliacao.setAvalicao(justificativa);
         save(avaliacao);

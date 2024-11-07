@@ -23,8 +23,14 @@ public class Avaliacao extends AbstractAuditingEntity<Long> {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "avalicaoGinfra")
+    private String avalicaoGinfra;
+
     @Column(name = "avalicao")
     private String avalicao;
+
+    @Column(name = "aprovacaoGinfra")
+    private Boolean aprovacaoGinfra;
 
     @Column(name = "aprovacao")
     private Boolean aprovacao;
@@ -47,6 +53,19 @@ public class Avaliacao extends AbstractAuditingEntity<Long> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAvalicaoGinfra() {
+        return this.avalicaoGinfra;
+    }
+
+    public Avaliacao avalicaoGinfra(String avalicaoGinfra) {
+        this.setAvalicaoGinfra(avalicaoGinfra);
+        return this;
+    }
+
+    public void setAvalicaoGinfra(String avalicaoGinfra) {
+        this.avalicaoGinfra = avalicaoGinfra;
     }
 
     public String getAvalicao() {
@@ -73,6 +92,19 @@ public class Avaliacao extends AbstractAuditingEntity<Long> {
 
     public void setAprovacao(Boolean aprovacao) {
         this.aprovacao = aprovacao;
+    }
+
+    public Boolean getAprovacaoGinfra() {
+        return this.aprovacaoGinfra;
+    }
+
+    public Avaliacao aprovacaoGinfra(Boolean aprovacaoGinfra) {
+        this.setAprovacaoGinfra(aprovacaoGinfra);
+        return this;
+    }
+
+    public void setAprovacaoGinfra(Boolean aprovacaoGinfra) {
+        this.aprovacaoGinfra = aprovacaoGinfra;
     }
 
     public Solicitacao getSolicitacao() {
@@ -112,8 +144,10 @@ public class Avaliacao extends AbstractAuditingEntity<Long> {
     public String toString() {
         return "Avaliacao{" +
             "id=" + getId() +
+            ", avalicaoGinfra='" + getAvalicaoGinfra() + "'" +
             ", avalicao='" + getAvalicao() + "'" +
             ", aprovacao='" + getAprovacao() + "'" +
+            ", aprovacaoGinfra='" + getAprovacaoGinfra() + "'" +
             "}";
     }
 }

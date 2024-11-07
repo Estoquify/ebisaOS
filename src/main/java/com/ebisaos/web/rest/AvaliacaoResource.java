@@ -116,6 +116,27 @@ public class AvaliacaoResource {
             .body(avaliacaoGinfra);
     }
 
+    @PatchMapping("avaliacaoGestor/{idSolicitacao}/{aprovacao}/{avaliacao}")
+    public ResponseEntity<Avaliacao> avaliacaoGestor(
+        @PathVariable(value = "idSolicitacao") Long idSolicitacao,
+        @PathVariable(value = "aprovacao") Boolean aprovacao,
+        @PathVariable(value = "avaliacao") String avaliacao
+    ) throws URISyntaxException {
+
+        // Verifica se algum dos parâmetros obrigatórios está nulo
+        if (idSolicitacao == null || aprovacao == null || avaliacao == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        // Chama o serviço de avaliação com os parâmetros validados
+        Avaliacao avaliacaoGestor = avaliacaoService.avaliacaoGestor(idSolicitacao, aprovacao, avaliacao);
+
+        // Retorna a resposta com os headers e o corpo
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, avaliacaoGestor.getId().toString()))
+            .body(avaliacaoGestor);
+    }
+
 
     /**
      * {@code PATCH  /avaliacaos/:id} : Partial updates given fields of an existing avaliacao, field will ignore if it is null
