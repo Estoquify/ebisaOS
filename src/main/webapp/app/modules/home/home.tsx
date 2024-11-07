@@ -11,8 +11,6 @@ import ModalAprovarOuRejeitar from 'app/shared/layout/modals/ModalAprovarOuRejei
 export const Home = () => {
   const account = useAppSelector(state => state.authentication.account);
 
-  const [isOpen, setIsOpen] = useState(true);
-
   return (
     <Row>
       <Col md="3" className="pad">
@@ -97,7 +95,6 @@ export const Home = () => {
         </p>
       </Col>
 
-      <ModalAprovarOuRejeitar isOpen={isOpen} setIsOpen={setIsOpen} isServico={true}/>
     </Row>
   );
 };
