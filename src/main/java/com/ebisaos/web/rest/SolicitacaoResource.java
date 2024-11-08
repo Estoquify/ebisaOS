@@ -83,13 +83,13 @@ public class SolicitacaoResource {
     @PutMapping("/{id}")
     public ResponseEntity<Solicitacao> updateSolicitacao(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody Solicitacao solicitacao
+        @RequestBody SolicitacaoDTO solicitacaoDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Solicitacao : {}, {}", id, solicitacao);
-        if (solicitacao.getId() == null) {
+        log.debug("REST request to update Solicitacao : {}, {}", id, solicitacaoDTO);
+        if (solicitacaoDTO.getSolicitacao().getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, solicitacao.getId())) {
+        if (!Objects.equals(id, solicitacaoDTO.getSolicitacao().getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -97,7 +97,11 @@ public class SolicitacaoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        solicitacao = solicitacaoRepository.save(solicitacao);
+
+        solicitacaoDTO.getSolicitacao().setAberta(true);
+        Solicitacao solicitacao = solicitacaoService.save(solicitacaoDTO.getSolicitacao());
+        solicitacaoDTO.setSolicitacao(solicitacao);
+        solicitacaoService.editarSolicitacao(solicitacaoDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, solicitacao.getId().toString()))
             .body(solicitacao);

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ebisaos.domain.Avaliacao;
 import com.ebisaos.domain.Item;
 import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.domain.Unidade;
@@ -73,6 +74,19 @@ public class SolicitacaoService {
             solicitacaoItemService.montarSolicitacaoItem(item, solicitacaoDTO.getSolicitacao());
         }
 
+    }
+
+    public void editarSolicitacao(SolicitacaoDTO solicitacaoDTO) {
+        Avaliacao avaliacao = avaliacaoService.avaliacaoPorSolicitacao(solicitacaoDTO.getSolicitacao().getId());
+        avaliacao.setAprovacao(null);
+        avaliacaoService.save(avaliacao);
+        for (QuantidadeItensDTO item : solicitacaoDTO.getItens()) {
+            if (solicitacaoItemService.verificarSolicitacaoAberta(item.getItem().getId(), solicitacaoDTO.getSolicitacao().getId()) == 0) {
+                solicitacaoItemService.montarSolicitacaoItem(item, solicitacaoDTO.getSolicitacao());
+            } else if (solicitacaoItemService.verificarSolicitacaoAberta(item.getItem().getId(), solicitacaoDTO.getSolicitacao().getId()) != item.getQuantidade()) {
+                solicitacaoItemService.editarSolicitacaoItem(item.getItem().getId(), solicitacaoDTO.getSolicitacao().getId(), item.getQuantidade());
+            }
+        }
     }
 
     public SolicitacaoViewDTO montarSolicitacaoView(Long idSoliciacao) {

@@ -19,5 +19,11 @@ public interface SolicitacaoItemRepository extends JpaRepository<SolicitacaoItem
     @Query("SELECT i FROM SolicitacaoItem si LEFT JOIN si.item i WHERE si.solicitacao.id = :solicitacaoId")
     List<Item> getItemPorSolicitacao(@Param("solicitacaoId") Long solicitacaoId);
 
+    @Query("SELECT COALESCE(MAX(si.quantidadeSolicitada), 0) FROM SolicitacaoItem si WHERE si.item.id = :itemId AND si.solicitacao.id = :solicitacaoId")
+    Long findQuantidadeSolicitadaByItemIdAndSolicitacaoId(@Param("itemId") Long itemId, @Param("solicitacaoId") Long solicitacaoId);
+
+    @Query("SELECT si FROM SolicitacaoItem si WHERE si.item.id = :itemId AND si.solicitacao.id = :solicitacaoId")
+    SolicitacaoItem findSolicitacaoItemByItemIdAndSolicitacaoId(@Param("itemId") Long itemId, @Param("solicitacaoId") Long solicitacaoId);
+
 
 }

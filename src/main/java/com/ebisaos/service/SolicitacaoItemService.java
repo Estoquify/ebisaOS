@@ -62,8 +62,16 @@ public class SolicitacaoItemService {
         solicitacaoItemRepository.delete(obj);
     }
 
+    public Long verificarSolicitacaoAberta(Long idItem, Long idSolicitacao) {
+        return solicitacaoItemRepository.findQuantidadeSolicitadaByItemIdAndSolicitacaoId(idItem, idSolicitacao);
+    }
+
     public List<Item> listaDeItensPorSolicitacao(Long idSolicitacao) {
         return solicitacaoItemRepository.getItemPorSolicitacao(idSolicitacao);
+    }
+
+    public SolicitacaoItem solicitacaoItemPorItemESolicitacao(Long idItem, Long idSolicitacao) {
+        return solicitacaoItemRepository.findSolicitacaoItemByItemIdAndSolicitacaoId(idItem, idSolicitacao);
     }
 
     public void montarSolicitacaoItem(QuantidadeItensDTO item, Solicitacao solicitacao) {
@@ -73,6 +81,13 @@ public class SolicitacaoItemService {
         solicitacaoItem.setQuantidadeSolicitada(item.getQuantidade());
         solicitacaoItem.setSolicitacao(solicitacao);
 
+        save(solicitacaoItem);
+    }
+
+    public void editarSolicitacaoItem(Long idItem, Long idSolicitacao, Long quantidade) {
+        SolicitacaoItem solicitacaoItem = solicitacaoItemPorItemESolicitacao(idItem, idSolicitacao);
+
+        solicitacaoItem.setQuantidadeSolicitada(quantidade);
         save(solicitacaoItem);
     }
 }
