@@ -20,6 +20,7 @@ import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.domain.Unidade;
 import com.ebisaos.repository.ComentarioRepository;
 import com.ebisaos.repository.SolicitacaoRepository;
+import com.ebisaos.service.dto.QuantidadeItensDTO;
 import com.ebisaos.service.dto.SolicitacaoDTO;
 import com.ebisaos.service.dto.SolicitacaoViewDTO;
 
@@ -68,7 +69,7 @@ public class SolicitacaoService {
     public void montarSolicicao(SolicitacaoDTO solicitacaoDTO) {
 
         avaliacaoService.avaliacaoInicial(solicitacaoDTO.getSolicitacao());
-        for (Item item : solicitacaoDTO.getItens()) {
+        for (QuantidadeItensDTO item : solicitacaoDTO.getItens()) {
             solicitacaoItemService.montarSolicitacaoItem(item, solicitacaoDTO.getSolicitacao());
         }
 

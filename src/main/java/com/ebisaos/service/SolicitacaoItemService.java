@@ -24,6 +24,7 @@ import com.ebisaos.domain.User;
 import com.ebisaos.repository.SolicitacaoItemRepository;
 import com.ebisaos.repository.UserRepository;
 import com.ebisaos.security.SecurityUtils;
+import com.ebisaos.service.dto.QuantidadeItensDTO;
 
 @Service
 @Transactional
@@ -65,10 +66,11 @@ public class SolicitacaoItemService {
         return solicitacaoItemRepository.getItemPorSolicitacao(idSolicitacao);
     }
 
-    public void montarSolicitacaoItem(Item item, Solicitacao solicitacao) {
+    public void montarSolicitacaoItem(QuantidadeItensDTO item, Solicitacao solicitacao) {
         SolicitacaoItem solicitacaoItem = new SolicitacaoItem();
 
-        solicitacaoItem.setItem(item);
+        solicitacaoItem.setItem(item.getItem());
+        solicitacaoItem.setQuantidadeSolicitada(item.getQuantidade());
         solicitacaoItem.setSolicitacao(solicitacao);
 
         save(solicitacaoItem);

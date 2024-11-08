@@ -2,13 +2,12 @@ package com.ebisaos.service.dto;
 
 import java.util.List;
 
-import com.ebisaos.domain.Item;
 import com.ebisaos.domain.Solicitacao;
 
 public class SolicitacaoDTO {
     
     private Solicitacao solicitacao;
-    private List<Item> itens;
+    private List<QuantidadeItensDTO> itens;
 
     public Solicitacao getSolicitacao() {
         return solicitacao;
@@ -18,11 +17,11 @@ public class SolicitacaoDTO {
         this.solicitacao = solicitacao;
     }
 
-    public List<Item> getItens() {
+    public List<QuantidadeItensDTO> getItens() {
         return itens;
     }
 
-    public void setItens(List<Item> itens) {
+    public void setItens(List<QuantidadeItensDTO> itens) {
         this.itens = itens;
     }
 

@@ -24,6 +24,9 @@ public class SolicitacaoItem extends AbstractAuditingEntity<Long> {
     @Column(name = "id")
     private Long id;
 
+    @Column(name ="quantidadeSolicitada")
+    private Long quantidadeSolicitada;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "solicitacaoItems" }, allowSetters = true)
@@ -47,6 +50,19 @@ public class SolicitacaoItem extends AbstractAuditingEntity<Long> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getQuantidadeSolicitada() {
+        return this.quantidadeSolicitada;
+    }
+
+    public SolicitacaoItem quantidadeSolicitada(Long quantidadeSolicitada) {
+        this.setQuantidadeSolicitada(quantidadeSolicitada);
+        return this;
+    }
+
+    public void setQuantidadeSolicitada(Long quantidadeSolicitada) {
+        this.quantidadeSolicitada = quantidadeSolicitada;
     }
 
     public Item getItem() {
@@ -99,6 +115,7 @@ public class SolicitacaoItem extends AbstractAuditingEntity<Long> {
     public String toString() {
         return "SolicitacaoItem{" +
             "id=" + getId() +
+            ", quantidadeSolicitada='" + getQuantidadeSolicitada() + "'" +
             "}";
     }
 }
