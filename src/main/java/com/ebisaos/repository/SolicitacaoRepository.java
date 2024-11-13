@@ -17,18 +17,16 @@ import org.springframework.stereotype.Repository;
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> {
 
     @Query(value = """
-        SELECT sol.id, sol.prioridade, sol.titulo, tps.nome AS tipo_solicitacao, sol.created_date, sol.aberta, ava.aprovacao, sol.finish_date, sol.prazo_date
+        SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.aberta, ava.aprovacao, sol.finish_date, sol.prazo_date
         FROM public.solicitacao AS sol
-        LEFT JOIN public.tipo_solicitacao AS tps ON sol.tipo_solicitacao_id = tps.id
         LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
         ORDER BY sol.aberta, sol.prioridade, sol.created_date
     """, nativeQuery = true)
     List<SolicitacaoUnidadeDTO> getListagemSolicitacaoUnidade();
 
     @Query(value = """
-        SELECT sol.id, sol.prioridade, sol.titulo, tps.nome AS tipo_solicitacao, sol.created_date, sol.prazo_date, uni.nome AS nome_unidade
+        SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.nome AS nome_unidade
         FROM public.solicitacao AS sol
-        LEFT JOIN public.tipo_solicitacao AS tps ON sol.tipo_solicitacao_id = tps.id
         LEFT JOIN public.unidade AS uni ON sol.unidade_id = uni.id
         WHERE sol.aberta = true
         ORDER BY sol.prioridade, sol.created_date

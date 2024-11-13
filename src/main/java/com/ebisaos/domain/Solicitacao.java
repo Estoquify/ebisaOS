@@ -1,5 +1,6 @@
 package com.ebisaos.domain;
 
+import com.ebisaos.domain.enumeration.TipoSolicitacaoEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -51,10 +52,9 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
     @JsonIgnoreProperties(value = { "solicitacaos" }, allowSetters = true)
     private Unidade unidade;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties(value = { "solicitacaos" }, allowSetters = true)
-    private TipoSolicitacao tipoSolicitacao;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_solicitacao")
+    private TipoSolicitacaoEnum tipoSolicitacaoEnum;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -175,16 +175,16 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
         return this;
     }
 
-    public TipoSolicitacao getTipoSolicitacao() {
-        return this.tipoSolicitacao;
+    public TipoSolicitacaoEnum getTipoSolicitacao() {
+        return this.tipoSolicitacaoEnum;
     }
 
-    public void setTipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
-        this.tipoSolicitacao = tipoSolicitacao;
+    public void setTipoSolicitacao(TipoSolicitacaoEnum tipoSolicitacaoEnum) {
+        this.tipoSolicitacaoEnum = tipoSolicitacaoEnum;
     }
 
-    public Solicitacao tipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
-        this.setTipoSolicitacao(tipoSolicitacao);
+    public Solicitacao tipoSolicitacaoEnum(TipoSolicitacaoEnum tipoSolicitacaoEnum) {
+        this.setTipoSolicitacao(tipoSolicitacaoEnum);
         return this;
     }
 
