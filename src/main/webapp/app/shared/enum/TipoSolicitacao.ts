@@ -1,7 +1,7 @@
 
 enum tipoSolicitacao {
-    'Servico',
-    'Material'
+    Servico= 'SERVICO',
+    Material= 'MATERIAL'
 }
 
 export default tipoSolicitacao;

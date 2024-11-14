@@ -2,22 +2,20 @@ import { faChevronLeft, faChevronRight, faFloppyDisk, faMinus, faPlus, faSearch 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Label, Row } from 'reactstrap';
-
-import './solicitacao-create.scss';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getItens } from 'app/entities/item/item.reducer';
 import { IItem } from 'app/shared/model/item.model';
-import { IItemSelecionados } from 'app/shared/model/itemSelecionados.models';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import tipoSolicitacao from 'app/shared/enum/TipoSolicitacao';
 import dayjs from 'dayjs';
 import { createEntity } from '../solicitacao.reducer';
 import { getEntities as getUnidades } from 'app/entities/unidade/unidade.reducer';
 import { IUnidade } from 'app/shared/model/unidade.model';
-import { toNumber } from 'lodash';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+
+import './solicitacao-create.scss';
+
 
 const SolicitacaoCreate = () => {
   const navigate = useNavigate();
@@ -32,6 +30,10 @@ const SolicitacaoCreate = () => {
     dispatch(getItens({}));
     dispatch(getUnidades({}));
   }, []);
+
+  useEffect(() => {
+    console.log(solicitacao)
+  })
 
   const handleCreateSolicitacao = () => {
     const solicitacaoFixed = { ...solicitacao, unidade: unidades?.find(data => solicitacao?.unidade?.id === data?.id) };
@@ -97,8 +99,8 @@ const SolicitacaoCreate = () => {
       errors.push('A descrição não pode estar vazia.');
     }
 
-    if (solicitacaoData.tipoSolicitacao === null || solicitacaoData.tipoSolicitacao === undefined) {
-      errors.push('O tipo de solicitação é obrigatório.');
+    if (!solicitacaoData.descricao || solicitacaoData.descricao.trim() === '') {
+      errors.push('A descrição não pode estar vazia.');
     }
 
     if (solicitacaoData.prazoDate && !dayjs(solicitacaoData.prazoDate).isAfter(dayjs())) {
@@ -109,7 +111,6 @@ const SolicitacaoCreate = () => {
   };
 
   const handleValidateSolicitacaoCreate = () => {
-    console.log(solicitacao);
     const result = validateCreateSolicitacao(solicitacao);
     if (!result.isValid) {
       result?.errors?.map(data => {
@@ -150,6 +151,9 @@ const SolicitacaoCreate = () => {
               onChange={e => setSolicitacao({ ...solicitacao, unidade: { id: toNumber(e.target.value) } })}
               value={solicitacao?.unidade?.id}
             >
+              <option value={0}>
+                Escolha ae
+              </option>
               {unidades &&
                 unidades?.map((data, key) => (
                   <>
