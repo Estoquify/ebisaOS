@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
 
-import Solicitacao from './solicitacao';
+import Solicitacao from './home/solicitacao';
 import SolicitacaoDetail from './view/solicitacao-detail';
 import SolicitacaoUpdate from './solicitacao-update';
 import SolicitacaoDeleteDialog from './solicitacao-delete-dialog';

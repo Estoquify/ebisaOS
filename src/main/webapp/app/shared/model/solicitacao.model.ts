@@ -10,6 +10,7 @@ export interface ISolicitacao {
   updatedDate?: dayjs.Dayjs | null;
   finishDate?: dayjs.Dayjs | null;
   aberta?: boolean | null;
+  prioridade?: boolean | null;
   descricao?: string | null;
   titulo?: string | null;
   observacao?: string | null;

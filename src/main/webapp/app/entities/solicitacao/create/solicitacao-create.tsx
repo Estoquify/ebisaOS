@@ -31,10 +31,6 @@ const SolicitacaoCreate = () => {
     dispatch(getUnidades({}));
   }, []);
 
-  useEffect(() => {
-    console.log(solicitacao)
-  })
-
   const handleCreateSolicitacao = () => {
     const solicitacaoFixed = { ...solicitacao, unidade: unidades?.find(data => solicitacao?.unidade?.id === data?.id) };
     dispatch(createEntity(solicitacaoFixed));
