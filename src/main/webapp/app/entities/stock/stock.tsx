@@ -8,7 +8,7 @@ import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
 import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntities } from './stock.reducer';
+import { getEntities, getStockPag } from './stock.reducer';
 
 export const Stock = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +20,11 @@ export const Stock = () => {
 
   const stockList = useAppSelector(state => state.stock.entities);
   const loading = useAppSelector(state => state.stock.loading);
+  const totalStock = useAppSelector(state => state?.stock?.totalItems);
+  const [imputPesquisa, setImputPesquisa] = useState<string>('');
+  const [page, setPage] = useState<number>(0);
+
+  const itensPorpagina = 5;
 
   const getAllEntities = () => {
     dispatch(
@@ -27,6 +32,7 @@ export const Stock = () => {
         sort: `${sortState.sort},${sortState.order}`,
       }),
     );
+    dispatch(getStockPag({ query: imputPesquisa, size: itensPorpagina, page }));
   };
 
   const sortEntities = () => {

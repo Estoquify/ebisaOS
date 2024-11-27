@@ -4,6 +4,7 @@ import { ASC } from 'app/shared/util/pagination.constants';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IStock, defaultValue } from 'app/shared/model/stock.model';
+import { IStockPag } from 'app/shared/model/pageStock.model';
 
 const initialState: EntityState<IStock> = {
   loading: false,
@@ -11,6 +12,7 @@ const initialState: EntityState<IStock> = {
   entities: [],
   entity: defaultValue,
   updating: false,
+  totalItems: 0,
   updateSuccess: false,
 };
 
@@ -22,6 +24,11 @@ export const getEntities = createAsyncThunk('stock/fetch_entity_list', async ({ 
   const requestUrl = `${apiUrl}?${sort ? `sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
   return axios.get<IStock[]>(requestUrl);
 });
+
+export const getStockPag = createAsyncThunk('stock/fetch_entity_list', async ({ page = 0, size = 10, sort = 'ASC', query = '' }: IQueryParams) => {
+  const requestUrl = `${apiUrl}/listaPageStock?page=${page}&size=${size}&${sort ? `sort=${sort}&` : ''}pesquisa=${query}`;
+  return axios.get<IStockPag[]>(requestUrl);
+})
 
 export const getEntity = createAsyncThunk(
   'stock/fetch_entity',
@@ -89,20 +96,14 @@ export const StockSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = {};
       })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
+      .addMatcher(isFulfilled(getEntities, getStockPag), (state, action) => {
         const { data } = action.payload;
 
         return {
           ...state,
           loading: false,
-          entities: data.sort((a, b) => {
-            if (!action.meta?.arg?.sort) {
-              return 1;
-            }
-            const order = action.meta.arg.sort.split(',')[1];
-            const predicate = action.meta.arg.sort.split(',')[0];
-            return order === ASC ? (a[predicate] < b[predicate] ? -1 : 1) : b[predicate] < a[predicate] ? -1 : 1;
-          }),
+          entities: data,
+          totalItems: parseInt(action.payload.headers['x-total-count'], 10),
         };
       })
       .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
@@ -111,7 +112,7 @@ export const StockSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getStockPag, getEntity), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
