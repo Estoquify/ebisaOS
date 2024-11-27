@@ -30,6 +30,9 @@ public class LogStockItens extends AbstractAuditingEntity<Long> {
     @Column(name = "quant_anterior")
     private Long quantAnterior;
 
+    @Column(name = "acao")
+    private String acao;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "logStockItens" }, allowSetters = true)
@@ -76,6 +79,19 @@ public class LogStockItens extends AbstractAuditingEntity<Long> {
         this.quantAnterior = quantAnterior;
     }
 
+    public String getAcao() {
+        return this.acao;
+    }
+
+    public LogStockItens acao(String acao) {
+        this.setAcao(acao);
+        return this;
+    }
+
+    public void setAcao(String acao) {
+        this.acao = acao;
+    }
+
     public Stock getStock() {
         return this.stock;
     }
@@ -115,6 +131,7 @@ public class LogStockItens extends AbstractAuditingEntity<Long> {
             "id=" + getId() +
             ", quantAtual=" + getQuantAtual() +
             ", quantAnterior=" + getQuantAnterior() +
+            ", acao=" + getAcao() +
             "}";
     }
 }

@@ -28,6 +28,9 @@ public class Stock implements Serializable {
     @Column(name = "quant_item")
     private Long quantItem;
 
+    @Column(name = "quant_max")
+    private Long quantMax;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "stocks" }, allowSetters = true)
@@ -64,6 +67,19 @@ public class Stock implements Serializable {
 
     public void setQuantItem(Long quantItem) {
         this.quantItem = quantItem;
+    }
+
+    public Long getQuantMax() {
+        return this.quantMax;
+    }
+
+    public Stock quantMax(Long quantMax) {
+        this.setQuantMax(quantMax);
+        return this;
+    }
+
+    public void setQuantMax(Long quantMax) {
+        this.quantMax = quantMax;
     }
 
     public Item getItem() {
@@ -117,6 +133,7 @@ public class Stock implements Serializable {
         return "Stock{" +
             "id=" + getId() +
             ", quantItem=" + getQuantItem() +
+            ", quantMax=" + getQuantMax() +
             "}";
     }
 }
