@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.time.Instant;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -30,6 +32,9 @@ public class Stock implements Serializable {
 
     @Column(name = "quant_max")
     private Long quantMax;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate = Instant.now();
 
     @ManyToOne(optional = false)
     @NotNull
@@ -80,6 +85,19 @@ public class Stock implements Serializable {
 
     public void setQuantMax(Long quantMax) {
         this.quantMax = quantMax;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public Stock lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Item getItem() {
@@ -134,6 +152,7 @@ public class Stock implements Serializable {
             "id=" + getId() +
             ", quantItem=" + getQuantItem() +
             ", quantMax=" + getQuantMax() +
+            ", lastModifiedDate=" + getLastModifiedDate() +
             "}";
     }
 }

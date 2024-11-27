@@ -2,19 +2,28 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Stock;
 import com.ebisaos.repository.StockRepository;
+import com.ebisaos.service.StockService;
+import com.ebisaos.service.dto.StockDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.springframework.http.HttpHeaders;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -34,8 +43,11 @@ public class StockResource {
 
     private final StockRepository stockRepository;
 
-    public StockResource(StockRepository stockRepository) {
+    private final StockService stockService;
+
+    public StockResource(StockRepository stockRepository, StockService stockService) {
         this.stockRepository = stockRepository;
+        this.stockService = stockService;
     }
 
     /**
@@ -153,6 +165,20 @@ public class StockResource {
         log.debug("REST request to get Stock : {}", id);
         Optional<Stock> stock = stockRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(stock);
+    }
+
+    @GetMapping("/listaPageStock")
+    public ResponseEntity<Page<StockDTO>> getAllPageStock(
+        Pageable pageable,
+        @RequestParam(required = true) Map<String, String> params
+    ) {
+        log.debug("REST request to get all Stock");
+
+        final Page<StockDTO> customPage = stockService.listaPageStock(pageable, params);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
+
+        return ResponseEntity.ok().headers(headers).body(customPage);
     }
 
     /**
