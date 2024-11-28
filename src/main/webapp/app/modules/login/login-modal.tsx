@@ -46,7 +46,7 @@ const LoginModal = (props: ILoginModalProps) => {
               value={loginItens?.cpf}
             />
             <Input
-              type="text"
+              type="password"
               placeholder="Senha"
               onChange={e => setLoginItens({ ...loginItens, senha: e.target.value })}
               value={loginItens?.senha}
