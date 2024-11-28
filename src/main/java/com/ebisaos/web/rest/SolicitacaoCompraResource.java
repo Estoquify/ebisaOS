@@ -2,6 +2,8 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.SolicitacaoCompra;
 import com.ebisaos.repository.SolicitacaoCompraRepository;
+import com.ebisaos.security.Response;
+import com.ebisaos.service.SolicitacaoCompraService;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,8 +36,11 @@ public class SolicitacaoCompraResource {
 
     private final SolicitacaoCompraRepository solicitacaoCompraRepository;
 
-    public SolicitacaoCompraResource(SolicitacaoCompraRepository solicitacaoCompraRepository) {
+    private final SolicitacaoCompraService solicitacaoCompraService;
+
+    public SolicitacaoCompraResource(SolicitacaoCompraRepository solicitacaoCompraRepository, SolicitacaoCompraService solicitacaoCompraService) {
         this.solicitacaoCompraRepository = solicitacaoCompraRepository;
+        this.solicitacaoCompraService = solicitacaoCompraService;
     }
 
     /**
@@ -46,17 +51,25 @@ public class SolicitacaoCompraResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<SolicitacaoCompra> createSolicitacaoCompra(@RequestBody SolicitacaoCompra solicitacaoCompra)
-        throws URISyntaxException {
+    public ResponseEntity<?> createSolicitacaoCompra(@RequestBody SolicitacaoCompra solicitacaoCompra)
+            throws URISyntaxException {
         log.debug("REST request to save SolicitacaoCompra : {}", solicitacaoCompra);
+
         if (solicitacaoCompra.getId() != null) {
             throw new BadRequestAlertException("A new solicitacaoCompra cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        solicitacaoCompra = solicitacaoCompraRepository.save(solicitacaoCompra);
+
+        Response response = solicitacaoCompraService.criarSolicitacaoCompra(solicitacaoCompra);
+
+        if (!response.isSuccess()) {
+            return ResponseEntity.badRequest().body(response.getMessage());
+        }
+
         return ResponseEntity.created(new URI("/api/solicitacao-compras/" + solicitacaoCompra.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, solicitacaoCompra.getId().toString()))
-            .body(solicitacaoCompra);
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, solicitacaoCompra.getId().toString()))
+                .body(solicitacaoCompra);
     }
+
 
     /**
      * {@code PUT  /solicitacao-compras/:id} : Updates an existing solicitacaoCompra.

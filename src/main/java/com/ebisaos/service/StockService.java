@@ -1,6 +1,7 @@
 package com.ebisaos.service;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,6 +51,22 @@ public class StockService {
 
     public void delete(Stock obj) {
         stockRepository.delete(obj);
+    }
+
+    public Long quantAtual(Long idStock) {
+        return stockRepository.quantAtual(idStock);
+    }
+
+    public Long quantMax(Long idStock) {
+        return stockRepository.quantMax(idStock);
+    }
+
+    public void compraFinalizada(Long newQuantidade, Long idStock) {
+        Stock stock = findById(idStock);
+        stock.setQuantItem(newQuantidade);
+        stock.setLastModifiedDate(Instant.now());
+        save(stock);
+
     }
 
     public List<StockDTO> listaPageStock(List<Object[]> rawResults) {

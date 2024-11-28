@@ -30,6 +30,9 @@ public class SolicitacaoCompra extends AbstractAuditingEntity<Long> {
     @Column(name = "aberta")
     private Boolean aberta;
 
+    @Column(name = "quant_solicitada")
+    private Long quantSolicitada;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "solicitacaoCompras" }, allowSetters = true)
@@ -76,6 +79,19 @@ public class SolicitacaoCompra extends AbstractAuditingEntity<Long> {
         this.aberta = aberta;
     }
 
+    public Long getQuantSolicitada() {
+        return this.quantSolicitada;
+    }
+
+    public SolicitacaoCompra quantSolicitada(Long quantSolicitada) {
+        this.setQuantSolicitada(quantSolicitada);
+        return this;
+    }
+
+    public void setQuantSolicitada(Long quantSolicitada) {
+        this.quantSolicitada = quantSolicitada;
+    }
+
     public Stock getStock() {
         return this.stock;
     }
@@ -115,6 +131,7 @@ public class SolicitacaoCompra extends AbstractAuditingEntity<Long> {
             "id=" + getId() +
             ", descricao='" + getDescricao() + "'" +
             ", aberta='" + getAberta() + "'" +
+            ", quantSolicitada='" + getQuantSolicitada() + "'" +
             "}";
     }
 }

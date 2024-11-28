@@ -2,6 +2,7 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Stock;
 import com.ebisaos.repository.StockRepository;
+import com.ebisaos.service.SolicitacaoCompraService;
 import com.ebisaos.service.StockService;
 import com.ebisaos.service.dto.StockDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
@@ -45,9 +46,12 @@ public class StockResource {
 
     private final StockService stockService;
 
-    public StockResource(StockRepository stockRepository, StockService stockService) {
+    private final SolicitacaoCompraService solicitacaoCompraService;
+
+    public StockResource(StockRepository stockRepository, StockService stockService, SolicitacaoCompraService solicitacaoCompraService) {
         this.stockRepository = stockRepository;
         this.stockService = stockService;
+        this.solicitacaoCompraService = solicitacaoCompraService;
     }
 
     /**
@@ -165,6 +169,11 @@ public class StockResource {
         log.debug("REST request to get Stock : {}", id);
         Optional<Stock> stock = stockRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(stock);
+    }
+
+    @GetMapping("/finalizarCompra/{idStock}")
+    public void getFinalizarCompra(@PathVariable("idStock") Long idStock) {
+        solicitacaoCompraService.finalizarCompra(idStock);
     }
 
     @GetMapping("/listaPageStock")

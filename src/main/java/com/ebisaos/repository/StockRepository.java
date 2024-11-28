@@ -63,4 +63,10 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     )
     Long countListaStokDTO(String pesquisa);
 
+    @Query( value = "SELECT quant_item FROM public.stock WHERE id = ?1", nativeQuery = true )
+    Long quantAtual(Long idStock);
+
+    @Query( value = "SELECT quant_max FROM public.stock WHERE id = ?1", nativeQuery = true )
+    Long quantMax(Long idStock);
+
 }
