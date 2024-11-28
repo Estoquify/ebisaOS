@@ -1,22 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button, Table } from 'reactstrap';
-import { Translate, getSortState } from 'react-jhipster';
+import { Alert, Button, Col, Row, Table } from 'reactstrap';
+import { TextFormat, Translate, getSortState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSort,
+  faSortUp,
+  faSortDown,
+  faPlus,
+  faEye,
+  faChevronLeft,
+  faChevronRight,
+  faFileUpload,
+  faCircleCheck,
+  faFolderPlus,
+  faWarning,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
 import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities, getStockPag } from './stock.reducer';
+import { IStock } from 'app/shared/model/stock.model';
+import { APP_DATE_FORMAT } from 'app/config/constants';
+import './stock.scss';
 
 export const Stock = () => {
   const dispatch = useAppDispatch();
 
   const pageLocation = useLocation();
   const navigate = useNavigate();
-
-  const [sortState, setSortState] = useState(overrideSortStateWithQueryParams(getSortState(pageLocation, 'id'), pageLocation.search));
 
   const stockList = useAppSelector(state => state.stock.entities);
   const loading = useAppSelector(state => state.stock.loading);
@@ -26,136 +40,157 @@ export const Stock = () => {
 
   const itensPorpagina = 5;
 
+  const handlePassPagePrevious = () => {
+    if (page <= 0) {
+      return;
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const handlePassPageNext = () => {
+    if (page + 1 >= 10) {
+      return;
+    } else {
+      setPage(page + 1);
+    }
+  };
+
   const getAllEntities = () => {
     dispatch(
       getEntities({
-        sort: `${sortState.sort},${sortState.order}`,
+        sort: ``,
       }),
     );
     dispatch(getStockPag({ query: imputPesquisa, size: itensPorpagina, page }));
   };
 
-  const sortEntities = () => {
-    getAllEntities();
-    const endURL = `?sort=${sortState.sort},${sortState.order}`;
-    if (pageLocation.search !== endURL) {
-      navigate(`${pageLocation.pathname}${endURL}`);
+  const handleReturnStyleQuantidadeContainer = (item: IStock): string => {
+    if (item?.quantItem <= item?.quantMax / 3) {
+      return 'sheet-data-quantidade-container red';
+    } else if (item?.quantItem <= item?.quantMax / 2) {
+      return 'sheet-data-quantidade-container yellow';
+    } else {
+      return 'sheet-data-quantidade-container green';
+    }
+  };
+
+  const handleReturnIconQuantidadeContainer = (item: IStock): IconDefinition => {
+    if (item?.quantItem <= item?.quantMax / 3 || item?.quantItem <= item?.quantMax / 2) {
+      return faWarning;
+    } else {
+      return faCircleCheck;
     }
   };
 
   useEffect(() => {
-    sortEntities();
-  }, [sortState.order, sortState.sort]);
-
-  const sort = p => () => {
-    setSortState({
-      ...sortState,
-      order: sortState.order === ASC ? DESC : ASC,
-      sort: p,
-    });
-  };
-
-  const handleSyncList = () => {
-    sortEntities();
-  };
-
-  const getSortIconByFieldName = (fieldName: string) => {
-    const sortFieldName = sortState.sort;
-    const order = sortState.order;
-    if (sortFieldName !== fieldName) {
-      return faSort;
-    } else {
-      return order === ASC ? faSortUp : faSortDown;
-    }
-  };
+    getAllEntities();
+  }, []);
 
   return (
-    <div>
-      <h2 id="stock-heading" data-cy="StockHeading">
-        <Translate contentKey="ebisaOsApp.stock.home.title">Stocks</Translate>
-        <div className="d-flex justify-content-end">
-          <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} />{' '}
-            <Translate contentKey="ebisaOsApp.stock.home.refreshListLabel">Refresh List</Translate>
+    <div className="stock-home-container">
+      <Row className="stock-home-header">
+        <Col className="stock-home-header_title">
+          <h2>Stock</h2>
+        </Col>
+
+        <Col className="stock-home-header_button">
+          <Button onClick={() => navigate('new')}>
+            <FontAwesomeIcon icon={faPlus} />
           </Button>
-          <Link to="/stock/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp;
-            <Translate contentKey="ebisaOsApp.stock.home.createLabel">Create new Stock</Translate>
-          </Link>
-        </div>
-      </h2>
-      <div className="table-responsive">
-        {stockList && stockList.length > 0 ? (
-          <Table responsive>
-            <thead>
-              <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ebisaOsApp.stock.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
-                </th>
-                <th className="hand" onClick={sort('quantItem')}>
-                  <Translate contentKey="ebisaOsApp.stock.quantItem">Quant Item</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('quantItem')} />
-                </th>
-                <th>
-                  <Translate contentKey="ebisaOsApp.stock.item">Item</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  <Translate contentKey="ebisaOsApp.stock.setor">Setor</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {stockList.map((stock, i) => (
-                <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/stock/${stock.id}`} color="link" size="sm">
-                      {stock.id}
-                    </Button>
-                  </td>
-                  <td>{stock.quantItem}</td>
-                  <td>{stock.item ? <Link to={`/item/${stock.item.id}`}>{stock.item.id}</Link> : ''}</td>
-                  <td>{stock.setor ? <Link to={`/setor/${stock.setor.id}`}>{stock.setor.id}</Link> : ''}</td>
-                  <td className="text-end">
-                    <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`/stock/${stock.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.view">View</Translate>
-                        </span>
+        </Col>
+      </Row>
+
+      <Row className="stock-home-data">
+        {stockList && stockList?.length > 0 && (
+          <div>
+            <div className="header-table-container">
+              <div className="header-table-data">
+                <span>Titulo</span>
+              </div>
+
+              <div className="header-table-data">
+                <span>Ultima Atualização</span>
+              </div>
+
+              <div className="header-table-data">
+                <span>Setor</span>
+              </div>
+
+              <div className="header-table-data">
+                <span>Quantidade </span>
+              </div>
+
+              <div className="header-table-data">
+                <div />
+              </div>
+
+              <div className="header-table-data">
+                <div />
+              </div>
+            </div>
+
+            <div className="sheet-data-container">
+              {stockList &&
+                stockList?.map((data: IStock, key) => (
+                  <div className="sheet-line-data-container" key={key}>
+                    <div className="sheet-data">
+                      <span> {data?.item?.nomeItem} </span>
+                    </div>
+
+                    <div className="sheet-data">
+                      <TextFormat value={data.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+                    </div>
+
+                    <div className="sheet-data">
+                      <span> {data?.setor?.nome} </span>
+                    </div>
+
+                    <div className={handleReturnStyleQuantidadeContainer(data)}>
+                      <span> {data?.quantItem}</span>
+                      <FontAwesomeIcon icon={handleReturnIconQuantidadeContainer(data)} />
+                    </div>
+
+                    {data?.quantMax && data?.quantMax / 2 >= data?.quantItem ? (
+                      <Button className="sheet-data-adicionar-itens-container">
+                        <span>Abrir solicitação</span>
+                        <FontAwesomeIcon icon={faFolderPlus} />
                       </Button>
-                      <Button tag={Link} to={`/stock/${stock.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                        <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
-                      </Button>
-                      <Button
-                        onClick={() => (window.location.href = `/stock/${stock.id}/delete`)}
-                        color="danger"
-                        size="sm"
-                        data-cy="entityDeleteButton"
-                      >
-                        <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </span>
+                    ) : (
+                      <div />
+                    )}
+
+                    <div className="sheet-data-button-container">
+                      <Button className="sheet-data-button" onClick={() => navigate(`./${data?.id}`)}>
+                        <FontAwesomeIcon icon={faEye} />
                       </Button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        ) : (
-          !loading && (
-            <div className="alert alert-warning">
-              <Translate contentKey="ebisaOsApp.stock.home.notFound">No Stocks found</Translate>
+                  </div>
+                ))}
             </div>
-          )
+          </div>
         )}
-      </div>
+
+        {stockList && stockList?.lenght === 0 && <Alert color="info">Nenhum stock criado</Alert>}
+      </Row>
+
+      <Row className="page-container">
+        <Col>
+          <Button onClick={() => handlePassPagePrevious()}>
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </Button>
+        </Col>
+
+        <Col>
+          <span>{`${page + 1} de ${totalStock}`}</span>
+        </Col>
+
+        <Col>
+          <Button onClick={() => handlePassPageNext()}>
+            <FontAwesomeIcon icon={faChevronRight} />
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 };
