@@ -4,6 +4,8 @@ import { ISetor } from 'app/shared/model/setor.model';
 export interface IStock {
   id?: number;
   quantItem?: number | null;
+  quantMax?: number | null;
+  lastModifiedDate?: Date | null;
   item?: IItem | null;
   setor?: ISetor | null;
 }
