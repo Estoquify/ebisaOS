@@ -98,7 +98,6 @@ export const StockSlice = createEntitySlice({
       })
       .addMatcher(isFulfilled(getEntities, getStockPag), (state, action) => {
         const { data } = action.payload;
-
         return {
           ...state,
           loading: false,

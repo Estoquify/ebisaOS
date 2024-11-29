@@ -1,0 +1,121 @@
+
+.modal-stock-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    > .modal-content {
+        > .modal-stock-header-container {
+            width: 100%;    
+            display: flex;
+    
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    
+        > .modal-stock-body-container{
+            width: 100%;    
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+
+            > .modal-stock-body-input-container {
+                width: 85%;
+            }
+
+            > .modal-stock-body-buttons-container {
+                width: 100%;
+
+                display: flex;
+                align-items: center;
+
+                justify-content: space-around;
+
+                > button {
+                    width: 20%;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+
+                    border: inherit;
+
+                    transition: transform 0.15s linear;
+
+                    
+            
+                    &:active {
+                        transform: translateY(0.05em) !important;
+                    }
+                
+                    &:first-child {
+                        background: #43aa8b;
+                        
+                        &:hover {
+                            background: #4abe9c; 
+                            transform: translateY(-0.05em);
+                        }
+                    }
+                
+                    &:last-child {
+                        background: #f94144;
+                
+                        &:hover {
+                            background: #f73134; 
+                            transform: translateY(-0.05em)
+                        }
+                    }
+                }
+            }
+        }
+
+        > .modal-stock-footer-container{
+            width: 100%;    
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+            
+            > button {
+                width: 20%;
+                display: flex;
+                align-items: center;
+                border: inherit;
+                justify-content: space-between;
+                transition: transform 0.1s linear;
+            
+                &:active {
+                    transform: translateY(0.05em) !important;
+                }
+            
+                &:first-child {
+                    background: #60A3EB;
+            
+                    &:hover {
+                        background: #4d97e6; 
+                        transform: translateY(-0.05em)
+                    }
+                }
+            
+                &:last-child {
+                    background: #001358;
+            
+                    &:hover {
+                        background: #011e88; 
+                        transform: translateY(-0.05em)
+                    }
+                }
+            }
+            
+        }
+    }
+
+ 
+}
+
