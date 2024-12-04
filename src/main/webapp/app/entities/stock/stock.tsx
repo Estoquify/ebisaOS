@@ -109,7 +109,7 @@ export const Stock = () => {
     return (
       <Button
         className="sheet-data-adicionar-itens-container"
-        onClick={() => !isOpen && openModal(data)}
+        onClick={() => openModal(data)}
       >
         <span>{buttonText}</span>
         <FontAwesomeIcon icon={buttonIcon} />
@@ -128,7 +128,7 @@ export const Stock = () => {
 
   useEffect(() => {
     handleGetStock();
-  }, [inputPesquisa, page]);
+  }, [inputPesquisa, page, isModalOpen]);
 
   return (
     <div className="stock-home-container">
@@ -243,7 +243,7 @@ export const Stock = () => {
 
       {isModalOpen && selectedStock && (
         <ModalStock
-          typeModal={TypeModal.abrirSolicitacao}
+          typeModal={selectedStock?.aberta ? TypeModal.fecharSolicitacao : TypeModal.abrirSolicitacao }
           isOpen={isModalOpen}
           setIsOpen={setIsModalOpen}
           data={selectedStock}

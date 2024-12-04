@@ -19,10 +19,10 @@ const ModalStock: React.FC<IModalStock> = props => {
   const renderContent = () => {
     switch (props.typeModal) {
       case TypeModal.abrirSolicitacao:
-        return <ModalStockClose isOpen={props?.isOpen} setIsOpen={props?.setIsOpen} data={props?.data} />;
+        return <ModalStockOpen isOpen={props?.isOpen} setIsOpen={props?.setIsOpen} data={props?.data} />;
 
       case TypeModal.fecharSolicitacao:
-        return <ModalStockOpen isOpen={props?.isOpen} setIsOpen={props?.setIsOpen} data={props?.data} />;
+        return <ModalStockClose isOpen={props?.isOpen} setIsOpen={props?.setIsOpen} data={props?.data} />;
 
       default:
         return null;
