@@ -2,6 +2,8 @@ package com.ebisaos.domain;
 
 import com.ebisaos.config.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -80,6 +82,11 @@ public class User extends AbstractAuditingEntity<Long> {
 
     @Column(name = "reset_date")
     private Instant resetDate = null;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
+    private SetorUnidade setorUnidade;
 
     @JsonIgnore
     @ManyToMany
@@ -179,6 +186,19 @@ public class User extends AbstractAuditingEntity<Long> {
 
     public void setResetDate(Instant resetDate) {
         this.resetDate = resetDate;
+    }
+
+    public SetorUnidade getSetorUnidade() {
+        return this.setorUnidade;
+    }
+
+    public void setSetorUnidade(SetorUnidade setorUnidade) {
+        this.setorUnidade = setorUnidade;
+    }
+
+    public User setorUnidade(SetorUnidade setorUnidade) {
+        this.setSetorUnidade(setorUnidade);
+        return this;
     }
 
     public String getLangKey() {
