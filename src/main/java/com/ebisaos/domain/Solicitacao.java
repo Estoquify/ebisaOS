@@ -50,7 +50,7 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "solicitacaos" }, allowSetters = true)
-    private Unidade unidade;
+    private SetorUnidade setorUnidade;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_solicitacao")
@@ -162,16 +162,16 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
         this.prioridade = prioridade;
     }
 
-    public Unidade getUnidade() {
-        return this.unidade;
+    public SetorUnidade getSetorUnidade() {
+        return this.setorUnidade;
     }
 
-    public void setUnidade(Unidade unidade) {
-        this.unidade = unidade;
+    public void setSetorUnidade(SetorUnidade setorUnidade) {
+        this.setorUnidade = setorUnidade;
     }
 
-    public Solicitacao unidade(Unidade unidade) {
-        this.setUnidade(unidade);
+    public Solicitacao setorUnidade(SetorUnidade setorUnidade) {
+        this.setSetorUnidade(setorUnidade);
         return this;
     }
 
