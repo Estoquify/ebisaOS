@@ -38,7 +38,6 @@
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
 
-
         padding: 0.5em;
 
         color: #fff;
@@ -129,10 +128,9 @@
           align-items: center;
           justify-items: center;
 
-          >.sheet-data:nth-child(1) {
+          > .sheet-data:nth-child(1) {
             text-align: start !important;
           }
-
 
           > .sheet-data,
           .sheet-data-adicionar-itens-container,
@@ -142,7 +140,7 @@
             height: 100%;
 
             display: flex;
-        
+
             > * {
               width: 100%;
               height: 100%;
@@ -194,15 +192,15 @@
             }
 
             &.green {
-                background: #43aa8b;
+              background: #43aa8b;
             }
 
             &.yellow {
-                background: #f9c74f;
+              background: #f9c74f;
             }
 
             &.red {
-                background: #f94144;
+              background: #f94144;
             }
 
             > svg {
@@ -233,13 +231,13 @@
             > .sheet-data-button {
               background: #001358 !important;
               border: inherit;
-  
+
               border-radius: 6px;
-  
+
               display: flex;
               align-items: center;
               justify-content: space-around;
-  
+
               > svg {
                 width: 20%;
                 height: 100%;
@@ -275,6 +273,56 @@
       > button {
         width: 100%;
         background: #001358;
+        border: inherit;
+      }
+    }
+  }
+}
+
+
+.stock-update-container {
+  background: #fff;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-top: 3.5em;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 10px;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+
+  margin-top: 1em;
+
+  > .col {
+    display: flex;
+
+    &:first-child {
+      > button, a {
+        color: #fff;
+        background: #60a3eb;
+        font-size: 1.2em;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        border: inherit;
+      }
+    }
+
+    &:last-child {
+      justify-content: end;
+
+      > button, a {
+        color: #fff;
+        background: #60a3eb;
+        font-size: 1.2em;
+        font-weight: 700;
+        letter-spacing: 0.05em;
         border: inherit;
       }
     }
