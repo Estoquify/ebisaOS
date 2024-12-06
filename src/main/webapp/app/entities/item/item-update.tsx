@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
+import { Button, Row, Col, FormText, Label, Input } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IItem } from 'app/shared/model/item.model';
 import { getEntity, updateEntity, createEntity, reset } from './item.reducer';
+import { faChevronLeft, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
 export const ItemUpdate = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +25,10 @@ export const ItemUpdate = () => {
   const updating = useAppSelector(state => state.item.updating);
   const updateSuccess = useAppSelector(state => state.item.updateSuccess);
 
+  const [itemData, setItemData] = useState<IItem>();
+
   const handleClose = () => {
+    dispatch(reset());
     navigate('/item');
   };
 
@@ -42,17 +46,22 @@ export const ItemUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  useEffect(() => {
+    if (itemEntity?.id !== undefined) {
+      setItemData(itemEntity);
     }
-    values.createDate = convertDateTimeToServer(values.createDate);
-    values.updatedDate = convertDateTimeToServer(values.updatedDate);
+  }, [itemEntity]);
+
+  // eslint-disable-next-line complexity
+  const saveEntity = () => {
+    if (itemData.id !== undefined && typeof itemData.id !== 'number') {
+      itemData.id = Number(itemData.id);
+    }
 
     const entity = {
-      ...itemEntity,
-      ...values,
+      ...itemData,
+      createdDate: convertDateTimeToServer(itemData?.createdDate?.toString()),
+      lastModifiedDate: convertDateTimeToServer(itemData?.lastModifiedDate?.toString()),
     };
 
     if (isNew) {
@@ -62,24 +71,12 @@ export const ItemUpdate = () => {
     }
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {
-          createDate: displayDefaultDateTime(),
-          updatedDate: displayDefaultDateTime(),
-        }
-      : {
-          ...itemEntity,
-          createDate: convertDateTimeFromServer(itemEntity.createDate),
-          updatedDate: convertDateTimeFromServer(itemEntity.updatedDate),
-        };
-
   return (
-    <div>
+    <div className="stock-update-container">
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="ebisaOsApp.item.home.createOrEditLabel" data-cy="ItemCreateUpdateHeading">
-            <Translate contentKey="ebisaOsApp.item.home.createOrEditLabel">Create or edit a Item</Translate>
+          <h2 id="ebisaOsApp.stock.home.createOrEditLabel" data-cy="StockCreateUpdateHeading">
+            {!isNew ? 'Editar Item' : 'Criar Item'}
           </h2>
         </Col>
       </Row>
@@ -88,54 +85,34 @@ export const ItemUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="item-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
-              ) : null}
-              <ValidatedField
-                label={translate('ebisaOsApp.item.nomeItem')}
-                id="item-nomeItem"
-                name="nomeItem"
-                data-cy="nomeItem"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.item.createDate')}
-                id="item-createDate"
-                name="createDate"
-                data-cy="createDate"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.item.updatedDate')}
-                id="item-updatedDate"
-                name="updatedDate"
-                data-cy="updatedDate"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/item" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ValidatedForm>
+            <>
+              <Row>
+                <Col>
+                  <Label>Nome Item</Label>
+                  <Input
+                    placeholder="Nome Item"
+                    value={itemData?.nomeItem}
+                    onChange={e => setItemData({ ...itemData, nomeItem: e.target.value })}
+                  />
+                </Col>
+              </Row>
+
+              <Row className="buttons-container">
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => saveEntity()} disabled={updating}>
+                    <span> Salvar </span>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                  </Button>
+                </Col>
+              </Row>
+            </>
           )}
         </Col>
       </Row>
