@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col, Label, Input } from 'reactstrap';
 import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -8,6 +8,9 @@ import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './item.reducer';
+import { IItem } from 'app/shared/model/item.model';
+import { faChevronLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+import dayjs from 'dayjs';
 
 export const ItemDetail = () => {
   const dispatch = useAppDispatch();
@@ -18,54 +21,67 @@ export const ItemDetail = () => {
     dispatch(getEntity(id));
   }, []);
 
-  const itemEntity = useAppSelector(state => state.item.entity);
+  const itemEntity: IItem = useAppSelector(state => state.item.entity);
   return (
-    <Row>
-      <Col md="8">
-        <h2 data-cy="itemDetailsHeading">
-          <Translate contentKey="ebisaOsApp.item.detail.title">Item</Translate>
-        </h2>
-        <dl className="jh-entity-details">
-          <dt>
-            <span id="id">
-              <Translate contentKey="global.field.id">ID</Translate>
-            </span>
-          </dt>
-          <dd>{itemEntity.id}</dd>
-          <dt>
-            <span id="nomeItem">
-              <Translate contentKey="ebisaOsApp.item.nomeItem">Nome Item</Translate>
-            </span>
-          </dt>
-          <dd>{itemEntity.nomeItem}</dd>
-          <dt>
-            <span id="createDate">
-              <Translate contentKey="ebisaOsApp.item.createDate">Create Date</Translate>
-            </span>
-          </dt>
-          <dd>{itemEntity.createDate ? <TextFormat value={itemEntity.createDate} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
-          <dt>
-            <span id="updatedDate">
-              <Translate contentKey="ebisaOsApp.item.updatedDate">Updated Date</Translate>
-            </span>
-          </dt>
-          <dd>{itemEntity.updatedDate ? <TextFormat value={itemEntity.updatedDate} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
-        </dl>
-        <Button tag={Link} to="/item" replace color="info" data-cy="entityDetailsBackButton">
-          <FontAwesomeIcon icon="arrow-left" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.back">Back</Translate>
-          </span>
-        </Button>
-        &nbsp;
-        <Button tag={Link} to={`/item/${itemEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.edit">Edit</Translate>
-          </span>
-        </Button>
-      </Col>
-    </Row>
+    <div className="stock-update-container">
+      <Row className="justify-content-center">
+        <Col md="8">
+          <h2 id="ebisaOsApp.stock.home.createOrEditLabel" data-cy="StockCreateUpdateHeading">
+            Visualizar Item: {itemEntity?.nomeItem}
+          </h2>
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md="8">
+          <>
+            <Row>
+              <Col>
+                <Label>Nome Item</Label>
+                <Input placeholder="Quantidade Item" value={itemEntity?.nomeItem} disabled readOnly />
+              </Col>
+
+              <Col>
+                <Label>Data Criação</Label>
+                <Input
+                  id="createDate"
+                  placeholder="Data de criação"
+                  value={itemEntity?.createdDate ? dayjs(itemEntity.createdDate).format('DD/MM/YYYY') : '-'}
+                  disabled
+                  readOnly
+                />
+              </Col>
+
+              <Col>
+                <Label>Stock Item</Label>
+                <Input
+                  id="updatedDate"
+                  placeholder="Última atualização"
+                  value={itemEntity?.lastModifiedDate ? dayjs(itemEntity.lastModifiedDate).format('DD/MM/YYYY') : '-'}
+                  disabled
+                  readOnly
+                />
+              </Col>
+            </Row>
+
+            <Row className="buttons-container">
+              <Col>
+                <Button tag={Link} to="/item">
+                  <FontAwesomeIcon icon={faChevronLeft} />
+                  <span> Voltar </span>
+                </Button>
+              </Col>
+
+              <Col>
+                <Button tag={Link} to={`/item/${itemEntity.id}/edit`}>
+                  <span> Editar </span>
+                  <FontAwesomeIcon icon={faPen} />
+                </Button>
+              </Col>
+            </Row>
+          </>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
