@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { Button, Row, Col, Input, Label } from 'reactstrap';
+import { Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { IItem } from 'app/shared/model/item.model';
 import { getEntities as getItems } from 'app/entities/item/item.reducer';
-import { ISetor } from 'app/shared/model/setor.model';
 import { getEntities as getSetors } from 'app/entities/setor/setor.reducer';
-import { IStock } from 'app/shared/model/stock.model';
 import { getEntity, updateEntity, createEntity, reset } from './stock.reducer';
+import { IStock } from 'app/shared/model/stock.model';
+import { IItem } from 'app/shared/model/item.model';
+import { ISetor } from 'app/shared/model/setor.model';
+import { faChevronLeft, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import { toNumber } from 'lodash';
+import { numberMask } from 'app/shared/util/Misc';
+import { toast } from 'react-toastify';
 
 export const StockUpdate = () => {
   const dispatch = useAppDispatch();
@@ -23,14 +25,17 @@ export const StockUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const items = useAppSelector(state => state.item.entities);
-  const setors = useAppSelector(state => state.setor.entities);
+  const items: IItem[] = useAppSelector(state => state.item.entities);
+  const setors: ISetor[] = useAppSelector(state => state.setor.entities);
   const stockEntity = useAppSelector(state => state.stock.entity);
   const loading = useAppSelector(state => state.stock.loading);
   const updating = useAppSelector(state => state.stock.updating);
   const updateSuccess = useAppSelector(state => state.stock.updateSuccess);
 
+  const [stockData, setStockData] = useState<IStock>({ quantItem: 0 });
+
   const handleClose = () => {
+    dispatch(reset());
     navigate('/stock');
   };
 
@@ -51,20 +56,28 @@ export const StockUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  useEffect(() => {
+    if (stockEntity?.id !== undefined) {
+      setStockData(stockEntity);
     }
-    if (values.quantItem !== undefined && typeof values.quantItem !== 'number') {
-      values.quantItem = Number(values.quantItem);
+  }, [stockEntity]);
+
+  const saveEntity = () => {
+    if (stockData.id !== undefined && typeof stockData.id !== 'number') {
+      stockData.id = Number(stockData.id);
+    }
+    if (stockData.quantItem !== undefined && typeof stockData.quantItem !== 'number') {
+      stockData.quantItem = Number(stockData.quantItem);
+    }
+
+    if (!validateData()) {
+      return;
     }
 
     const entity = {
-      ...stockEntity,
-      ...values,
-      item: items.find(it => it.id.toString() === values.item?.toString()),
-      setor: setors.find(it => it.id.toString() === values.setor?.toString()),
+      ...stockData,
+      item: items.find(it => it.id.toString() === stockData?.item?.id?.toString()),
+      setor: setors.find(it => it.id.toString() === stockData?.setor?.id?.toString()),
     };
 
     if (isNew) {
@@ -74,21 +87,30 @@ export const StockUpdate = () => {
     }
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-          ...stockEntity,
-          item: stockEntity?.item?.id,
-          setor: stockEntity?.setor?.id,
-        };
+  const validateData = () => {
+    if (stockData?.quantItem === 0) {
+      toast.info('A quantidade maxima do item não pode ser 0');
+      return false;
+    } else if (stockData?.quantItem > stockData?.quantMax) {
+      toast.info('A quantidade de itens não poder ser maior do que a quantidade maxima');
+      return false;
+    } else if (stockData?.item?.id === undefined || stockData?.item?.id === null) {
+      toast.info('Escolha o Item para criar o Stock');
+      return false;
+    } else if (stockData?.setor?.id === undefined || stockData?.setor?.id === null) {
+      toast.info('Escolha o Item para criar o Setor');
+      return false;
+    }
+
+    return true;
+  };
 
   return (
-    <div>
+    <div className='stock-update-container'>
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="ebisaOsApp.stock.home.createOrEditLabel" data-cy="StockCreateUpdateHeading">
-            <Translate contentKey="ebisaOsApp.stock.home.createOrEditLabel">Create or edit a Stock</Translate>
+            {!isNew ? 'Editar Stock' : 'Criar Stock'}
           </h2>
         </Col>
       </Row>
@@ -97,58 +119,68 @@ export const StockUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="stock-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
-              ) : null}
-              <ValidatedField
-                label={translate('ebisaOsApp.stock.quantItem')}
-                id="stock-quantItem"
-                name="quantItem"
-                data-cy="quantItem"
-                type="text"
-              />
-              <ValidatedField id="stock-item" name="item" data-cy="item" label={translate('ebisaOsApp.stock.item')} type="select">
-                <option value="" key="0" />
-                {items
-                  ? items.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+            <>
+              <Row>
+                <Col>
+                  <Label>Quantidade Item</Label>
+                  <Input
+                    placeholder="Quantidade Item"
+                    value={stockData?.quantItem}
+                    onChange={e => setStockData({ ...stockData, quantItem: toNumber(numberMask(e.target.value)) })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>Quantidade Item Maxima</Label>
+                  <Input
+                    placeholder="Quantidade Item"
+                    value={stockData?.quantMax}
+                    onChange={e => setStockData({ ...stockData, quantMax: toNumber(numberMask(e.target.value)) })}
+                  />
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <Label>Stock Item</Label>
+                  <Input placeholder="Item" type="select" value={stockData?.item?.id}>
+                    <option>escolha um Item</option>
+                    {items?.map((data, key) => (
+                      <option value={data?.id} key={key}>
+                        {data?.nomeItem}
                       </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField id="stock-setor" name="setor" data-cy="setor" label={translate('ebisaOsApp.stock.setor')} type="select">
-                <option value="" key="0" />
-                {setors
-                  ? setors.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                    ))}
+                  </Input>
+                </Col>
+                <Col>
+                  <Label>Stock Setor</Label>
+                  <Input placeholder="Item" type="select" value={stockData?.setor?.id}>
+                    <option>escolha um Setor</option>
+                    {setors?.map((data, key) => (
+                      <option value={data?.id} key={key}>
+                        {data?.nome}
                       </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/stock" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ValidatedForm>
+                    ))}
+                  </Input>
+                </Col>
+              </Row>
+
+              <Row className='buttons-container'>
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => saveEntity()} disabled={updating}>
+                    <span> Salvar </span>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                  </Button>
+                </Col>
+              </Row>
+            </>
           )}
         </Col>
       </Row>
