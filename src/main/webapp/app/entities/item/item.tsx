@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button, Table } from 'reactstrap';
-import { Translate, TextFormat, getSortState } from 'react-jhipster';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Alert, Button, Col, Input, Row, Table } from 'reactstrap';
+import { TextFormat, getSortState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
+import { faSearch, faPlus, faEye, faPen } from '@fortawesome/free-solid-svg-icons';
+import { APP_DATE_FORMAT } from 'app/config/constants';
 import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './item.reducer';
+import { IItem } from 'app/shared/model/item.model';
+
+import './item.scss'
 
 export const Item = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +20,8 @@ export const Item = () => {
   const navigate = useNavigate();
 
   const [sortState, setSortState] = useState(overrideSortStateWithQueryParams(getSortState(pageLocation, 'id'), pageLocation.search));
+
+  const [inputPesquisa, setInputPesquisa] = useState<string>('');
 
   const itemList = useAppSelector(state => state.item.entities);
   const loading = useAppSelector(state => state.item.loading);
@@ -42,117 +46,100 @@ export const Item = () => {
     sortEntities();
   }, [sortState.order, sortState.sort]);
 
-  const sort = p => () => {
-    setSortState({
-      ...sortState,
-      order: sortState.order === ASC ? DESC : ASC,
-      sort: p,
-    });
-  };
-
-  const handleSyncList = () => {
-    sortEntities();
-  };
-
-  const getSortIconByFieldName = (fieldName: string) => {
-    const sortFieldName = sortState.sort;
-    const order = sortState.order;
-    if (sortFieldName !== fieldName) {
-      return faSort;
-    } else {
-      return order === ASC ? faSortUp : faSortDown;
-    }
-  };
-
   return (
-    <div>
-      <h2 id="item-heading" data-cy="ItemHeading">
-        <Translate contentKey="ebisaOsApp.item.home.title">Items</Translate>
-        <div className="d-flex justify-content-end">
-          <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} />{' '}
-            <Translate contentKey="ebisaOsApp.item.home.refreshListLabel">Refresh List</Translate>
+    <div className="stock-home-container">
+      <Row className="stock-home-header">
+        <Col className="stock-home-header_title">
+          <h2>Itens</h2>
+        </Col>
+
+        <Col md={3} className="stock-home-header-search-container">
+          <Input placeholder="Pesquisa" value={inputPesquisa} onChange={e => setInputPesquisa(e.target.value)} />
+          <Button className="search-icon-container" onClick={() => getAllEntities()}>
+            <FontAwesomeIcon icon={faSearch} />
           </Button>
-          <Link to="/item/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp;
-            <Translate contentKey="ebisaOsApp.item.home.createLabel">Create new Item</Translate>
-          </Link>
-        </div>
-      </h2>
-      <div className="table-responsive">
-        {itemList && itemList.length > 0 ? (
-          <Table responsive>
-            <thead>
-              <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ebisaOsApp.item.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
-                </th>
-                <th className="hand" onClick={sort('nomeItem')}>
-                  <Translate contentKey="ebisaOsApp.item.nomeItem">Nome Item</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('nomeItem')} />
-                </th>
-                <th className="hand" onClick={sort('createDate')}>
-                  <Translate contentKey="ebisaOsApp.item.createDate">Create Date</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('createDate')} />
-                </th>
-                <th className="hand" onClick={sort('updatedDate')}>
-                  <Translate contentKey="ebisaOsApp.item.updatedDate">Updated Date</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('updatedDate')} />
-                </th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {itemList.map((item, i) => (
-                <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/item/${item.id}`} color="link" size="sm">
-                      {item.id}
-                    </Button>
-                  </td>
-                  <td>{item.nomeItem}</td>
-                  <td>{item.createDate ? <TextFormat type="date" value={item.createDate} format={APP_DATE_FORMAT} /> : null}</td>
-                  <td>{item.updatedDate ? <TextFormat type="date" value={item.updatedDate} format={APP_DATE_FORMAT} /> : null}</td>
-                  <td className="text-end">
-                    <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`/item/${item.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.view">View</Translate>
-                        </span>
+        </Col>
+
+        <Col className="stock-home-header_button">
+          <Button onClick={() => navigate('new')}>
+            <FontAwesomeIcon icon={faPlus} />
+          </Button>
+        </Col>
+      </Row>
+
+      <Row className="stock-home-data">
+        {itemList && itemList?.length > 0 && (
+          <div>
+            <div className="header-table-container-iten">
+              <div className="header-table-data">
+                <span>Nome item</span>
+              </div>
+
+              <div className="header-table-data">
+                <span>Data De Criação</span>
+              </div>
+
+              <div className="header-table-data">
+                <span>Ultima Atualização</span>
+              </div>
+
+              <div className="header-table-data">
+              </div>
+            </div>
+
+            <div className="sheet-data-container">
+              {itemList &&
+                itemList?.map((data: IItem, key) => (
+                  <div className="sheet-line-data-container-iten" key={key}>
+                    <div className="sheet-data">
+                      <span> {data?.nomeItem} </span>
+                    </div>
+
+                    <div className="sheet-data">
+                      <TextFormat value={data?.createdDate?.toString()} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+                    </div>
+
+                    <div className="sheet-data">
+                      <TextFormat value={data?.lastModifiedDate?.toString()} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+                    </div>
+
+                    <div className="sheet-data-button-container">
+                      <Button className="sheet-data-button" onClick={() => navigate(`./${data?.id}`)}>
+                        <span> Visualizar</span>
+                        <FontAwesomeIcon icon={faEye} />
                       </Button>
-                      <Button tag={Link} to={`/item/${item.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                        <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
-                      </Button>
-                      <Button
-                        onClick={() => (window.location.href = `/item/${item.id}/delete`)}
-                        color="danger"
-                        size="sm"
-                        data-cy="entityDeleteButton"
-                      >
-                        <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </span>
+
+                      <Button className="sheet-data-button" onClick={() => navigate(`./${data?.id}/edit`)}>
+                        <span> Editar </span>
+                        <FontAwesomeIcon icon={faPen} />
                       </Button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        ) : (
-          !loading && (
-            <div className="alert alert-warning">
-              <Translate contentKey="ebisaOsApp.item.home.notFound">No Items found</Translate>
+                  </div>
+                ))}
             </div>
-          )
+          </div>
         )}
-      </div>
+
+        {itemList && itemList?.length === 0 && <Alert color="info">Nenhum Item Cadastrado</Alert>}
+      </Row>
+
+      {/* <Row className="page-container">
+        <Col>
+          <Button onClick={() => handlePassPagePrevious()}>
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </Button>
+        </Col>
+
+        <Col>
+          <span>{`${page + 1} de ${totalPages}`}</span>
+        </Col>
+
+        <Col>
+          <Button onClick={() => handlePassPageNext()}>
+            <FontAwesomeIcon icon={faChevronRight} />
+          </Button>
+        </Col>
+      </Row> */}
     </div>
   );
 };
