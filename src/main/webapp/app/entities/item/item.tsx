@@ -3,48 +3,42 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Input, Row, Table } from 'reactstrap';
 import { TextFormat, getSortState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faPlus, faEye, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faPlus, faEye, faPen, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { APP_DATE_FORMAT } from 'app/config/constants';
 import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntities } from './item.reducer';
 import { IItem } from 'app/shared/model/item.model';
 
-import './item.scss'
+import './item.scss';
+import axios from 'axios';
+import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
 
 export const Item = () => {
-  const dispatch = useAppDispatch();
-
-  const pageLocation = useLocation();
   const navigate = useNavigate();
 
-  const [sortState, setSortState] = useState(overrideSortStateWithQueryParams(getSortState(pageLocation, 'id'), pageLocation.search));
-
   const [inputPesquisa, setInputPesquisa] = useState<string>('');
+  const [itemList, setItemList] = useState<IItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const itemList = useAppSelector(state => state.item.entities);
-  const loading = useAppSelector(state => state.item.loading);
+  const [page, setPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const itensPorpagina = 5;
 
-  const getAllEntities = () => {
-    dispatch(
-      getEntities({
-        sort: `${sortState.sort},${sortState.order}`,
-      }),
-    );
-  };
-
-  const sortEntities = () => {
-    getAllEntities();
-    const endURL = `?sort=${sortState.sort},${sortState.order}`;
-    if (pageLocation.search !== endURL) {
-      navigate(`${pageLocation.pathname}${endURL}`);
-    }
+  const getAllEntitites = () => {
+    axios.get(`/api/items/listaPageItem?page=${page}&size=${itensPorpagina}`).then(res => {
+      setItemList(res?.data?.content);
+      setTotalPages(res?.data?.totalPages);
+    });
   };
 
   useEffect(() => {
-    sortEntities();
-  }, [sortState.order, sortState.sort]);
+    getAllEntitites()
+  }, [page])
+
+  useEffect(() => {
+    getAllEntitites();
+  }, []);
 
   return (
     <div className="stock-home-container">
@@ -53,12 +47,12 @@ export const Item = () => {
           <h2>Itens</h2>
         </Col>
 
-        <Col md={3} className="stock-home-header-search-container">
+        {/* <Col md={3} className="stock-home-header-search-container">
           <Input placeholder="Pesquisa" value={inputPesquisa} onChange={e => setInputPesquisa(e.target.value)} />
-          <Button className="search-icon-container" onClick={() => getAllEntities()}>
+          <Button className="search-icon-container" onClick={() => getAllEntitites()}>
             <FontAwesomeIcon icon={faSearch} />
           </Button>
-        </Col>
+        </Col> */}
 
         <Col className="stock-home-header_button">
           <Button onClick={() => navigate('new')}>
@@ -83,8 +77,7 @@ export const Item = () => {
                 <span>Ultima Atualização</span>
               </div>
 
-              <div className="header-table-data">
-              </div>
+              <div className="header-table-data"></div>
             </div>
 
             <div className="sheet-data-container">
@@ -123,9 +116,9 @@ export const Item = () => {
         {itemList && itemList?.length === 0 && <Alert color="info">Nenhum Item Cadastrado</Alert>}
       </Row>
 
-      {/* <Row className="page-container">
+      <Row className="page-container">
         <Col>
-          <Button onClick={() => handlePassPagePrevious()}>
+          <Button onClick={() => handlePassPagePrevious(setPage, page)}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </Button>
         </Col>
@@ -135,11 +128,11 @@ export const Item = () => {
         </Col>
 
         <Col>
-          <Button onClick={() => handlePassPageNext()}>
+          <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
             <FontAwesomeIcon icon={faChevronRight} />
           </Button>
         </Col>
-      </Row> */}
+      </Row>
     </div>
   );
 };
