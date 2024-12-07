@@ -2,6 +2,7 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Item;
 import com.ebisaos.repository.ItemRepository;
+import com.ebisaos.service.ItemService;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,8 +35,11 @@ public class ItemResource {
 
     private final ItemRepository itemRepository;
 
-    public ItemResource(ItemRepository itemRepository) {
+    private final ItemService ItemService;
+
+    public ItemResource(ItemRepository itemRepository, ItemService ItemService) {
         this.itemRepository = itemRepository;
+        this.ItemService = ItemService;
     }
 
     /**
@@ -153,6 +157,20 @@ public class ItemResource {
         log.debug("REST request to get Item : {}", id);
         Optional<Item> item = itemRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(item);
+    }
+
+    @GetMapping("/listaPageItem")
+    public ResponseEntity<Page<Item>> getAllPageStock(
+        Pageable pageable,
+        @RequestParam(required = true) Map<String, String> params
+    ) {
+        log.debug("REST request to get all Item");
+
+        final Page<Item> customPage = stockService.listaPageStock(pageable, params);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
+
+        return ResponseEntity.ok().headers(headers).body(customPage);
     }
 
     /**

@@ -9,4 +9,26 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ItemRepository extends JpaRepository<Item, Long> {}
+public interface ItemRepository extends JpaRepository<Item, Long> {
+
+    @Query(
+        value = """
+                SELECT ite.*
+                FROM public.item AS ite
+                LIMIT :size OFFSET :page * :size
+        """,
+        nativeQuery = true
+    )
+    List<Item> listaItemRaw(@Param("page") Integer page, @Param("size") Integer size);
+
+
+    @Query(
+        value = """
+                SELECT COUNT(ite.*)
+                FROM public.item AS ite
+        """,
+        nativeQuery = true
+    )
+    Long countListaItem();
+
+}
