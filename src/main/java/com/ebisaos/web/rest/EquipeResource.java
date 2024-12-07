@@ -2,6 +2,7 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Equipe;
 import com.ebisaos.repository.EquipeRepository;
+import com.ebisaos.service.EquipeService;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,8 +35,11 @@ public class EquipeResource {
 
     private final EquipeRepository equipeRepository;
 
-    public EquipeResource(EquipeRepository equipeRepository) {
+    private final EquipeService equipeService;
+
+    public EquipeResource(EquipeRepository equipeRepository, EquipeService equipeService) {
         this.equipeRepository = equipeRepository;
+        this.equipeService = equipeService;
     }
 
     /**
@@ -164,6 +168,20 @@ public class EquipeResource {
         log.debug("REST request to get Equipe : {}", id);
         Optional<Equipe> equipe = equipeRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(equipe);
+    }
+
+    @GetMapping("/listaPageEquipe")
+    public ResponseEntity<Page<Equipe>> getAllPageStock(
+        Pageable pageable,
+        @RequestParam(required = true) Map<String, String> params
+    ) {
+        log.debug("REST request to get all Equipe");
+
+        final Page<Equipe> customPage = equipeService.listaPageEquipe(pageable, params);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
+
+        return ResponseEntity.ok().headers(headers).body(customPage);
     }
 
     /**

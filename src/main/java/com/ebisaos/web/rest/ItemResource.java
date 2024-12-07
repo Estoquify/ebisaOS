@@ -35,11 +35,11 @@ public class ItemResource {
 
     private final ItemRepository itemRepository;
 
-    private final ItemService ItemService;
+    private final ItemService itemService;
 
-    public ItemResource(ItemRepository itemRepository, ItemService ItemService) {
+    public ItemResource(ItemRepository itemRepository, ItemService itemService) {
         this.itemRepository = itemRepository;
-        this.ItemService = ItemService;
+        this.itemService = itemService;
     }
 
     /**
@@ -166,7 +166,7 @@ public class ItemResource {
     ) {
         log.debug("REST request to get all Item");
 
-        final Page<Item> customPage = stockService.listaPageStock(pageable, params);
+        final Page<Item> customPage = itemService.listaPageItem(pageable, params);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
 

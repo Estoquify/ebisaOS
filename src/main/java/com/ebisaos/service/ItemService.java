@@ -59,13 +59,13 @@ public class ItemService {
         return page;
     }
 
-    public Page<Item> listaPageStock(Pageable pageable, Map<String, String> params) {
+    public Page<Item> listaPageItem(Pageable pageable, Map<String, String> params) {
         Long countItem = itemRepository.countListaItem();
-        List<Item> listaStock = itemRepository.listaItemRaw(Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
+        List<Item> listaItem = itemRepository.listaItemRaw(Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
         
-        Page<Item> pageStock = listPage(pageable, listaStock, countStock);
+        Page<Item> pageItem = listPage(pageable, listaItem, countItem);
 
-        return pageStock;
+        return pageItem;
     }
 
 }

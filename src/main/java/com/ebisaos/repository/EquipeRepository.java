@@ -9,4 +9,26 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface EquipeRepository extends JpaRepository<Equipe, Long> {}
+public interface EquipeRepository extends JpaRepository<Equipe, Long> {
+
+    @Query(
+        value = """
+                SELECT eqi.*
+                FROM public.equipe AS eqi
+                LIMIT :size OFFSET :page * :size
+        """,
+        nativeQuery = true
+    )
+    List<Equipe> listaEquipeRaw(@Param("page") Integer page, @Param("size") Integer size);
+
+
+    @Query(
+        value = """
+                SELECT COUNT(eqi.*)
+                FROM public.equipe AS eqi
+        """,
+        nativeQuery = true
+    )
+    Long countListaEquipe();
+    
+}
