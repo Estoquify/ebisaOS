@@ -6,7 +6,7 @@ export interface IEquipe {
   descricao?: string | null;
   ocupada?: boolean | null;
   ativa?: boolean | null;
-  colaborador?: IColaborador | null;
+  // colaborador?: IColaborador | null;
 }
 
 export const defaultValue: Readonly<IEquipe> = {
