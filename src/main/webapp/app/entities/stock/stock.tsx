@@ -24,6 +24,7 @@ import './stock.scss';
 import axios from 'axios';
 import { IStockDTO } from 'app/shared/model/StockDTO.model';
 import ModalStock, { TypeModal } from 'app/shared/layout/modals/modalStock/Index';
+import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
 
 export const Stock = () => {
   const dispatch = useAppDispatch();
@@ -51,22 +52,6 @@ export const Stock = () => {
       setStockList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
-  };
-
-  const handlePassPagePrevious = () => {
-    if (page <= 0) {
-      return;
-    } else {
-      setPage(page - 1);
-    }
-  };
-
-  const handlePassPageNext = () => {
-    if (page + 1 >= totalStock) {
-      return;
-    } else {
-      setPage(page + 1);
-    }
   };
 
   const getAllEntities = () => {
@@ -225,7 +210,7 @@ export const Stock = () => {
 
       <Row className="page-container">
         <Col>
-          <Button onClick={() => handlePassPagePrevious()}>
+          <Button onClick={() => handlePassPagePrevious(setPage, page)}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </Button>
         </Col>
@@ -235,7 +220,7 @@ export const Stock = () => {
         </Col>
 
         <Col>
-          <Button onClick={() => handlePassPageNext()}>
+          <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
             <FontAwesomeIcon icon={faChevronRight} />
           </Button>
         </Col>

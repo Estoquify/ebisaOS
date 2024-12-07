@@ -1,0 +1,110 @@
+.sheet-line-data-container-iten {
+    width: 100%;
+    height: 10%;
+
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr 0.5fr 0.3fr;
+
+    text-align: center;
+
+    gap: 1.2em;
+
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+
+    > .sheet-data:nth-child(1) {
+      text-align: start !important;
+    }
+
+    > .sheet-data,
+    .sheet-data-adicionar-itens-container,
+    .sheet-data-button-container,
+    .sheet-data-quantidade-container {
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+
+      > * {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    > .sheet-data-adicionar-itens-container {
+      background: #001358 !important;
+      border: inherit;
+      color: #fff;
+
+      justify-content: space-around;
+      align-items: center;
+
+      padding: 0.5em;
+
+      border-radius: 6px;
+
+      > span {
+        width: auto;
+        height: auto;
+        font-weight: 500;
+        font-size: 0.9em;
+      }
+
+      > svg {
+        width: 15% !important;
+      }
+    }
+
+    > .sheet-data-button-container {
+      gap: 0.5em;
+
+      > .sheet-data-button {
+        background: #001358 !important;
+        border: inherit;
+
+        border-radius: 6px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        > svg {
+          width: 20%;
+          height: 100%;
+        }
+      }
+    }
+  }
+
+.header-table-container-iten {
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr 0.5fr 0.3fr;
+
+    gap: 1.2em;
+
+    font-weight: bold;
+    font-size: 1.15em;
+
+    text-align: center;
+
+    width: 100%;
+    height: 5%;
+
+    border-bottom: 3px solid #00135880;
+
+    > .header-table-data {
+      width: 100%;
+      height: 100%;
+    }
+
+    :first-child {
+      text-align: start !important;
+    }
+
+    :last-child {
+      width: 100%;
+      height: 100%;
+    }
+  } 

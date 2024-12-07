@@ -25,7 +25,7 @@ export const ItemUpdate = () => {
   const updating = useAppSelector(state => state.item.updating);
   const updateSuccess = useAppSelector(state => state.item.updateSuccess);
 
-  const [itemData, setItemData] = useState<IItem>();
+  const [itemData, setItemData] = useState<IItem>({});
 
   const handleClose = () => {
     dispatch(reset());
