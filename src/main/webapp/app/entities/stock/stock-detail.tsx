@@ -1,19 +1,26 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, Input, Label } from 'reactstrap';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntity } from './stock.reducer';
+import { getEntity, reset } from './stock.reducer';
 import { IStock } from 'app/shared/model/stock.model';
 import { faChevronLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 
 export const StockDetail = () => {
   const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
+
   const { id } = useParams<'id'>();
+
+  const handleClose = () => {
+    dispatch(reset());
+    navigate('/stock');
+  };
 
   useEffect(() => {
     dispatch(getEntity(id));
@@ -57,7 +64,7 @@ export const StockDetail = () => {
 
             <Row className="buttons-container">
               <Col>
-                <Button tag={Link} to="/stock">
+                <Button onClick={() => handleClose()}>
                   <FontAwesomeIcon icon={faChevronLeft} />
                   <span> Voltar </span>
                 </Button>
