@@ -21,8 +21,8 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
-                  OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
-                        OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
                  AND seu.unidade_id = :idUnidade
                  ORDER BY sol.aberta, sol.created_date
                  LIMIT :size OFFSET :page * :size
@@ -35,8 +35,8 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
-                  OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
-                        OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
                  AND seu.unidade_id = :idUnidade
             """, nativeQuery = true)
     Long countListagemSolicitacaoUnidade(@Param("pesquisa") String pesquisa, @Param("idUnidade") Long idUnidade);
