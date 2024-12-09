@@ -129,8 +129,8 @@ public class SolicitacaoService {
     }
 
     public Page<SolicitacaoUnidadeDTO> listaPageSolicitacaoUnidade(Pageable pageable, Map<String, String> params) {
-        Long countSolicitacao = solicitacaoRepository.countListagemSolicitacaoUnidade(params.get("pesquisa"));
-        List<Object[]> rawResults = solicitacaoRepository.getListagemSolicitacaoUnidadeRaw(params.get("pesquisa"), Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
+        Long countSolicitacao = solicitacaoRepository.countListagemSolicitacaoUnidade(params.get("pesquisa"), Long.parseLong(params.get("idUnidade")));
+        List<Object[]> rawResults = solicitacaoRepository.getListagemSolicitacaoUnidadeRaw(params.get("pesquisa"), Long.parseLong(params.get("idUnidade")), Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
         List<SolicitacaoUnidadeDTO> listaSolicitacao = montarListaPageSolicitacao(rawResults);
         
         Page<SolicitacaoUnidadeDTO> pageSolicitacao = listPage(pageable, listaSolicitacao, countSolicitacao);

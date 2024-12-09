@@ -23,11 +23,11 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                   OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                         OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
-                 AND seu.unidade_id = 1
+                 AND seu.unidade_id = :idUnidade
                  ORDER BY sol.aberta, sol.created_date
                  LIMIT :size OFFSET :page * :size
             """, nativeQuery = true)
-    List<Object[]> getListagemSolicitacaoUnidadeRaw(@Param("pesquisa") String pesquisa, @Param("page") Integer page, @Param("size") Integer size);
+    List<Object[]> getListagemSolicitacaoUnidadeRaw(@Param("pesquisa") String pesquisa, @Param("idUnidade") Long idUnidade, @Param("page") Integer page, @Param("size") Integer size);
 
     @Query(value = """
                 SELECT COUNT(*)
@@ -37,9 +37,9 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                   OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                         OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
-                 AND seu.unidade_id = 1
+                 AND seu.unidade_id = :idUnidade
             """, nativeQuery = true)
-    Long countListagemSolicitacaoUnidade(@Param("pesquisa") String pesquisa);
+    Long countListagemSolicitacaoUnidade(@Param("pesquisa") String pesquisa, @Param("idUnidade") Long idUnidade);
 
     @Query(value = """
                 SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.nome AS nome_unidade, seu.nome AS nome_setor
