@@ -23,10 +23,10 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from '../solicitacao.reducer';
 
-import './solicitacao.scss';
+import '../home/solicitacao.scss';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 
-export const Solicitacao = () => {
+export const SolicitacaoEbisa = () => {
   const dispatch = useAppDispatch();
 
   const pageLocation = useLocation();
@@ -100,7 +100,7 @@ export const Solicitacao = () => {
   };
 
   const handlePassPageNext = () => {
-    if ((pageAtual + 1) >= 10) {
+    if (pageAtual + 1 >= 10) {
       return;
     } else {
       setPageAtual(pageAtual + 1);
@@ -125,7 +125,7 @@ export const Solicitacao = () => {
         </Col>
       </Row>
 
-      <Row className="solicitacao-home-data">
+      <Row className="solicitacao-ebisa-data">
         {solicitacaoList && solicitacaoList?.length > 0 && (
           <div>
             <div className="header-table-container">
@@ -134,11 +134,19 @@ export const Solicitacao = () => {
               </div>
 
               <div className="header-table-data">
+                <span>Id</span>
+              </div>
+
+              <div className="header-table-data">
                 <span>Titulo</span>
               </div>
 
               <div className="header-table-data">
                 <span>Tipo</span>
+              </div>
+
+              <div className="header-table-data">
+                <span> Setor </span>
               </div>
 
               <div className="header-table-data">
@@ -163,6 +171,10 @@ export const Solicitacao = () => {
                     </div>
 
                     <div className="sheet-data">
+                      <div>{data?.id}</div>
+                    </div>
+
+                    <div className="sheet-data">
                       <span> {data?.titulo} </span>
                     </div>
 
@@ -171,11 +183,18 @@ export const Solicitacao = () => {
                     </div>
 
                     <div className="sheet-data">
+                      <span> {data?.setorUnidade?.nome}</span>
+                    </div>
+
+                    <div className="sheet-data">
                       <span> {data?.createDate?.format(APP_LOCAL_DATE_FORMAT)}</span>
                     </div>
 
                     <div className="sheet-data-status-container">
-                      <div className={handleReturnStatus(data?.aberta)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                      <div
+                        className={handleReturnStatus(data?.aberta)}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
                         <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aberta)} />
                       </div>
                     </div>
@@ -190,7 +209,6 @@ export const Solicitacao = () => {
             </div>
           </div>
         )}
-
       </Row>
 
       <Row className="page-container">
@@ -214,4 +232,4 @@ export const Solicitacao = () => {
   );
 };
 
-export default Solicitacao;
+export default SolicitacaoEbisa;

@@ -23,10 +23,10 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from '../solicitacao.reducer';
 
-import './solicitacao.scss';
+import '../home/solicitacao.scss';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 
-export const Solicitacao = () => {
+export const SolicitacaoUnidade = () => {
   const dispatch = useAppDispatch();
 
   const pageLocation = useLocation();
@@ -130,7 +130,7 @@ export const Solicitacao = () => {
           <div>
             <div className="header-table-container">
               <div className="header-table-data">
-                <span>Prioridade</span>
+                <span>Id</span>
               </div>
 
               <div className="header-table-data">
@@ -158,8 +158,8 @@ export const Solicitacao = () => {
               {solicitacaoList &&
                 solicitacaoList?.map((data: ISolicitacao, key) => (
                   <div className="sheet-line-data-container" key={key}>
-                    <div className={handleReturnPrioridade(data?.prioridade)}>
-                      <div> </div>
+                    <div className="sheet-data">
+                      <div>{data?.id}</div>
                     </div>
 
                     <div className="sheet-data">
@@ -214,4 +214,4 @@ export const Solicitacao = () => {
   );
 };
 
-export default Solicitacao;
+export default SolicitacaoUnidade;

@@ -38,6 +38,257 @@
     }
   }
 
+  > .solicitacao-ginfra-data {
+      width: 100%;
+      height: 100%;
+  
+      display: flex;
+  
+      > div {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+  
+        > .header-table-container {
+          display: grid;
+          grid-template-columns: 0.15fr 1fr 0.5fr 0.5fr 0.4fr 0.1fr 0.1fr;
+  
+          gap: 1.2em;
+  
+          width: 100%;
+          height: 5%;
+  
+          border-bottom: 3px solid #00135880;
+  
+          > .header-table-data {
+            width: 100%;
+            height: 100%;
+          }
+  
+          :last-child {
+            width: 100%;
+            height: 100%;
+          }
+        }
+  
+        > .sheet-data-container {
+          width: 100%;
+          height: 100%;
+  
+          overflow-y: auto;
+  
+          display: flex;
+          flex-direction: column;
+  
+          > .sheet-line-data-container {
+            width: 100%;
+            height: 10%;
+  
+            display: grid;
+            grid-template-columns: 0.15fr 1fr 0.5fr 0.5fr 0.4fr 0.1fr 0.1fr;
+  
+            gap: 1.2em;
+  
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            justify-items: center;
+  
+            > .sheet-data,
+            .sheet-data-prioridade,
+            .sheet-data-button-container,
+            .sheet-data-status-container {
+              width: 100%;
+              height: 100%;
+  
+              display: flex;
+  
+              > * {
+                width: 100%;
+                height: 100%;
+              }
+            }
+  
+            > .sheet-data-prioridade-green {
+              width: 100%;
+              height: 100%;
+  
+              background: #43aa8b;
+              border-radius: 10px;
+            }
+  
+            > .sheet-data-prioridade-yellow {
+              width: 100%;
+              height: 100%;
+              
+              background: #f9c74f;
+  
+              border-radius: 10px;
+            }
+  
+            > .sheet-data-prioridade-red {
+              width: 100%;
+              height: 100%;
+              
+              background: #f94144;
+  
+              border-radius: 10px;
+            }
+  
+            > .sheet-data-status-container,
+            .sheet-data-status {
+              display: flex;
+  
+              align-items: center;
+              justify-content: center;
+  
+              color: #fff;
+  
+              background: #43aa8b;
+  
+              border-radius: 6px;
+            }
+  
+            > .sheet-data-button-container,
+            .sheet-data-button {
+              background: #001358 !important;
+              border: inherit;
+  
+              border-radius: 6px;
+            }
+          }
+        }
+      }
+    
+  }
+
+  > .solicitacao-ebisa-data {
+      width: 100%;
+      height: 100%;
+  
+      display: flex;
+  
+      > div {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+  
+        > .header-table-container {
+          display: grid;
+          grid-template-columns: 0.15fr 0.2fr 1fr 0.5fr 0.4fr 0.3fr 0.1fr 0.1fr;
+  
+          gap: 1.2em;
+  
+          width: 100%;
+          height: 5%;
+  
+          border-bottom: 3px solid #00135880;
+  
+          > .header-table-data {
+            width: 100%;
+            height: 100%;
+          }
+  
+          :last-child {
+            width: 100%;
+            height: 100%;
+          }
+        }
+  
+        > .sheet-data-container {
+          width: 100%;
+          height: 100%;
+  
+          overflow-y: auto;
+  
+          display: flex;
+          flex-direction: column;
+  
+          > .sheet-line-data-container {
+            width: 100%;
+            height: 10%;
+  
+            display: grid;
+            grid-template-columns: 0.15fr 0.2fr 1fr 0.5fr 0.4fr 0.3fr 0.1fr 0.1fr;
+  
+            gap: 1.2em;
+  
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            justify-items: center;
+  
+            > .sheet-data,
+            .sheet-data-prioridade,
+            .sheet-data-button-container,
+            .sheet-data-status-container {
+              width: 100%;
+              height: 100%;
+  
+              display: flex;
+  
+              > * {
+                width: 100%;
+                height: 100%;
+              }
+            }
+  
+            > .sheet-data-prioridade-green {
+              width: 100%;
+              height: 100%;
+  
+              background: #43aa8b;
+              border-radius: 10px;
+            }
+  
+            > .sheet-data-prioridade-yellow {
+              width: 100%;
+              height: 100%;
+              
+              background: #f9c74f;
+  
+              border-radius: 10px;
+            }
+  
+            > .sheet-data-prioridade-red {
+              width: 100%;
+              height: 100%;
+              
+              background: #f94144;
+  
+              border-radius: 10px;
+            }
+  
+            > .sheet-data-status-container,
+            .sheet-data-status {
+              display: flex;
+  
+              align-items: center;
+              justify-content: center;
+  
+              color: #fff;
+  
+              background: #43aa8b;
+  
+              border-radius: 6px;
+            }
+  
+            > .sheet-data-button-container,
+            .sheet-data-button {
+              background: #001358 !important;
+              border: inherit;
+  
+              border-radius: 6px;
+            }
+          }
+        }
+      }
+    
+  
+  }
+
   > .solicitacao-home-data {
     width: 100%;
     height: 100%;
@@ -111,17 +362,26 @@
           }
 
           > .sheet-data-prioridade-green {
+            width: 100%;
+            height: 100%;
+
             background: #43aa8b;
             border-radius: 10px;
           }
 
           > .sheet-data-prioridade-yellow {
+            width: 100%;
+            height: 100%;
+            
             background: #f9c74f;
 
             border-radius: 10px;
           }
 
           > .sheet-data-prioridade-red {
+            width: 100%;
+            height: 100%;
+            
             background: #f94144;
 
             border-radius: 10px;

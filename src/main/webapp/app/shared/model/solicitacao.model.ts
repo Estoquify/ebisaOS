@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { IUnidade } from 'app/shared/model/unidade.model';
 import { IItemSelecionados } from './itemSelecionados.models';
 import tipoSolicitacao from '../enum/TipoSolicitacao';
+import { ISetorUnidade } from './setor-unidade.model';
 
 export interface ISolicitacao {
   id?: number;
@@ -15,7 +16,8 @@ export interface ISolicitacao {
   titulo?: string | null;
   observacao?: string | null;
   unidade?: IUnidade | null;
-  itensSelecionados?: Array<IItemSelecionados> | null;
+  setorUnidade?: ISetorUnidade | null;
+  // itensSelecionados?: Array<IItemSelecionados> | null;
   tipoSolicitacao?: tipoSolicitacao | null
 }
 

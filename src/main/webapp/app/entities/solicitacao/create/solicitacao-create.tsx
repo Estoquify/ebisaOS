@@ -15,6 +15,9 @@ import { IUnidade } from 'app/shared/model/unidade.model';
 import { toast } from 'react-toastify';
 
 import './solicitacao-create.scss';
+import { IItemSelecionados } from 'app/shared/model/itemSelecionados.models';
+import axios from 'axios';
+import { ISolicitacaoDTO } from 'app/shared/model/SolicitacaoDTO.model';
 
 
 const SolicitacaoCreate = () => {
@@ -24,7 +27,8 @@ const SolicitacaoCreate = () => {
   const itens: IItem[] = useAppSelector(state => state?.item?.entities);
   const unidades: IUnidade[] = useAppSelector(state => state?.unidade?.entities);
 
-  const [solicitacao, setSolicitacao] = useState<ISolicitacao>({ itensSelecionados: [], titulo: '', descricao: '' });
+  const [solicitacao, setSolicitacao] = useState<ISolicitacao>({ titulo: '', descricao: '' });
+  const [itensSelecionados, setItensSelecionados] = useState<IItemSelecionados[]>([])
 
   useEffect(() => {
     dispatch(getItens({}));
@@ -32,58 +36,48 @@ const SolicitacaoCreate = () => {
   }, []);
 
   const handleCreateSolicitacao = () => {
-    const solicitacaoFixed = { ...solicitacao, unidade: unidades?.find(data => solicitacao?.unidade?.id === data?.id) };
-    dispatch(createEntity(solicitacaoFixed));
+    const solicitacaoFixed = { ...solicitacao, unidade: unidades?.find(data => solicitacao?.unidade?.id === data?.id), id: null };
+
+    const entityFixed: ISolicitacaoDTO = {
+      itensSelecionados,
+      solicitacao: solicitacaoFixed
+    }
+
+    axios.post(`/api/solicitacaos`, entityFixed)
   };
-
+  
   const handleAddItem = (item: IItem) => {
-    setSolicitacao(prevSolicitacao => {
-      const itensSelecionados = prevSolicitacao.itensSelecionados || [];
-
-      const itemExistente = itensSelecionados.find(data => data.item === item);
-
+    setItensSelecionados(prevItensSelecionados => {
+      const itemExistente = prevItensSelecionados.find(data => data.item === item);
+  
       if (itemExistente) {
-        return {
-          ...prevSolicitacao,
-          itensSelecionados: itensSelecionados.map(data =>
-            data.item === item ? { ...data, quantidade: (data.quantidade || 0) + 1 } : data,
-          ),
-        };
+        return prevItensSelecionados.map(data =>
+          data.item === item ? { ...data, quantidade: (data.quantidade || 0) + 1 } : data,
+        );
       } else {
-        return {
-          ...prevSolicitacao,
-          itensSelecionados: [...itensSelecionados, { item, quantidade: 1 }],
-        };
+        return [...prevItensSelecionados, { item, quantidade: 1 }];
       }
     });
   };
 
   const handleRemoveItem = (item: IItem) => {
-    setSolicitacao(prevSolicitacao => {
-      const itensSelecionados = prevSolicitacao.itensSelecionados || [];
-
-      const itemExistente = itensSelecionados.find(data => data.item === item);
-
+    setItensSelecionados(prevItensSelecionados => {
+      const itemExistente = prevItensSelecionados.find(data => data.item === item);
+  
       if (itemExistente) {
         if ((itemExistente.quantidade || 0) > 1) {
-          return {
-            ...prevSolicitacao,
-            itensSelecionados: itensSelecionados.map(data =>
-              data.item === item ? { ...data, quantidade: (data.quantidade || 0) - 1 } : data,
-            ),
-          };
+          return prevItensSelecionados.map(data =>
+            data.item === item ? { ...data, quantidade: (data.quantidade || 0) - 1 } : data,
+          );
         } else {
-          return {
-            ...prevSolicitacao,
-            itensSelecionados: itensSelecionados.filter(data => data.item !== item),
-          };
+          return prevItensSelecionados.filter(data => data.item !== item);
         }
       }
-
-      return prevSolicitacao;
+  
+      return prevItensSelecionados;
     });
   };
-
+  
   const validateCreateSolicitacao = (solicitacaoData: ISolicitacao) => {
     const errors: string[] = [];
 
@@ -238,9 +232,9 @@ const SolicitacaoCreate = () => {
                 </div>
 
                 <div className="itens-list">
-                  {solicitacao?.itensSelecionados &&
-                    solicitacao?.itensSelecionados?.length > 0 &&
-                    solicitacao?.itensSelecionados?.map((data, key) => (
+                  {itensSelecionados &&
+                    itensSelecionados?.length > 0 &&
+                    itensSelecionados?.map((data, key) => (
                       <React.Fragment key={key}>
                         <div className="itens-container">
                           <div className="itens-container-text">
@@ -257,7 +251,7 @@ const SolicitacaoCreate = () => {
                       </React.Fragment>
                     ))}
 
-                  {solicitacao?.itensSelecionados && solicitacao?.itensSelecionados?.length === 0 && <span>Nenhum item selecionado</span>}
+                  {itensSelecionados && itensSelecionados?.length === 0 && <span>Nenhum item selecionado</span>}
                 </div>
               </div>
             </div>
