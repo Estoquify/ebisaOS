@@ -220,7 +220,7 @@ public class SolicitacaoResource {
         return ResponseEntity.ok().headers(headers).body(customPage);
     }
 
-    @GetMapping("listaPageSolicitacaoavaliacaoGInfra")
+    @GetMapping("listaPageSolicitacaoAvaliacaoGInfra")
     public ResponseEntity<Page<SolicitacaoAvaliacaoGInfraDTO>> getAllSolicitacaoAvalicaoGinfra(
         Pageable pageable,
         @RequestParam(required = true) Map<String, String> params
@@ -234,7 +234,7 @@ public class SolicitacaoResource {
         return ResponseEntity.ok().headers(headers).body(customPage);
     }
 
-    @GetMapping("listaPageSolicitacaoavaliacao")
+    @GetMapping("listaPageSolicitacaoAvaliacao")
     public ResponseEntity<Page<SolicitacaoAvaliacaoDTO>> getAllSolicitacaoAvalicao(
         Pageable pageable,
         @RequestParam(required = true) Map<String, String> params
