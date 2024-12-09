@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, Label, Input } from 'reactstrap';
 import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,12 +7,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntity } from './item.reducer';
+import { getEntity, reset } from './item.reducer';
 import { IItem } from 'app/shared/model/item.model';
 import { faChevronLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 
 export const ItemDetail = () => {
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
 
   const { id } = useParams<'id'>();
@@ -20,6 +22,11 @@ export const ItemDetail = () => {
   useEffect(() => {
     dispatch(getEntity(id));
   }, []);
+  
+  const handleClose = () => {
+    dispatch(reset());
+    navigate('/item');
+  };
 
   const itemEntity: IItem = useAppSelector(state => state.item.entity);
   return (
@@ -52,7 +59,7 @@ export const ItemDetail = () => {
               </Col>
 
               <Col>
-                <Label>Stock Item</Label>
+                <Label>Data Ultima Atualização</Label>
                 <Input
                   id="updatedDate"
                   placeholder="Última atualização"
@@ -65,7 +72,7 @@ export const ItemDetail = () => {
 
             <Row className="buttons-container">
               <Col>
-                <Button tag={Link} to="/item">
+                <Button onClick={() => handleClose()}>
                   <FontAwesomeIcon icon={faChevronLeft} />
                   <span> Voltar </span>
                 </Button>
