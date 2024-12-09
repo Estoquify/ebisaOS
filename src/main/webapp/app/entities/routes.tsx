@@ -40,8 +40,8 @@ export default () => {
         <Route path="comentario/*" element={<Comentario />} />
         <Route path="solicitacao-compra/*" element={<SolicitacaoCompra />} />
         <Route path="equipe/*" element={<Equipe />} />
-        <Route path="colaborador/*" element={<Colaborador />} />
-        <Route path="funcao/*" element={<Funcao />} />
+        {/* <Route path="colaborador/*" element={<Colaborador />} /> */}
+        {/* <Route path="funcao/*" element={<Funcao />} /> */}
         <Route path="solicitacao-equipe/*" element={<SolicitacaoEquipe />} />
         <Route path="solicitacao-item/*" element={<SolicitacaoItem />} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}

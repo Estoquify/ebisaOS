@@ -46,12 +46,12 @@ const EntitiesMenu = () => {
       <MenuItem icon="asterisk" to="/equipe">
         <Translate contentKey="global.menu.entities.equipe" />
       </MenuItem>
-      <MenuItem icon="asterisk" to="/colaborador">
+      {/* <MenuItem icon="asterisk" to="/colaborador">
         <Translate contentKey="global.menu.entities.colaborador" />
-      </MenuItem>
-      <MenuItem icon="asterisk" to="/funcao">
+      </MenuItem> */}
+      {/* <MenuItem icon="asterisk" to="/funcao">
         <Translate contentKey="global.menu.entities.funcao" />
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem icon="asterisk" to="/solicitacao-equipe">
         <Translate contentKey="global.menu.entities.solicitacaoEquipe" />
       </MenuItem>

@@ -10,13 +10,13 @@ import FuncaoDeleteDialog from './funcao-delete-dialog';
 
 const FuncaoRoutes = () => (
   <ErrorBoundaryRoutes>
-    <Route index element={<Funcao />} />
+    {/* <Route index element={<Funcao />} />
     <Route path="new" element={<FuncaoUpdate />} />
     <Route path=":id">
       <Route index element={<FuncaoDetail />} />
       <Route path="edit" element={<FuncaoUpdate />} />
       <Route path="delete" element={<FuncaoDeleteDialog />} />
-    </Route>
+    </Route> */}
   </ErrorBoundaryRoutes>
 );
 
