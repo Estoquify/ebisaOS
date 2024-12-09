@@ -32,10 +32,6 @@ export const Stock = () => {
   const pageLocation = useLocation();
   const navigate = useNavigate();
 
-  // const stockList = useAppSelector(state => state.stock.entities);
-  const loading = useAppSelector(state => state.stock.loading);
-  const totalStock = useAppSelector(state => state?.stock?.totalItems);
-
   const [stockList, setStockList] = useState<IStockDTO[]>([]);
 
   const [inputPesquisa, setInputPesquisa] = useState<string>('');
@@ -52,15 +48,6 @@ export const Stock = () => {
       setStockList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
-  };
-
-  const getAllEntities = () => {
-    dispatch(
-      getEntities({
-        sort: ``,
-      }),
-    );
-    dispatch(getStockPag({ query: inputPesquisa, size: itensPorpagina, page }));
   };
 
   const handleReturnStyleQuantidadeContainer = (item: IStockDTO): string => {
@@ -101,6 +88,11 @@ export const Stock = () => {
       </Button>
     );
   };
+
+  const handleInputPesquisaChange = (data: string) => {
+    setInputPesquisa(data)
+    setPage(0)
+  }
   
   const openModal = (data: IStockDTO) => {
     setSelectedStock(data);
@@ -123,8 +115,8 @@ export const Stock = () => {
         </Col>
 
         <Col md={3} className="stock-home-header-search-container">
-          <Input placeholder="Pesquisa" value={inputPesquisa} onChange={e => setInputPesquisa(e.target.value)} />
-          <Button className="search-icon-container" onClick={() => getAllEntities()}>
+          <Input placeholder="Pesquisa" value={inputPesquisa} onChange={e => handleInputPesquisaChange(e.target.value)} />
+          <Button className="search-icon-container" onClick={() => handleGetStock()}>
             <FontAwesomeIcon icon={faSearch} />
           </Button>
         </Col>
