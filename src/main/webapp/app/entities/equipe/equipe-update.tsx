@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
+import { Button, Row, Col, FormText, Label, Input } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -12,6 +12,7 @@ import { IColaborador } from 'app/shared/model/colaborador.model';
 import { getEntities as getColaboradors } from 'app/entities/colaborador/colaborador.reducer';
 import { IEquipe } from 'app/shared/model/equipe.model';
 import { getEntity, updateEntity, createEntity, reset } from './equipe.reducer';
+import { faChevronLeft, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
 export const EquipeUpdate = () => {
   const dispatch = useAppDispatch();
@@ -27,7 +28,10 @@ export const EquipeUpdate = () => {
   const updating = useAppSelector(state => state.equipe.updating);
   const updateSuccess = useAppSelector(state => state.equipe.updateSuccess);
 
+  const [equipeData, setEquipeData] = useState<IEquipe>({});
+
   const handleClose = () => {
+    dispatch(reset());
     navigate('/equipe');
   };
 
@@ -47,16 +51,20 @@ export const EquipeUpdate = () => {
     }
   }, [updateSuccess]);
 
+  useEffect(() => {
+    if (equipeEntity?.id !== undefined) {
+      setEquipeData(equipeEntity);
+    }
+  }, [equipeEntity]);
+
   // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  const saveEntity = () => {
+    if (equipeData.id !== undefined && typeof equipeData.id !== 'number') {
+      equipeData.id = Number(equipeData.id);
     }
 
     const entity = {
-      ...equipeEntity,
-      ...values,
-      colaborador: colaboradors.find(it => it.id.toString() === values.colaborador?.toString()),
+      ...equipeData,
     };
 
     if (isNew) {
@@ -66,20 +74,12 @@ export const EquipeUpdate = () => {
     }
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-          ...equipeEntity,
-          colaborador: equipeEntity?.colaborador?.id,
-        };
-
   return (
-    <div>
+    <div className="stock-update-container">
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="ebisaOsApp.equipe.home.createOrEditLabel" data-cy="EquipeCreateUpdateHeading">
-            <Translate contentKey="ebisaOsApp.equipe.home.createOrEditLabel">Create or edit a Equipe</Translate>
+          <h2 id="ebisaOsApp.stock.home.createOrEditLabel" data-cy="StockCreateUpdateHeading">
+            {!isNew ? 'Editar Equipe' : 'Criar Equipe'}
           </h2>
         </Col>
       </Row>
@@ -88,77 +88,65 @@ export const EquipeUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="equipe-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
-              ) : null}
-              <ValidatedField
-                label={translate('ebisaOsApp.equipe.apelido')}
-                id="equipe-apelido"
-                name="apelido"
-                data-cy="apelido"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.equipe.descricao')}
-                id="equipe-descricao"
-                name="descricao"
-                data-cy="descricao"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.equipe.ocupada')}
-                id="equipe-ocupada"
-                name="ocupada"
-                data-cy="ocupada"
-                check
-                type="checkbox"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.equipe.ativa')}
-                id="equipe-ativa"
-                name="ativa"
-                data-cy="ativa"
-                check
-                type="checkbox"
-              />
-              <ValidatedField
-                id="equipe-colaborador"
-                name="colaborador"
-                data-cy="colaborador"
-                label={translate('ebisaOsApp.equipe.colaborador')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {colaboradors
-                  ? colaboradors.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/equipe" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ValidatedForm>
+            <>
+              <Row>
+                <Col>
+                  <Label>Equipe Apelido</Label>
+                  <Input
+                    placeholder="Apelido Equipe"
+                    value={equipeData?.apelido}
+                    onChange={e => setEquipeData({ ...equipeData, apelido: e.target.value })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>Equipe Descrição</Label>
+                  <Input
+                    placeholder="Descrição Equipe"
+                    value={equipeData?.descricao}
+                    type='textarea'
+                    onChange={e => setEquipeData({ ...equipeData, descricao: e.target.value })}
+                    style={{maxHeight: '150px'}}
+                  />
+                </Col>
+
+                <Col style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <Label>Equipe Ativa</Label>
+                  <Input
+                    checked={equipeData?.ativa}
+                    type='checkbox'
+                    style={{padding: '1em', boxShadow: '0px 0px 10px 1px #ccc', border: '1px solid #ccc'}}
+                    onChange={e => setEquipeData({ ...equipeData, ativa: !equipeData?.ativa })}
+                  />
+                </Col>
+
+                <Col style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <Label>Equipe Ocupada</Label>
+                  <Input
+                    type='checkbox'
+                    checked={equipeData?.ocupada}
+                    style={{padding: '1em', boxShadow: '0px 0px 10px 1px #ccc', border: '1px solid #ccc'}}
+                    onChange={e => setEquipeData({ ...equipeData, ocupada: !equipeData?.ocupada })}
+                  />
+                </Col>
+              </Row>
+
+              <Row className="buttons-container">
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => saveEntity()} disabled={updating}>
+                    <span> Salvar </span>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                  </Button>
+                </Col>
+              </Row>
+            </>
           )}
         </Col>
       </Row>
