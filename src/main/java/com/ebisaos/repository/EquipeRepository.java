@@ -1,7 +1,11 @@
 package com.ebisaos.repository;
 
 import com.ebisaos.domain.Equipe;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**

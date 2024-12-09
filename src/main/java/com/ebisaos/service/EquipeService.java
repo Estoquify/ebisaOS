@@ -21,7 +21,7 @@ import com.ebisaos.repository.EquipeRepository;
 
 @Service
 @Transactional
-public class ItemService {
+public class EquipeService {
     
     private final Logger log = LoggerFactory.getLogger(StockService.class);
 
