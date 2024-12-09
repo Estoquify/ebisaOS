@@ -44,7 +44,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     )
     List<Object[]> listaStockRaw(@Param("pesquisa") String pesquisa, @Param("page") Integer page, @Param("size") Integer size);
 
-
     @Query(
         value = """
                 SELECT COUNT(*)

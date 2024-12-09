@@ -3,7 +3,6 @@ package com.ebisaos.service.dto;
 import java.time.LocalDateTime;
 
 public class SolicitacaoAvaliacaoDTO {
-    
     private Long id;
     private Long prioridade;
     private String titulo;
@@ -11,9 +10,10 @@ public class SolicitacaoAvaliacaoDTO {
     private LocalDateTime createdDate;
     private LocalDateTime prazoDate;
     private String nomeUnidade;
+    private String nomeSetor;
 
     // Construtor completo
-    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String nomeUnidade) {
+    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String nomeUnidade, String nomeSetor) {
         this.id = id;
         this.prioridade = prioridade;
         this.titulo = titulo;
@@ -21,6 +21,7 @@ public class SolicitacaoAvaliacaoDTO {
         this.createdDate = createdDate;
         this.prazoDate = prazoDate;
         this.nomeUnidade = nomeUnidade;
+        this.nomeSetor = nomeSetor;
     }
 
     // Getters e Setters
@@ -80,5 +81,12 @@ public class SolicitacaoAvaliacaoDTO {
     public void setNomeUnidade(String nomeUnidade) {
         this.nomeUnidade = nomeUnidade;
     }
-}
 
+    public String getNomeSetor() {
+        return nomeSetor;
+    }
+
+    public void setNomeSetor(String nomeSetor) {
+        this.nomeSetor = nomeSetor;
+    }
+}

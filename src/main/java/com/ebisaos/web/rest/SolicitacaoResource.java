@@ -4,6 +4,7 @@ import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.repository.SolicitacaoRepository;
 import com.ebisaos.service.SolicitacaoService;
 import com.ebisaos.service.dto.SolicitacaoAvaliacaoDTO;
+import com.ebisaos.service.dto.SolicitacaoAvaliacaoGInfraDTO;
 import com.ebisaos.service.dto.SolicitacaoDTO;
 import com.ebisaos.service.dto.SolicitacaoUnidadeDTO;
 import com.ebisaos.service.dto.SolicitacaoViewDTO;
@@ -11,16 +12,23 @@ import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -198,16 +206,46 @@ public class SolicitacaoResource {
         return solicitacaoViewDTO;
     }
 
-    @GetMapping("solicitacaoUnidade")
-    public List<SolicitacaoUnidadeDTO> getAllSolicitacaoUnidade() {
+    @GetMapping("listaPageSolicitacaoUnidade")
+    public ResponseEntity<Page<SolicitacaoUnidadeDTO>> getAllSolicitacaoUnidade(
+        Pageable pageable,
+        @RequestParam(required = true) Map<String, String> params
+    ) {
         log.debug("REST request to get all Solicitacaos da unidade");
-        return solicitacaoRepository.getListagemSolicitacaoUnidade();
+
+        final Page<SolicitacaoUnidadeDTO> customPage = solicitacaoService.listaPageSolicitacaoUnidade(pageable, params);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
+
+        return ResponseEntity.ok().headers(headers).body(customPage);
     }
 
-    @GetMapping("solicitacaoavaliacao")
-    public List<SolicitacaoAvaliacaoDTO> getAllSolicitacaoAvaliacao() {
-        log.debug("REST request to get all Solicitacaos para avaliacao");
-        return solicitacaoRepository.getListagemSolicitacaoAvaliacao();
+    @GetMapping("listaPageSolicitacaoavaliacaoGInfra")
+    public ResponseEntity<Page<SolicitacaoAvaliacaoGInfraDTO>> getAllSolicitacaoAvalicaoGinfra(
+        Pageable pageable,
+        @RequestParam(required = true) Map<String, String> params
+    ) {
+        log.debug("REST request to get all Solicitacaos da unidade");
+
+        final Page<SolicitacaoAvaliacaoGInfraDTO> customPage = solicitacaoService.listaPageSolicitacaoAvaliacaoGInfra(pageable, params);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
+
+        return ResponseEntity.ok().headers(headers).body(customPage);
+    }
+
+    @GetMapping("listaPageSolicitacaoavaliacao")
+    public ResponseEntity<Page<SolicitacaoAvaliacaoDTO>> getAllSolicitacaoAvalicao(
+        Pageable pageable,
+        @RequestParam(required = true) Map<String, String> params
+    ) {
+        log.debug("REST request to get all Solicitacaos da unidade");
+
+        final Page<SolicitacaoAvaliacaoDTO> customPage = solicitacaoService.listaPageSolicitacaoAvaliacao(pageable, params);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
+
+        return ResponseEntity.ok().headers(headers).body(customPage);
     }
 
     /**

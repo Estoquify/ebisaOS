@@ -69,7 +69,7 @@ public class StockService {
 
     }
 
-    public List<StockDTO> listaPageStock(List<Object[]> rawResults) {
+    public List<StockDTO> montarListaPageStock(List<Object[]> rawResults) {
     
         return rawResults.stream().map(obj -> new StockDTO(
             (Long) obj[0],           // idStock
@@ -92,7 +92,7 @@ public class StockService {
     public Page<StockDTO> listaPageStock(Pageable pageable, Map<String, String> params) {
         Long countStock = stockRepository.countListaStokDTO(params.get("pesquisa"));
         List<Object[]> rawResults = stockRepository.listaStockRaw(params.get("pesquisa"), Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
-        List<StockDTO> listaStock = listaPageStock(rawResults);
+        List<StockDTO> listaStock = montarListaPageStock(rawResults);
         
         Page<StockDTO> pageStock = listPage(pageable, listaStock, countStock);
 

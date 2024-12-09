@@ -2,28 +2,24 @@ package com.ebisaos.service.dto;
 
 import java.time.LocalDateTime;
 
-public class SolicitacaoUnidadeDTO {
+public class SolicitacaoAvaliacaoGInfraDTO {
     
     private Long id;
     private String titulo;
     private String tipoSolicitacao;
     private LocalDateTime createdDate;
-    private Boolean aberta;
-    private Boolean aprovacao;
-    private LocalDateTime finishDate;
     private LocalDateTime prazoDate;
+    private String nomeUnidade;
     private String nomeSetor;
 
     // Construtor completo
-    public SolicitacaoUnidadeDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, Boolean aberta, Boolean aprovacao, LocalDateTime finishDate, LocalDateTime prazoDate, String nomeSetor) {
+    public SolicitacaoAvaliacaoGInfraDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String nomeUnidade, String nomeSetor) {
         this.id = id;
         this.titulo = titulo;
         this.tipoSolicitacao = tipoSolicitacao;
         this.createdDate = createdDate;
-        this.aberta = aberta;
-        this.aprovacao = aprovacao;
-        this.finishDate = finishDate;
         this.prazoDate = prazoDate;
+        this.nomeUnidade = nomeUnidade;
         this.nomeSetor = nomeSetor;
     }
 
@@ -61,36 +57,20 @@ public class SolicitacaoUnidadeDTO {
         this.createdDate = createdDate;
     }
 
-    public Boolean getAberta() {
-        return aberta;
-    }
-
-    public void setAberta(Boolean aberta) {
-        this.aberta = aberta;
-    }
-
-    public Boolean getAprovacao() {
-        return aprovacao;
-    }
-
-    public void setAprovacao(Boolean aprovacao) {
-        this.aprovacao = aprovacao;
-    }
-
-    public LocalDateTime getFinishDate() {
-        return finishDate;
-    }
-
-    public void setFinishDate(LocalDateTime finishDate) {
-        this.finishDate = finishDate;
-    }
-
     public LocalDateTime getPrazoDate() {
         return prazoDate;
     }
 
     public void setPrazoDate(LocalDateTime prazoDate) {
         this.prazoDate = prazoDate;
+    }
+
+    public String getNomeUnidade() {
+        return nomeUnidade;
+    }
+
+    public void setNomeUnidade(String nomeUnidade) {
+        this.nomeUnidade = nomeUnidade;
     }
 
     public String getNomeSetor() {
