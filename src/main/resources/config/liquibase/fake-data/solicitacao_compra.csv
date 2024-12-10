@@ -1,11 +1,11 @@
-id;descricao;create_date;aberta
-1;hourly unto as;2024-11-04T02:14:02;true
-2;subtitle mop;2024-11-04T02:13:09;false
-3;per before to;2024-11-04T09:24:57;false
-4;ew rite oh;2024-11-03T23:23:15;true
-5;humble how oh;2024-11-03T19:59:09;true
-6;mar city;2024-11-04T06:09:58;true
-7;happy-go-lucky aha chirp;2024-11-03T19:10:12;true
-8;whereas following so;2024-11-03T22:09:14;true
-9;of frugal rabbit;2024-11-03T19:11:41;false
-10;tortoise swear underline;2024-11-04T03:40:31;false
+id;descricao;aberta;quant_solicitada
+1;hourly unto as;true;14890
+2;subtitle mop;true;18348
+3;per before to;true;19813
+4;ew rite oh;false;11921
+5;humble how oh;false;8284
+6;mar city;true;9546
+7;happy-go-lucky aha chirp;false;8386
+8;whereas following so;false;14831
+9;of frugal rabbit;false;23590
+10;tortoise swear underline;true;25527
