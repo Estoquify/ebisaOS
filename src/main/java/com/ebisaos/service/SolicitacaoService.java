@@ -76,7 +76,7 @@ public class SolicitacaoService {
     public void montarSolicicao(SolicitacaoDTO solicitacaoDTO) {
 
         avaliacaoService.avaliacaoInicial(solicitacaoDTO.getSolicitacao());
-        for (QuantidadeItensDTO item : solicitacaoDTO.getItens()) {
+        for (QuantidadeItensDTO item : solicitacaoDTO.getItensSelecionados()) {
             solicitacaoItemService.montarSolicitacaoItem(item, solicitacaoDTO.getSolicitacao());
         }
 
@@ -86,7 +86,7 @@ public class SolicitacaoService {
         Avaliacao avaliacao = avaliacaoService.avaliacaoPorSolicitacao(solicitacaoDTO.getSolicitacao().getId());
         avaliacao.setAprovacao(null);
         avaliacaoService.save(avaliacao);
-        for (QuantidadeItensDTO item : solicitacaoDTO.getItens()) {
+        for (QuantidadeItensDTO item : solicitacaoDTO.getItensSelecionados()) {
             if (solicitacaoItemService.verificarSolicitacaoAberta(item.getItem().getId(), solicitacaoDTO.getSolicitacao().getId()) == 0) {
                 solicitacaoItemService.montarSolicitacaoItem(item, solicitacaoDTO.getSolicitacao());
             } else if (solicitacaoItemService.verificarSolicitacaoAberta(item.getItem().getId(), solicitacaoDTO.getSolicitacao().getId()) != item.getQuantidade()) {

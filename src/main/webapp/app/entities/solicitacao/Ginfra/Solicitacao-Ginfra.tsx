@@ -27,6 +27,8 @@ import { getEntities } from '../solicitacao.reducer';
 
 import '../home/solicitacao.scss';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
+import axios from 'axios';
+import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
 
 export const SolicitacaoGinfra = () => {
   const dispatch = useAppDispatch();
@@ -34,28 +36,20 @@ export const SolicitacaoGinfra = () => {
   const pageLocation = useLocation();
   const navigate = useNavigate();
 
-  const solicitacaoList: Array<ISolicitacao> = useAppSelector(state => state.solicitacao.entities);
-  const loading = useAppSelector(state => state.solicitacao.loading);
+  const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacao[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [inputPesquisa, setInputPesquisa] = useState<string>('');
 
-  const [sortState, setSortState] = useState(overrideSortStateWithQueryParams(getSortState(pageLocation, 'id'), pageLocation.search));
   const [pageAtual, setPageAtual] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   const getAllEntities = () => {
-    dispatch(
-      getEntities({
-        sort: `${sortState.sort},${sortState.order}`,
-      }),
-    );
+    axios.get(`/api/solicitacaos/listaPageSolicitacaoAvaliacaoGInfra?page=${pageAtual}&size=${5}`).then(res => {
+      setSolicitacaoList(res?.data?.content);
+      setTotalPages(res?.data?.totalPages);
+    });
   };
-
-  const sortEntities = () => {
-    getAllEntities();
-    const endURL = `?sort=${sortState.sort},${sortState.order}`;
-    if (pageLocation.search !== endURL) {
-      navigate(`${pageLocation.pathname}${endURL}`);
-    }
-  };
-
+  
   const handleReturnPrioridade = (status: boolean) => {
     switch (status) {
       case true:
@@ -93,25 +87,9 @@ export const SolicitacaoGinfra = () => {
     }
   };
 
-  const handlePassPagePrevious = () => {
-    if (pageAtual <= 0) {
-      return;
-    } else {
-      setPageAtual(pageAtual - 1);
-    }
-  };
-
-  const handlePassPageNext = () => {
-    if ((pageAtual + 1) >= 10) {
-      return;
-    } else {
-      setPageAtual(pageAtual + 1);
-    }
-  };
-
   useEffect(() => {
-    sortEntities();
-  }, [sortState.order, sortState.sort]);
+    getAllEntities();
+  }, [pageAtual]);
 
   return (
     <div className="solicitacao-home-container">
@@ -205,17 +183,17 @@ export const SolicitacaoGinfra = () => {
 
       <Row className="page-container">
         <Col>
-          <Button onClick={() => handlePassPagePrevious()}>
+          <Button onClick={() => handlePassPagePrevious(setPageAtual, pageAtual)}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </Button>
         </Col>
 
         <Col>
-          <span>{`${pageAtual + 1} de ${10}`}</span>
+          <span>{`${pageAtual + 1} de ${totalPages}`}</span>
         </Col>
 
         <Col>
-          <Button onClick={() => handlePassPageNext()}>
+          <Button onClick={() => handlePassPageNext(setPageAtual, pageAtual, totalPages)}>
             <FontAwesomeIcon icon={faChevronRight} />
           </Button>
         </Col>

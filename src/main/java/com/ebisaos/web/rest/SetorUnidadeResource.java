@@ -155,6 +155,12 @@ public class SetorUnidadeResource {
         return ResponseUtil.wrapOrNotFound(setorUnidade);
     }
 
+    @GetMapping("/unidade/{idUnidade}")
+    public ResponseEntity<List<SetorUnidade>> getSetoresByUnidade(@PathVariable Long idUnidade) {
+        List<SetorUnidade> setores = setorUnidadeRepository.findAllByUnidade_Id(idUnidade);
+        return ResponseEntity.ok(setores);
+    }
+    
     /**
      * {@code DELETE  /setors/:id} : delete the "id" setor.
      *
