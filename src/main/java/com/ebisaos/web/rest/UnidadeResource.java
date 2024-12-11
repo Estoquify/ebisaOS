@@ -1,20 +1,28 @@
 package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Unidade;
+import com.ebisaos.service.UnidadeService;
 import com.ebisaos.repository.UnidadeRepository;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -34,8 +42,11 @@ public class UnidadeResource {
 
     private final UnidadeRepository unidadeRepository;
 
-    public UnidadeResource(UnidadeRepository unidadeRepository) {
+    private final UnidadeService unidadeService;
+
+    public UnidadeResource(UnidadeRepository unidadeRepository, UnidadeService unidadeService) {
         this.unidadeRepository = unidadeRepository;
+        this.unidadeService = unidadeService;
     }
 
     /**
@@ -51,7 +62,8 @@ public class UnidadeResource {
         if (unidade.getId() != null) {
             throw new BadRequestAlertException("A new unidade cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        unidade = unidadeRepository.save(unidade);
+        
+        unidade = unidadeService.montarUnidade(unidade);
         return ResponseEntity.created(new URI("/api/unidades/" + unidade.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, unidade.getId().toString()))
             .body(unidade);
@@ -82,7 +94,7 @@ public class UnidadeResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        unidade = unidadeRepository.save(unidade);
+        unidade = unidadeService.save(unidade);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, unidade.getId().toString()))
             .body(unidade);
@@ -131,7 +143,7 @@ public class UnidadeResource {
 
                 return existingUnidade;
             })
-            .map(unidadeRepository::save);
+            .map(unidadeService::save);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -147,7 +159,7 @@ public class UnidadeResource {
     @GetMapping("")
     public List<Unidade> getAllUnidades() {
         log.debug("REST request to get all Unidades");
-        return unidadeRepository.findAll();
+        return unidadeService.findAll();
     }
 
     /**
@@ -163,6 +175,20 @@ public class UnidadeResource {
         return ResponseUtil.wrapOrNotFound(unidade);
     }
 
+    @GetMapping("/listaPageUnidade")
+    public ResponseEntity<Page<Unidade>> getAllPageUnidade(
+        Pageable pageable,
+        @RequestParam(required = true) Map<String, String> params
+    ) {
+        log.debug("REST request to get all Unidade");
+
+        final Page<Unidade> customPage = unidadeService.listaPageUnidade(pageable, params);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), customPage);
+
+        return ResponseEntity.ok().headers(headers).body(customPage);
+    }
+
     /**
      * {@code DELETE  /unidades/:id} : delete the "id" unidade.
      *
@@ -172,7 +198,7 @@ public class UnidadeResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUnidade(@PathVariable("id") Long id) {
         log.debug("REST request to delete Unidade : {}", id);
-        unidadeRepository.deleteById(id);
+        unidadeService.deleteById(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
