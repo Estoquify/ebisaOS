@@ -167,7 +167,7 @@ public class ItemResource {
     }
 
     @GetMapping("/listaPageItem")
-    public ResponseEntity<Page<Item>> getAllPageStock(
+    public ResponseEntity<Page<Item>> getAllPageItem(
         Pageable pageable,
         @RequestParam(required = true) Map<String, String> params
     ) {
