@@ -10,7 +10,6 @@ import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import tipoSolicitacao from 'app/shared/enum/TipoSolicitacao';
 import dayjs from 'dayjs';
 import { createEntity } from '../solicitacao.reducer';
-import { getEntities as getUnidades } from 'app/entities/unidade/unidade.reducer';
 import { IUnidade } from 'app/shared/model/unidade.model';
 import { toast } from 'react-toastify';
 
@@ -18,32 +17,50 @@ import './solicitacao-create.scss';
 import { IItemSelecionados } from 'app/shared/model/itemSelecionados.models';
 import axios from 'axios';
 import { ISolicitacaoDTO } from 'app/shared/model/SolicitacaoDTO.model';
+import { toNumber } from 'lodash';
+import { getEntitiesByUnidadeId as getSetorUnidade } from 'app/entities/setor-unidade/setor-unidade.reducer';
+import { ISetorUnidade } from 'app/shared/model/setor-unidade.model';
 
 
 const SolicitacaoCreate = () => {
-  const navigate = useNavigate();
+const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const itens: IItem[] = useAppSelector(state => state?.item?.entities);
-  const unidades: IUnidade[] = useAppSelector(state => state?.unidade?.entities);
+  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id)
 
+  const [setorUnidadeList, setSetorUnidadeList] = useState<ISetorUnidade[]>([]);
   const [solicitacao, setSolicitacao] = useState<ISolicitacao>({ titulo: '', descricao: '' });
   const [itensSelecionados, setItensSelecionados] = useState<IItemSelecionados[]>([])
 
   useEffect(() => {
     dispatch(getItens({}));
-    dispatch(getUnidades({}));
   }, []);
 
+  useEffect(() => {
+    if(setorUnidadeId !== undefined) {
+      axios.get(`/api/setorUnidades/unidade/${setorUnidadeId}`)
+      .then((res) => {
+        setSetorUnidadeList(res?.data)
+      })
+      .catch((err) => {
+        toast.error("Não foi possivel identificar sua unidade tente novamente mais tarde")
+      })
+    }
+  }, [setorUnidadeId])
+
   const handleCreateSolicitacao = () => {
-    const solicitacaoFixed = { ...solicitacao, unidade: unidades?.find(data => solicitacao?.unidade?.id === data?.id), id: null };
+    const solicitacaoFixed: ISolicitacao = { ...solicitacao, setorUnidade: setorUnidadeList?.find(data => solicitacao?.setorUnidade?.id === data?.id)};
 
     const entityFixed: ISolicitacaoDTO = {
       itensSelecionados,
       solicitacao: solicitacaoFixed
     }
 
-    axios.post(`/api/solicitacaos`, entityFixed)
+    axios.post(`/api/solicitacaos`, entityFixed).then((res) => {
+      toast.success("Solicitação criada com sucesso!")
+      navigate(-1)
+    })
   };
   
   const handleAddItem = (item: IItem) => {
@@ -135,17 +152,20 @@ const SolicitacaoCreate = () => {
             />
           </Col>
           {/* Input para escolher a unidade usado apenas para teste */}
-          {/* <Col>
+          <Col>
+            <Label>
+              Setor
+            </Label>
             <Input
               type="select"
-              onChange={e => setSolicitacao({ ...solicitacao, unidade: { id: toNumber(e.target.value) } })}
-              value={solicitacao?.unidade?.id}
+              onChange={e => setSolicitacao({ ...solicitacao, setorUnidade: { id: toNumber(e.target.value) } })}
+              value={solicitacao?.setorUnidade?.id}
             >
               <option value={0}>
-                Escolha ae
+                Escolha um Setor
               </option>
-              {unidades &&
-                unidades?.map((data, key) => (
+              {setorUnidadeList &&
+                setorUnidadeList?.map((data, key) => (
                   <>
                     <option key={key} value={data?.id}>
                       {data?.nome}
@@ -153,7 +173,7 @@ const SolicitacaoCreate = () => {
                   </>
                 ))}
             </Input>
-          </Col> */}
+          </Col>
 
           <Col>
             <Label>Classificação</Label>

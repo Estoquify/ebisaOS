@@ -15,6 +15,8 @@ import colaborador from 'app/entities/colaborador/colaborador.reducer';
 import funcao from 'app/entities/funcao/funcao.reducer';
 import solicitacaoEquipe from 'app/entities/solicitacao-equipe/solicitacao-equipe.reducer';
 import solicitacaoItem from 'app/entities/solicitacao-item/solicitacao-item.reducer';
+import setorUnidade from 'app/entities/setor-unidade/setor-unidade.reducer';
+
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const entitiesReducers = {
@@ -35,6 +37,7 @@ const entitiesReducers = {
   funcao,
   solicitacaoEquipe,
   solicitacaoItem,
+  setorUnidade
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
 };
 

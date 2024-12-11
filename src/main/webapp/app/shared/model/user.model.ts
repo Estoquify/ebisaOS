@@ -1,3 +1,5 @@
+import { ISetorUnidade } from "./setor-unidade.model";
+
 export interface IUser {
   id?: any;
   login?: string;
@@ -12,6 +14,7 @@ export interface IUser {
   lastModifiedBy?: string;
   lastModifiedDate?: Date | null;
   password?: string;
+  setorUnidade?: ISetorUnidade
 }
 
 export const defaultValue: Readonly<IUser> = {

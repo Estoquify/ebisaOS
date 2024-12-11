@@ -2,6 +2,7 @@ package com.ebisaos.service.dto;
 
 import com.ebisaos.config.Constants;
 import com.ebisaos.domain.Authority;
+import com.ebisaos.domain.SetorUnidade;
 import com.ebisaos.domain.User;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -51,6 +52,8 @@ public class AdminUserDTO implements Serializable {
 
     private Set<String> authorities;
 
+    private SetorUnidade setorUnidade;
+
     public AdminUserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -69,6 +72,7 @@ public class AdminUserDTO implements Serializable {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
+        this.setorUnidade = user.getSetorUnidade();
     }
 
     public Long getId() {
@@ -173,6 +177,18 @@ public class AdminUserDTO implements Serializable {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+    
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
+    public SetorUnidade getSetorUnidade() {
+        return setorUnidade;
+    }
+
+    public void setSetorUnidade(SetorUnidade setorUnidade) {
+        this.setorUnidade = setorUnidade;
     }
 
     // prettier-ignore

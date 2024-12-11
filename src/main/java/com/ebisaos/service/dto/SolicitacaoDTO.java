@@ -7,7 +7,7 @@ import com.ebisaos.domain.Solicitacao;
 public class SolicitacaoDTO {
     
     private Solicitacao solicitacao;
-    private List<QuantidadeItensDTO> itens;
+    private List<QuantidadeItensDTO> itensSelecionados;
 
     public Solicitacao getSolicitacao() {
         return solicitacao;
@@ -17,17 +17,17 @@ public class SolicitacaoDTO {
         this.solicitacao = solicitacao;
     }
 
-    public List<QuantidadeItensDTO> getItens() {
-        return itens;
+    public List<QuantidadeItensDTO> getItensSelecionados() {
+        return itensSelecionados;
     }
 
-    public void setItens(List<QuantidadeItensDTO> itens) {
-        this.itens = itens;
+    public void setItensSelecionados(List<QuantidadeItensDTO> itensSelecionados) {
+        this.itensSelecionados = itensSelecionados;
     }
 
     @Override
     public String toString() {
-        return "SolicitacaoDTO [solicitacao=" + solicitacao + ", itens=" + itens
+        return "SolicitacaoDTO [solicitacao=" + solicitacao + ", itens=" + itensSelecionados
                 + "]";
     }
 
@@ -36,7 +36,7 @@ public class SolicitacaoDTO {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((solicitacao == null) ? 0 : solicitacao.hashCode());
-        result = prime * result + ((itens == null) ? 0 : itens.hashCode());
+        result = prime * result + ((itensSelecionados == null) ? 0 : itensSelecionados.hashCode());
         return result;
     }
 
@@ -54,10 +54,10 @@ public class SolicitacaoDTO {
                 return false;
         } else if (!solicitacao.equals(other.solicitacao))
             return false;
-        if (itens == null) {
-            if (other.itens != null)
+        if (itensSelecionados == null) {
+            if (other.itensSelecionados != null)
                 return false;
-        } else if (!itens.equals(other.itens))
+        } else if (!itensSelecionados.equals(other.itensSelecionados))
             return false;
         return true;
     }

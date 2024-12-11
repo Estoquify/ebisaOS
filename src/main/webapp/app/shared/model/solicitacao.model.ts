@@ -15,7 +15,6 @@ export interface ISolicitacao {
   descricao?: string | null;
   titulo?: string | null;
   observacao?: string | null;
-  unidade?: IUnidade | null;
   setorUnidade?: ISetorUnidade | null;
   // itensSelecionados?: Array<IItemSelecionados> | null;
   tipoSolicitacao?: tipoSolicitacao | null
