@@ -28,6 +28,9 @@ public class Unidade implements Serializable {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "sigla")
+    private String sigla;
+
     @Column(name = "cnpj")
     private String cnpj;
 
@@ -67,6 +70,19 @@ public class Unidade implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getSigla() {
+        return this.sigla;
+    }
+
+    public Unidade sigla(String sigla) {
+        this.setSigla(sigla);
+        return this;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 
     public String getCnpj() {
@@ -133,6 +149,7 @@ public class Unidade implements Serializable {
         return "Unidade{" +
             "id=" + getId() +
             ", nome='" + getNome() + "'" +
+            ", sigla='" + getSigla() + "'" +
             ", cnpj='" + getCnpj() + "'" +
             "}";
     }

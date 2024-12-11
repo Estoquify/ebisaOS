@@ -122,6 +122,9 @@ public class UnidadeResource {
                 if (unidade.getNome() != null) {
                     existingUnidade.setNome(unidade.getNome());
                 }
+                if (unidade.getSigla() != null) {
+                    existingUnidade.setSigla(unidade.getSigla());
+                }
                 if (unidade.getCnpj() != null) {
                     existingUnidade.setCnpj(unidade.getCnpj());
                 }
