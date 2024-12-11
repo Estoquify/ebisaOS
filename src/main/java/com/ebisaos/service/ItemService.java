@@ -60,8 +60,8 @@ public class ItemService {
     }
 
     public Page<Item> listaPageItem(Pageable pageable, Map<String, String> params) {
-        Long countItem = itemRepository.countListaItem();
-        List<Item> listaItem = itemRepository.listaItemRaw(Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
+        Long countItem = itemRepository.countListaItem(params.get("pesquisa"));
+        List<Item> listaItem = itemRepository.listaItemRaw(params.get("pesquisa"), Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
         
         Page<Item> pageItem = listPage(pageable, listaItem, countItem);
 

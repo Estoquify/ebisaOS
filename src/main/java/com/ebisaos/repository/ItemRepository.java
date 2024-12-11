@@ -18,21 +18,26 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query(
         value = """
                 SELECT ite.*
-                FROM public.item AS ite
+                    FROM public.item AS ite
+                    WHERE (:pesquisa IS NULL OR :pesquisa = ''
+                        OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(ite.nome_item))) > 0)
+                    ORDER BY ite.nome_item  
                 LIMIT :size OFFSET :page * :size
         """,
         nativeQuery = true
     )
-    List<Item> listaItemRaw(@Param("page") Integer page, @Param("size") Integer size);
+    List<Item> listaItemRaw(@Param("pesquisa") String pesquisa, @Param("page") Integer page, @Param("size") Integer size);
 
 
     @Query(
         value = """
                 SELECT COUNT(ite.*)
-                FROM public.item AS ite
+                    FROM public.item AS ite
+                    WHERE (:pesquisa IS NULL OR :pesquisa = ''
+                        OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(ite.nome_item))) > 0)
         """,
         nativeQuery = true
     )
-    Long countListaItem();
+    Long countListaItem(@Param("pesquisa") String pesquisa);
 
 }
