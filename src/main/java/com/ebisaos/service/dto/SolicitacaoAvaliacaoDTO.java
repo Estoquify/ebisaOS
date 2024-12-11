@@ -9,18 +9,18 @@ public class SolicitacaoAvaliacaoDTO {
     private String tipoSolicitacao;
     private LocalDateTime createdDate;
     private LocalDateTime prazoDate;
-    private String nomeUnidade;
+    private String siglaUnidade;
     private String nomeSetor;
 
     // Construtor completo
-    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String nomeUnidade, String nomeSetor) {
+    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String siglaUnidade, String nomeSetor) {
         this.id = id;
         this.prioridade = prioridade;
         this.titulo = titulo;
         this.tipoSolicitacao = tipoSolicitacao;
         this.createdDate = createdDate;
         this.prazoDate = prazoDate;
-        this.nomeUnidade = nomeUnidade;
+        this.siglaUnidade = siglaUnidade;
         this.nomeSetor = nomeSetor;
     }
 
@@ -74,12 +74,12 @@ public class SolicitacaoAvaliacaoDTO {
         this.prazoDate = prazoDate;
     }
 
-    public String getNomeUnidade() {
-        return nomeUnidade;
+    public String getSiglaUnidade() {
+        return siglaUnidade;
     }
 
-    public void setNomeUnidade(String nomeUnidade) {
-        this.nomeUnidade = nomeUnidade;
+    public void setSiglaUnidade(String siglaUnidade) {
+        this.siglaUnidade = siglaUnidade;
     }
 
     public String getNomeSetor() {

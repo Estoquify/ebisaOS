@@ -42,7 +42,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
     Long countListagemSolicitacaoUnidade(@Param("pesquisa") String pesquisa, @Param("idUnidade") Long idUnidade);
 
     @Query(value = """
-                SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.nome AS nome_unidade, seu.nome AS nome_setor
+                SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.sigla AS sigla_unidade, seu.nome AS nome_setor
                     FROM public.solicitacao AS sol
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
@@ -50,7 +50,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
-                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.nome))) > 0)
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
                  AND sol.aberta = true
                  AND ava.aprovacao_ginfra IS NULL
                  ORDER BY sol.created_date
@@ -67,14 +67,14 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
-                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.nome))) > 0)
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
                  AND sol.aberta = true
                  AND ava.aprovacao_ginfra IS NULL
             """, nativeQuery = true)
     Long countListagemSolicitacaoAvaliacaoGInfra(@Param("pesquisa") String pesquisa);
 
     @Query(value = """
-                SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.nome AS nome_unidade, seu.nome AS nome_setor
+                SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.sigla AS sigla_unidade, seu.nome AS nome_setor
                     FROM public.solicitacao AS sol
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
@@ -82,7 +82,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
-                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.nome))) > 0)
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
                  AND sol.aberta = true
                  AND ava.aprovacao_ginfra = true
                  ORDER BY sol.created_date
@@ -99,7 +99,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
-                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.nome))) > 0)
+                    OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
                  AND sol.aberta = true
                  AND ava.aprovacao_ginfra = true
             """, nativeQuery = true)

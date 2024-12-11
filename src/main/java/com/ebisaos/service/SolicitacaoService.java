@@ -146,7 +146,7 @@ public class SolicitacaoService {
             (String) obj[2],         // tipoSolicitacao
             obj[3] != null ? ((Timestamp) obj[3]).toLocalDateTime() : null,  // Converte Timestamp para LocalDateTime, createdDate
             obj[4] != null ? ((Timestamp) obj[4]).toLocalDateTime() : null,  // Converte Timestamp para LocalDateTime, prazoDate
-            (String) obj[5],         // nomeUnidade
+            (String) obj[5],         // siglaUnidade
             (String) obj[6]         // nomeSetor
         )).collect(Collectors.toList());
     }
@@ -177,7 +177,7 @@ public class SolicitacaoService {
             (String) obj[3],         // tipoSolicitacao
             obj[4] != null ? ((Timestamp) obj[4]).toLocalDateTime() : null,  // Converte Timestamp para LocalDateTime, createdDate
             obj[5] != null ? ((Timestamp) obj[5]).toLocalDateTime() : null,  // Converte Timestamp para LocalDateTime, prazoDate
-            (String) obj[6],         // nomeUnidade
+            (String) obj[6],         // siglaUnidade
             (String) obj[7]         // nomeSetor
         )).collect(Collectors.toList());
     }

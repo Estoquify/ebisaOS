@@ -9,17 +9,17 @@ public class SolicitacaoAvaliacaoGInfraDTO {
     private String tipoSolicitacao;
     private LocalDateTime createdDate;
     private LocalDateTime prazoDate;
-    private String nomeUnidade;
+    private String siglaUnidade;
     private String nomeSetor;
 
     // Construtor completo
-    public SolicitacaoAvaliacaoGInfraDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String nomeUnidade, String nomeSetor) {
+    public SolicitacaoAvaliacaoGInfraDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String siglaUnidade, String nomeSetor) {
         this.id = id;
         this.titulo = titulo;
         this.tipoSolicitacao = tipoSolicitacao;
         this.createdDate = createdDate;
         this.prazoDate = prazoDate;
-        this.nomeUnidade = nomeUnidade;
+        this.siglaUnidade = siglaUnidade;
         this.nomeSetor = nomeSetor;
     }
 
@@ -65,12 +65,12 @@ public class SolicitacaoAvaliacaoGInfraDTO {
         this.prazoDate = prazoDate;
     }
 
-    public String getNomeUnidade() {
-        return nomeUnidade;
+    public String getSiglaUnidade() {
+        return siglaUnidade;
     }
 
-    public void setNomeUnidade(String nomeUnidade) {
-        this.nomeUnidade = nomeUnidade;
+    public void setSiglaUnidade(String siglaUnidade) {
+        this.siglaUnidade = siglaUnidade;
     }
 
     public String getNomeSetor() {
