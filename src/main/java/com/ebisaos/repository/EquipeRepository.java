@@ -18,21 +18,26 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
     @Query(
         value = """
                 SELECT eqi.*
-                FROM public.equipe AS eqi
+                    FROM public.equipe AS eqi
+                    WHERE (:pesquisa IS NULL OR :pesquisa = ''
+                        OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(eqi.apelido))) > 0)
+                    ORDER BY eqi.apelido
                 LIMIT :size OFFSET :page * :size
         """,
         nativeQuery = true
     )
-    List<Equipe> listaEquipeRaw(@Param("page") Integer page, @Param("size") Integer size);
+    List<Equipe> listaEquipeRaw(@Param("pesquisa") String pesquisa, @Param("page") Integer page, @Param("size") Integer size);
 
 
     @Query(
         value = """
                 SELECT COUNT(eqi.*)
-                FROM public.equipe AS eqi
+                    FROM public.equipe AS eqi
+                    WHERE (:pesquisa IS NULL OR :pesquisa = ''
+                        OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(eqi.apelido))) > 0)
         """,
         nativeQuery = true
     )
-    Long countListaEquipe();
+    Long countListaEquipe(@Param("pesquisa") String pesquisa);
     
 }

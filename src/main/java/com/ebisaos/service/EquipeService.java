@@ -23,7 +23,7 @@ import com.ebisaos.repository.EquipeRepository;
 @Transactional
 public class EquipeService {
     
-    private final Logger log = LoggerFactory.getLogger(StockService.class);
+    private final Logger log = LoggerFactory.getLogger(EquipeService.class);
 
     @Autowired
     EquipeRepository equipeRepository;
@@ -60,8 +60,8 @@ public class EquipeService {
     }
 
     public Page<Equipe> listaPageEquipe(Pageable pageable, Map<String, String> params) {
-        Long countEquipe = equipeRepository.countListaEquipe();
-        List<Equipe> listaEquipe = equipeRepository.listaEquipeRaw(Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
+        Long countEquipe = equipeRepository.countListaEquipe(params.get("pesquisa"));
+        List<Equipe> listaEquipe = equipeRepository.listaEquipeRaw(params.get("pesquisa"), Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
         
         Page<Equipe> pageEquipe = listPage(pageable, listaEquipe, countEquipe);
 
