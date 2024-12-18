@@ -32,6 +32,13 @@ public class Comentario extends AbstractAuditingEntity<Long> {
     @JsonIgnoreProperties(value = { "comentarios" }, allowSetters = true)
     private Avaliacao avaliacao;
 
+    // Tipos:
+    // AVALIACAO GINFRA
+    // AVALIACAO EBISA
+    // COMENTARIO UNIDADE
+    @Column(name = "tipo_comentario")
+    private String tipoComentario;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -73,6 +80,19 @@ public class Comentario extends AbstractAuditingEntity<Long> {
         return this;
     }
 
+    public String getTipoComentario() {
+        return this.tipoComentario;
+    }
+
+    public Comentario tipoComentario(String tipoComentario) {
+        this.setTipoComentario(tipoComentario);
+        return this;
+    }
+
+    public void setTipoComentario(String tipoComentario) {
+        this.tipoComentario = tipoComentario;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -98,6 +118,7 @@ public class Comentario extends AbstractAuditingEntity<Long> {
         return "Comentario{" +
             "id=" + getId() +
             ", respostas='" + getRespostas() + "'" +
+            ", tipoComentario='" + getTipoComentario() + "'" +
             "}";
     }
 }

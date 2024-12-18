@@ -7,6 +7,9 @@ public class QuantidadeItensDTO {
     private Long quantidade;
     private Item item;
 
+    public QuantidadeItensDTO() {
+    }
+
     public Long getQuantidade() {
         return quantidade;
     }

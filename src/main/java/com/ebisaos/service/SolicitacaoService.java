@@ -23,6 +23,7 @@ import com.ebisaos.domain.Item;
 import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.domain.Unidade;
 import com.ebisaos.repository.ComentarioRepository;
+import com.ebisaos.repository.ItemRepository;
 import com.ebisaos.repository.SolicitacaoRepository;
 import com.ebisaos.service.dto.QuantidadeItensDTO;
 import com.ebisaos.service.dto.SolicitacaoAvaliacaoDTO;
@@ -30,6 +31,7 @@ import com.ebisaos.service.dto.SolicitacaoAvaliacaoGInfraDTO;
 import com.ebisaos.service.dto.SolicitacaoDTO;
 import com.ebisaos.service.dto.SolicitacaoUnidadeDTO;
 import com.ebisaos.service.dto.SolicitacaoViewDTO;
+import com.ebisaos.service.dto.SolicitacaoViewMaterialDTO;
 
 @Service
 @Transactional
@@ -48,6 +50,12 @@ public class SolicitacaoService {
 
     @Autowired
     ComentarioRepository comentarioRepository;
+
+    @Autowired
+    ItemService itemService;
+
+    @Autowired
+    ItemRepository itemRepository;
 
     public List<Solicitacao> findAll(Pageable pageable) {
         return solicitacaoRepository.findAll(pageable).getContent();
@@ -197,6 +205,20 @@ public class SolicitacaoService {
         Page<SolicitacaoAvaliacaoDTO> pageSolicitacao = listPageAvaliacao(pageable, listaSolicitacao, countSolicitacao);
 
         return pageSolicitacao;
+    }
+
+    public SolicitacaoViewMaterialDTO montarVisualizadorMaterial(Long idSolicitacao) {
+
+        List<Object[]> rawItens = itemRepository.rawItensQuantidade(idSolicitacao);
+        List<Object[]> rawComentarios = comentarioRepository.rawItensQuantidade(idSolicitacao);
+        
+        SolicitacaoViewMaterialDTO solicitacaoViewMaterialDTO = new SolicitacaoViewMaterialDTO();
+
+        solicitacaoViewMaterialDTO.setSolicitacao(findById(idSolicitacao));
+        solicitacaoViewMaterialDTO.setItens(itemService.montarDTOQuantItens(rawItens));
+        solicitacaoViewMaterialDTO.setComentarios(avaliacaoService.montarDTOChat(rawComentarios));
+
+        return solicitacaoViewMaterialDTO;
     }
 
 }

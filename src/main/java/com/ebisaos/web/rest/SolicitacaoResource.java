@@ -8,6 +8,7 @@ import com.ebisaos.service.dto.SolicitacaoAvaliacaoGInfraDTO;
 import com.ebisaos.service.dto.SolicitacaoDTO;
 import com.ebisaos.service.dto.SolicitacaoUnidadeDTO;
 import com.ebisaos.service.dto.SolicitacaoViewDTO;
+import com.ebisaos.service.dto.SolicitacaoViewMaterialDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -199,10 +200,10 @@ public class SolicitacaoResource {
         return ResponseUtil.wrapOrNotFound(solicitacao);
     }
 
-    @GetMapping("solicitacaoView/{id}")
-    public SolicitacaoViewDTO getSolicitacaoView(@PathVariable("id") Long id) {
+    @GetMapping("solicitacaoViewMatarial/{id}")
+    public SolicitacaoViewMaterialDTO getGolicitacaoViewMatarial(@PathVariable("id") Long id) {
         log.debug("REST request to get Solicitacao : {}", id);
-        SolicitacaoViewDTO solicitacaoViewDTO = solicitacaoService.montarSolicitacaoView(id);
+        SolicitacaoViewMaterialDTO solicitacaoViewDTO = solicitacaoService.montarVisualizadorMaterial(id);
         return solicitacaoViewDTO;
     }
 
