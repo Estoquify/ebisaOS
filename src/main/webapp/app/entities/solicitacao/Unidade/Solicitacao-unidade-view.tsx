@@ -4,7 +4,7 @@ import { Button, Row, Col, Label, Input } from 'reactstrap';
 import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT, AUTHORITIES, TIPOSCOMENTARIOS } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from '../solicitacao.reducer';
@@ -25,12 +25,21 @@ import dayjs from 'dayjs';
 import { ISetorUnidade } from 'app/shared/model/setor-unidade.model';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { ISolicitacaoViewServicoDto } from 'app/shared/model/solicitacao-view-servico-dto.model';
+import { IComentarioView } from 'app/shared/model/comentarios-view.model';
+import { hasAnyAuthority } from 'app/shared/auth/private-route';
+import ChatComponent from '../view/Chat/ChatComponent';
 
 export const SolicitacaoUnidadeDetail = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const solicitacaoEntity: ISolicitacao = useAppSelector(state => state.solicitacao.entity);
+
+  const isUnidade = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.UNIDADE]));
+  const isEbisa = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.EBISA]));
+  const isGinfra = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.GINFRA]));
+
   const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id);
+
+  const [solicitacaoViewServico, setSolicitacaoViewServico] = useState<ISolicitacaoViewServicoDto>({});
 
   const { id } = useParams<'id'>();
   const [setorUnidadeList, setSetorUnidadeList] = useState<ISetorUnidade[]>([]);
@@ -49,10 +58,21 @@ export const SolicitacaoUnidadeDetail = () => {
   }, [setorUnidadeId]);
 
   useEffect(() => {
-    dispatch(getEntity(id));
+    axios
+      .get(`/api/solicitacaos/solicitacaoViewServico/${id}`)
+      .then(res => {
+        setSolicitacaoViewServico(res?.data);
+      })
+      .catch(err => {});
   }, []);
 
-  const formattedPrazoDate = solicitacaoEntity?.prazoDate ? dayjs(solicitacaoEntity.prazoDate).format('YYYY-MM-DDTHH:mm') : '';
+  const formattedPrazoDate = solicitacaoViewServico?.solicitacao?.prazoDate
+    ? dayjs(solicitacaoViewServico?.solicitacao.prazoDate).format('YYYY-MM-DDTHH:mm')
+    : '';
+
+  const handleButtonClick = () => {
+    navigate(`./edit`)
+  }
 
   return (
     <div className="solicitacao-create-container">
@@ -62,12 +82,12 @@ export const SolicitacaoUnidadeDetail = () => {
         <Row>
           <Col>
             <Label>Titulo</Label>
-            <Input placeholder="Titulo" readOnly disabled value={solicitacaoEntity?.titulo} />
+            <Input placeholder="Titulo" readOnly disabled value={solicitacaoViewServico?.solicitacao?.titulo} />
           </Col>
 
           <Col>
             <Label>Setor</Label>
-            <Input type="select" value={solicitacaoEntity?.setorUnidade?.id} readOnly disabled>
+            <Input type="select" value={solicitacaoViewServico?.solicitacao?.setorUnidade?.id} readOnly disabled>
               <option value={0}>Escolha um Setor</option>
               {setorUnidadeList &&
                 setorUnidadeList?.map((data, key) => (
@@ -82,7 +102,7 @@ export const SolicitacaoUnidadeDetail = () => {
 
           <Col>
             <Label>Classificação</Label>
-            <Input type="select" disabled readOnly value={solicitacaoEntity?.tipoSolicitacao}>
+            <Input type="select" disabled readOnly value={solicitacaoViewServico?.solicitacao?.tipoSolicitacao}>
               <option value="">Tipo Solicitação</option>
               <option value="SERVICO">Serviço</option>
               <option value="MATERIAL">Material</option>
@@ -98,8 +118,39 @@ export const SolicitacaoUnidadeDetail = () => {
         <Row>
           <Col className="descricao-container">
             <Label>Descrição</Label>
-            <Input type="textarea" placeholder="Descrição" readOnly disabled value={solicitacaoEntity?.descricao} />
+            <Input type="textarea" placeholder="Descrição" readOnly disabled value={solicitacaoViewServico?.solicitacao?.descricao} />
           </Col>
+
+          {solicitacaoViewServico && solicitacaoViewServico?.equipes && solicitacaoViewServico?.equipes?.length > 0 && (
+            <Col>
+              <div className="inventario-container">
+                <span>Equipe</span>
+
+                <div className="inventario-container-data">
+                  <div className="inventario-container_search-box">
+                    <div>
+                      <FontAwesomeIcon icon={faSearch} />
+                    </div>
+                    <Input type="text" placeholder="Pesquisa" />
+                  </div>
+
+                  <div className="itens-list">
+                    {solicitacaoViewServico &&
+                      solicitacaoViewServico?.equipes &&
+                      solicitacaoViewServico?.equipes?.map((data, key) => (
+                        <React.Fragment key={key}>
+                          <div className="itens-container">
+                            <div className="itens-container-text">
+                              <span>{data?.apelido}</span>
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </Col>
+          )}
 
           <Col>
             <div className="inventario-container">
@@ -114,57 +165,27 @@ export const SolicitacaoUnidadeDetail = () => {
                 </div>
 
                 <div className="itens-list">
-                  <div className="itens-container">
-                    <div className="itens-container-text">
-                      <span>Teste</span>
-                    </div>
+                  {solicitacaoViewServico &&
+                    solicitacaoViewServico?.itens &&
+                    solicitacaoViewServico?.itens?.map((data, key) => (
+                      <React.Fragment key={key}>
+                        <div className="itens-container">
+                          <div className="itens-container-text">
+                            <span>{data?.item?.nomeItem}</span>
+                          </div>
 
-                    <div className="itens-container-icon" style={{ width: '10%' }}>
-                      <span>4</span>
-                    </div>
-                  </div>
+                          <div className="itens-container-icon" style={{ width: '10%' }}>
+                            <span>{data?.quantidade}</span>
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    ))}
                 </div>
               </div>
             </div>
           </Col>
 
-          <Col>
-            <div className="chat-container">
-              {/* Div para conter o header */}
-              <div className="chat-container-header">
-                <span>Chat</span>
-                <div className="chat-container-header_icon">
-                  <FontAwesomeIcon icon={faComment} />
-                </div>
-              </div>
-              {/*  Div que vai conter os dados do chat */}
-              <div className="chat-data-container">
-                <div className="chat-data-talker-container">
-                  {/* mensagem que o usuário escreveu */}
-                  <div className="chat-data-talker-message-container">
-                    <span> Teste </span>
-                  </div>
-                  <div className="chat-data-talker-logo">{/* Circulo com a primeira letra do nome do usuario */} L </div>
-                </div>
-
-                <div className="chat-data-user-container">
-                  {/* mensagem que você escreveu */}
-                  <div className="chat-data-user-message-container">
-                    <span> Testando </span>
-                  </div>
-                  <div className="chat-data-user-logo">
-                    <FontAwesomeIcon icon={faUser} />
-                  </div>
-                </div>
-              </div>
-              <div className="chat-input-container">
-                <Input placeholder="Digite uma mensagem" />
-                <Button>
-                  <FontAwesomeIcon icon={faPaperPlane} />
-                </Button>
-              </div>
-            </div>
-          </Col>
+          <ChatComponent solicitacaoViewServico={solicitacaoViewServico} isEbisa={isEbisa} isGinfra={isGinfra} isUnidade={isUnidade} />
         </Row>
       </div>
 
@@ -174,7 +195,7 @@ export const SolicitacaoUnidadeDetail = () => {
           <span> Voltar </span>
         </Button>
 
-        <Button>
+        <Button onClick={() => handleButtonClick()} >
           <span> Editar </span>
           <FontAwesomeIcon icon={faPen} />
         </Button>

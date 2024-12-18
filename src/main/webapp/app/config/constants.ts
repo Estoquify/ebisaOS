@@ -6,6 +6,12 @@ export const AUTHORITIES = {
   UNIDADE: 'ROLE_UNIDADE'
 };
 
+export const TIPOSCOMENTARIOS = {
+    GINFRA: "AVALIACAO GINFRA",
+    EBISA: "AVALIACAO EBISA",
+    UNIDADE: "COMENTARIO UNIDADE"
+}
+
 export const messages = {
   DATA_ERROR_ALERT: 'Internal Error',
 };

@@ -1,204 +1,298 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { faChevronLeft, faChevronRight, faFloppyDisk, faMinus, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Input, Label, Row } from 'reactstrap';
+import { useNavigate, useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-
-import { IUnidade } from 'app/shared/model/unidade.model';
-import { getEntities as getUnidades } from 'app/entities/unidade/unidade.reducer';
+import { getEntities as getItens } from 'app/entities/item/item.reducer';
+import { IItem } from 'app/shared/model/item.model';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
-import { getEntity, updateEntity, createEntity, reset } from './solicitacao.reducer';
+import tipoSolicitacao from 'app/shared/enum/TipoSolicitacao';
+import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 
-export const SolicitacaoUpdate = () => {
+import '../solicitacao/create/solicitacao-create.scss';
+
+import { IItemSelecionados } from 'app/shared/model/itemSelecionados.models';
+import axios from 'axios';
+import { ISolicitacaoDTO } from 'app/shared/model/SolicitacaoDTO.model';
+import { toNumber } from 'lodash';
+import { ISetorUnidade } from 'app/shared/model/setor-unidade.model';
+// import { getEntity } from './solicitacao.reducer';
+
+const SolicitacaoUpdate = () => {
+const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const navigate = useNavigate();
-
   const { id } = useParams<'id'>();
-  const isNew = id === undefined;
 
-  const unidades = useAppSelector(state => state.unidade.entities);
-  const solicitacaoEntity = useAppSelector(state => state.solicitacao.entity);
-  const loading = useAppSelector(state => state.solicitacao.loading);
-  const updating = useAppSelector(state => state.solicitacao.updating);
-  const updateSuccess = useAppSelector(state => state.solicitacao.updateSuccess);
+  const itens: IItem[] = useAppSelector(state => state?.item?.entities);
+  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id)
 
-  const handleClose = () => {
-    navigate('/solicitacao');
-  };
+  const [setorUnidadeList, setSetorUnidadeList] = useState<ISetorUnidade[]>([]);
+  const [solicitacao, setSolicitacao] = useState<ISolicitacao>({ titulo: '', descricao: '' });
+  const [itensSelecionados, setItensSelecionados] = useState<IItemSelecionados[]>([])
 
   useEffect(() => {
-    if (isNew) {
-      dispatch(reset());
-    } else {
-      dispatch(getEntity(id));
-    }
-
-    dispatch(getUnidades({}));
+    dispatch(getItens({}));
   }, []);
 
+  // useEffect(() => {
+  //   dispatch(getEntity(id))
+  // }, [])
+
   useEffect(() => {
-    if (updateSuccess) {
-      handleClose();
+    if(setorUnidadeId !== undefined) {
+      axios.get(`/api/setorUnidades/unidade/${setorUnidadeId}`)
+      .then((res) => {
+        setSetorUnidadeList(res?.data)
+      })
+      .catch((err) => {
+        toast.error("Não foi possivel identificar sua unidade tente novamente mais tarde")
+      })
     }
-  }, [updateSuccess]);
+  }, [setorUnidadeId])
 
-  // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  const handleCreateSolicitacao = () => {
+    const solicitacaoFixed: ISolicitacao = { ...solicitacao, setorUnidade: setorUnidadeList?.find(data => solicitacao?.setorUnidade?.id === data?.id)};
+
+    const entityFixed: ISolicitacaoDTO = {
+      itensSelecionados,
+      solicitacao: solicitacaoFixed
     }
-    values.prazoDate = convertDateTimeToServer(values.prazoDate);
-    values.createDate = convertDateTimeToServer(values.createDate);
-    values.updatedDate = convertDateTimeToServer(values.updatedDate);
-    values.finishDate = convertDateTimeToServer(values.finishDate);
 
-    const entity = {
-      ...solicitacaoEntity,
-      ...values,
-      unidade: unidades.find(it => it.id.toString() === values.unidade?.toString()),
-    };
+    axios.post(`/api/solicitacaos`, entityFixed).then((res) => {
+      toast.success("Solicitação criada com sucesso!")
+      navigate(-1)
+    })
+  };
+  
+  const handleAddItem = (item: IItem) => {
+    setItensSelecionados(prevItensSelecionados => {
+      const itemExistente = prevItensSelecionados.find(data => data.item === item);
+  
+      if (itemExistente) {
+        return prevItensSelecionados.map(data =>
+          data.item === item ? { ...data, quantidade: (data.quantidade || 0) + 1 } : data,
+        );
+      } else {
+        return [...prevItensSelecionados, { item, quantidade: 1 }];
+      }
+    });
+  };
 
-    if (isNew) {
-      dispatch(createEntity(entity));
+  const handleRemoveItem = (item: IItem) => {
+    setItensSelecionados(prevItensSelecionados => {
+      const itemExistente = prevItensSelecionados.find(data => data.item === item);
+  
+      if (itemExistente) {
+        if ((itemExistente.quantidade || 0) > 1) {
+          return prevItensSelecionados.map(data =>
+            data.item === item ? { ...data, quantidade: (data.quantidade || 0) - 1 } : data,
+          );
+        } else {
+          return prevItensSelecionados.filter(data => data.item !== item);
+        }
+      }
+  
+      return prevItensSelecionados;
+    });
+  };
+  
+  const validateCreateSolicitacao = (solicitacaoData: ISolicitacao) => {
+    const errors: string[] = [];
+
+    if (!solicitacaoData.titulo || solicitacaoData.titulo.length < 4) {
+      errors.push('O título deve conter pelo menos 4 caracteres.');
+    }
+
+    if (!solicitacaoData.descricao || solicitacaoData.descricao.trim() === '') {
+      errors.push('A descrição não pode estar vazia.');
+    }
+
+    if (!solicitacaoData.descricao || solicitacaoData.descricao.trim() === '') {
+      errors.push('A descrição não pode estar vazia.');
+    }
+
+    if (solicitacaoData.prazoDate && !dayjs(solicitacaoData.prazoDate).isAfter(dayjs())) {
+      errors.push('A data do prazo deve estar no futuro.');
+    }
+
+    return errors.length > 0 ? { isValid: false, errors } : { isValid: true, errors: [] };
+  };
+
+  const handleValidateSolicitacaoCreate = () => {
+    const result = validateCreateSolicitacao(solicitacao);
+    if (!result.isValid) {
+      result?.errors?.map(data => {
+        toast.error(`Erro de validação: ${data}`);
+      });
     } else {
-      dispatch(updateEntity(entity));
+      handleCreateSolicitacao();
     }
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {
-          prazoDate: displayDefaultDateTime(),
-          createDate: displayDefaultDateTime(),
-          updatedDate: displayDefaultDateTime(),
-          finishDate: displayDefaultDateTime(),
-        }
-      : {
-          ...solicitacaoEntity,
-          prazoDate: convertDateTimeFromServer(solicitacaoEntity.prazoDate),
-          createDate: convertDateTimeFromServer(solicitacaoEntity.createDate),
-          updatedDate: convertDateTimeFromServer(solicitacaoEntity.updatedDate),
-          finishDate: convertDateTimeFromServer(solicitacaoEntity.finishDate),
-          unidade: solicitacaoEntity?.unidade?.id,
-        };
+  const handleSelectTipoSolicitacao = (dadoTipoSolicitacao: string) => {
+    const valorEnum = tipoSolicitacao[dadoTipoSolicitacao as keyof typeof tipoSolicitacao];
+
+    setSolicitacao({
+      ...solicitacao,
+      tipoSolicitacao: valorEnum ?? null,
+    });
+  };
 
   return (
-    <div>
-      <Row className="justify-content-center">
-        <Col md="8">
-          <h2 id="ebisaOsApp.solicitacao.home.createOrEditLabel" data-cy="SolicitacaoCreateUpdateHeading">
-            <Translate contentKey="ebisaOsApp.solicitacao.home.createOrEditLabel">Create or edit a Solicitacao</Translate>
-          </h2>
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col md="8">
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="solicitacao-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
-              ) : null}
-              <ValidatedField
-                label={translate('ebisaOsApp.solicitacao.prazoDate')}
-                id="solicitacao-prazoDate"
-                name="prazoDate"
-                data-cy="prazoDate"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.solicitacao.createDate')}
-                id="solicitacao-createDate"
-                name="createDate"
-                data-cy="createDate"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.solicitacao.updatedDate')}
-                id="solicitacao-updatedDate"
-                name="updatedDate"
-                data-cy="updatedDate"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.solicitacao.finishDate')}
-                id="solicitacao-finishDate"
-                name="finishDate"
-                data-cy="finishDate"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.solicitacao.aberta')}
-                id="solicitacao-aberta"
-                name="aberta"
-                data-cy="aberta"
-                check
-                type="checkbox"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.solicitacao.descricao')}
-                id="solicitacao-descricao"
-                name="descricao"
-                data-cy="descricao"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.solicitacao.observacao')}
-                id="solicitacao-observacao"
-                name="observacao"
-                data-cy="observacao"
-                type="text"
-              />
-              <ValidatedField
-                id="solicitacao-unidade"
-                name="unidade"
-                data-cy="unidade"
-                label={translate('ebisaOsApp.solicitacao.unidade')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {unidades
-                  ? unidades.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/solicitacao" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ValidatedForm>
-          )}
-        </Col>
-      </Row>
+    <div className="solicitacao-create-container">
+      <h2>Editar Solicitação</h2>
+
+      <div className="solicitacao-create-data-container">
+        <Row>
+          <Col>
+            <Label>Titulo</Label>
+            <Input
+              placeholder="Titulo"
+              value={solicitacao?.titulo}
+              onChange={e => setSolicitacao({ ...solicitacao, titulo: e.target.value })}
+            />
+          </Col>
+          {/* Input para escolher a unidade usado apenas para teste */}
+          <Col>
+            <Label>
+              Setor
+            </Label>
+            <Input
+              type="select"
+              onChange={e => setSolicitacao({ ...solicitacao, setorUnidade: { id: toNumber(e.target.value) } })}
+              value={solicitacao?.setorUnidade?.id}
+            >
+              <option value={0}>
+                Escolha um Setor
+              </option>
+              {setorUnidadeList &&
+                setorUnidadeList?.map((data, key) => (
+                  <>
+                    <option key={key} value={data?.id}>
+                      {data?.nome}
+                    </option>
+                  </>
+                ))}
+            </Input>
+          </Col>
+
+          <Col>
+            <Label>Classificação</Label>
+            <Input
+              type="select"
+              onChange={e => handleSelectTipoSolicitacao(e.target.value)}
+              value={solicitacao?.tipoSolicitacao !== null ? tipoSolicitacao[solicitacao.tipoSolicitacao] : ''}
+            >
+              <option value="">Tipo Solicitação</option>
+              <option value="Servico">Serviço</option>
+              <option value="Material">Material</option>
+            </Input>
+          </Col>
+
+          <Col>
+            <Label>Prazo</Label>
+            <Input
+              type="datetime-local"
+              onChange={e => setSolicitacao({ ...solicitacao, prazoDate: dayjs(e.target.value?.toString()) })}
+              value={solicitacao?.prazoDate ? solicitacao.prazoDate.format('YYYY-MM-DDTHH:mm') : ''}
+            />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col className="descricao-container">
+            <Label>Descrição</Label>
+            <Input type="textarea" placeholder="Descrição" onChange={e => setSolicitacao({ ...solicitacao, descricao: e.target.value })} />
+          </Col>
+
+          <Col>
+            <div className="inventario-container">
+              <span>Inventario</span>
+
+              <div className="inventario-container-data">
+                <div className="inventario-container_search-box">
+                  <div>
+                    <FontAwesomeIcon icon={faSearch} />
+                  </div>
+                  <Input type="text" placeholder="Pesquisa" />
+                </div>
+
+                <div className="itens-list">
+                  {itens &&
+                    itens?.length > 0 &&
+                    itens?.map((data, key) => (
+                      <React.Fragment key={key}>
+                        <div className="itens-container">
+                          <div className="itens-container-text">
+                            <span>{data?.nomeItem}</span>
+                          </div>
+
+                          <Button className="itens-container-icon-plus" onClick={() => handleAddItem(data)}>
+                            <FontAwesomeIcon icon={faPlus} />
+                          </Button>
+                        </div>
+                      </React.Fragment>
+                    ))}
+
+                  {itens && itens?.length === 0 && <span> Nenhum item cadastrado</span>}
+                </div>
+              </div>
+            </div>
+          </Col>
+
+          <Col>
+            <div className="inventario-container">
+              <span>Itens Selecionados</span>
+
+              <div className="inventario-container-data">
+                <div className="inventario-container_search-box">
+                  <div>
+                    <FontAwesomeIcon icon={faSearch} />
+                  </div>
+                  <Input type="text" placeholder="Pesquisa" />
+                </div>
+
+                <div className="itens-list">
+                  {itensSelecionados &&
+                    itensSelecionados?.length > 0 &&
+                    itensSelecionados?.map((data, key) => (
+                      <React.Fragment key={key}>
+                        <div className="itens-container">
+                          <div className="itens-container-text">
+                            <span>{data?.item?.nomeItem}</span>
+                          </div>
+
+                          <div className="itens-container-icon">
+                            <Button className="itens-container-icon-minus" onClick={() => handleRemoveItem(data?.item)}>
+                              <FontAwesomeIcon icon={faMinus} />
+                            </Button>
+                            <span>{data?.quantidade}</span>
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    ))}
+
+                  {itensSelecionados && itensSelecionados?.length === 0 && <span>Nenhum item selecionado</span>}
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <div className="buttons-container">
+        <Button onClick={() => navigate(-1)}>
+          <FontAwesomeIcon icon={faChevronLeft} />
+          <span> Voltar </span>
+        </Button>
+
+        <Button onClick={() => handleValidateSolicitacaoCreate()}>
+          <span> Salvar </span>
+          <FontAwesomeIcon icon={faFloppyDisk} />
+        </Button>
+      </div>
     </div>
   );
 };
