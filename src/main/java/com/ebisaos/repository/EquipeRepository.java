@@ -39,5 +39,16 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
         nativeQuery = true
     )
     Long countListaEquipe(@Param("pesquisa") String pesquisa);
+
+    @Query(
+        value = """
+                SELECT eqi.*
+                    FROM public.equipe AS eqi
+                    LEFT JOIN public.solicitacao_equipe AS sle ON eqi.id = sle.equipe_id
+                    WHERE sle.solicitacao_id = :idSolicitacao
+        """,
+        nativeQuery = true    
+    )
+    List<Equipe> listEquipePorSolicitacao(@Param("idSolicitacao") Long idSolicitacao);
     
 }

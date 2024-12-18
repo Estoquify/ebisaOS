@@ -52,6 +52,10 @@ public class EquipeService {
         equipeRepository.delete(obj);
     }
 
+    public List<Equipe> listaEquipesPorSolicitacao(Long idSolicitacao){
+        return equipeRepository.listEquipePorSolicitacao(idSolicitacao);
+    }
+
     public Page<Equipe> listPage(Pageable pageable, List<Equipe> lista, long totalItems) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();

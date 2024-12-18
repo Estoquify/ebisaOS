@@ -9,6 +9,7 @@ import com.ebisaos.service.dto.SolicitacaoDTO;
 import com.ebisaos.service.dto.SolicitacaoUnidadeDTO;
 import com.ebisaos.service.dto.SolicitacaoViewDTO;
 import com.ebisaos.service.dto.SolicitacaoViewMaterialDTO;
+import com.ebisaos.service.dto.SolicitacaoViewServicoDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -204,6 +205,13 @@ public class SolicitacaoResource {
     public SolicitacaoViewMaterialDTO getGolicitacaoViewMatarial(@PathVariable("id") Long id) {
         log.debug("REST request to get Solicitacao : {}", id);
         SolicitacaoViewMaterialDTO solicitacaoViewDTO = solicitacaoService.montarVisualizadorMaterial(id);
+        return solicitacaoViewDTO;
+    }
+
+    @GetMapping("solicitacaoViewServico/{id}")
+    public SolicitacaoViewServicoDTO getGolicitacaoViewServico(@PathVariable("id") Long id) {
+        log.debug("REST request to get Solicitacao : {}", id);
+        SolicitacaoViewServicoDTO solicitacaoViewDTO = solicitacaoService.montarVisualizadorSolicitacao(id);
         return solicitacaoViewDTO;
     }
 
