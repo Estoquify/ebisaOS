@@ -1,5 +1,6 @@
 package com.ebisaos.repository;
 
+import com.ebisaos.domain.Equipe;
 import com.ebisaos.domain.Item;
 import com.ebisaos.domain.SolicitacaoItem;
 

@@ -2,6 +2,9 @@ package com.ebisaos.service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ebisaos.domain.Item;
 import com.ebisaos.repository.ItemRepository;
+import com.ebisaos.service.dto.QuantidadeItensDTO;
+import com.ebisaos.service.dto.StockDTO;
 
 @Service
 @Transactional
@@ -66,6 +71,31 @@ public class ItemService {
         Page<Item> pageItem = listPage(pageable, listaItem, countItem);
 
         return pageItem;
+    }
+
+    public List<QuantidadeItensDTO> montarDTOQuantItens(List<Object[]> listRaw) {
+        
+        List<QuantidadeItensDTO> dtoList = new ArrayList<>();
+
+        for (Object[] row : listRaw) {
+            
+
+            Item item = new Item();
+            item.setId((Long) row[0]);  
+            item.setCreatedBy((String) row[1]);  
+            item.setCreatedDate(((java.sql.Timestamp) row[2]).toInstant());
+            item.setLastModifiedBy((String) row[3]); 
+            item.setLastModifiedDate(((java.sql.Timestamp) row[4]).toInstant());  
+            item.setNomeItem((String) row[5]);
+
+            QuantidadeItensDTO dto = new QuantidadeItensDTO();
+            dto.setQuantidade((Long) row[6]);  
+            dto.setItem(item);  
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
 }

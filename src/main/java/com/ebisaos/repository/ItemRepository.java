@@ -40,4 +40,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     )
     Long countListaItem(@Param("pesquisa") String pesquisa);
 
+    @Query(
+        value = """
+                SELECT ite.id, ite.created_by, ite.created_date, ite.last_modified_by, ite.last_modified_date, ite.nome_item, soli.quantidade_solicitada
+                    FROM public.solicitacao_item AS soli
+                    LEFT JOIN public.item AS ite ON soli.item_id = ite.id
+                    WHERE soli.solicitacao_id = :idSolicitacao
+        """,
+        nativeQuery = true
+    )
+    List<Object[]> rawItensQuantidade(@Param("idSolicitacao") Long idSolicitacao);
+
 }

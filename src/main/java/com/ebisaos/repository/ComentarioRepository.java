@@ -18,4 +18,17 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
     @Query("SELECT c FROM Comentario c LEFT JOIN c.avaliacao a WHERE a.solicitacao.id = :solicitacaoId")
     List<Comentario> getListComentarios(@Param("solicitacaoId") Long solicitacaoId);
 
+    @Query(
+        value = """
+                SELECT com.respostas as resposta, use.last_name as nome, com.created_date as data_avaliacao, com.tipo_comentario
+                    FROM public.comentario AS com
+                    LEFT JOIN public.jhi_user AS use ON com.created_by = use.login
+                    LEFT JOIN public.avaliacao AS ava ON com.avaliacao_id = ava.id
+                    WHERE ava.solicitacao_id = :idSolicitacao
+                    ORDER BY com.created_date;
+        """,
+        nativeQuery = true
+    )
+    List<Object[]> rawItensQuantidade(@Param("idSolicitacao") Long idSolicitacao);
+
 }
