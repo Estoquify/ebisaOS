@@ -29,11 +29,9 @@ import '../home/solicitacao.scss';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import axios from 'axios';
 import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
+import dayjs from 'dayjs';
 
 export const SolicitacaoGinfra = () => {
-  const dispatch = useAppDispatch();
-
-  const pageLocation = useLocation();
   const navigate = useNavigate();
 
   const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacao[]>([]);
@@ -48,17 +46,6 @@ export const SolicitacaoGinfra = () => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
-  };
-  
-  const handleReturnPrioridade = (status: boolean) => {
-    switch (status) {
-      case true:
-        return 'sheet-data-prioridade-green';
-      case false:
-        return 'sheet-data-prioridade-red';
-      default:
-        return 'sheet-data-prioridade-yellow';
-    }
   };
 
   const handleReturnStatus = (status: boolean) => {
@@ -85,6 +72,11 @@ export const SolicitacaoGinfra = () => {
       default:
         return faHourglass;
     }
+  };
+
+  const handleFormatDate = (data: ISolicitacao) => {
+    const formattedDate = data?.createdDate ? dayjs(data.createdDate).format('DD/MM/YYYY') : '--------------';
+    return formattedDate;
   };
 
   useEffect(() => {
@@ -159,7 +151,7 @@ export const SolicitacaoGinfra = () => {
                     </div>
 
                     <div className="sheet-data">
-                      <span> {data?.createDate?.format(APP_LOCAL_DATE_FORMAT)}</span>
+                      <span> {handleFormatDate(data)}</span>
                     </div>
 
                     <div className="sheet-data-status-container">
