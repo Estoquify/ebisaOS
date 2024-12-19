@@ -3,6 +3,8 @@ package com.ebisaos.web.rest;
 import com.ebisaos.domain.Avaliacao;
 import com.ebisaos.repository.AvaliacaoRepository;
 import com.ebisaos.service.AvaliacaoService;
+import com.ebisaos.service.dto.AvaliacaoEbisaMaterialDTO;
+import com.ebisaos.service.dto.AvaliacaoEbisaServicoDTO;
 import com.ebisaos.service.dto.AvaliacaoInfraDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -113,20 +115,33 @@ public class AvaliacaoResource {
             .body(avaliacaoGinfra);
     }
 
-    @PatchMapping("avaliacaoGestor/{idSolicitacao}/{aprovacao}/{avaliacao}")
-    public ResponseEntity<Avaliacao> avaliacaoGestor(
-        @PathVariable(value = "idSolicitacao") Long idSolicitacao,
-        @PathVariable(value = "aprovacao") Boolean aprovacao,
-        @PathVariable(value = "avaliacao") String avaliacao
-    ) throws URISyntaxException {
+    @PatchMapping("avaliacaoEbisaMaterial")
+    public ResponseEntity<Avaliacao> avaliacaoEbisaMaterial(@RequestBody AvaliacaoEbisaMaterialDTO avaliacaoEbisaMaterialDTO) throws URISyntaxException {
 
         // Verifica se algum dos parâmetros obrigatórios está nulo
-        if (idSolicitacao == null || aprovacao == null || avaliacao == null) {
+        if (avaliacaoEbisaMaterialDTO.getIdSolicitacao() == null || avaliacaoEbisaMaterialDTO.getResposta() == null || avaliacaoEbisaMaterialDTO.getAprovacao() == null) {
             return ResponseEntity.badRequest().body(null);
         }
 
         // Chama o serviço de avaliação com os parâmetros validados
-        Avaliacao avaliacaoGestor = avaliacaoService.avaliacaoGestor(idSolicitacao, aprovacao, avaliacao);
+        Avaliacao avaliacaoGestor = avaliacaoService.avaliacaoEbisaMaterial(avaliacaoEbisaMaterialDTO);
+
+        // Retorna a resposta com os headers e o corpo
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, avaliacaoGestor.getId().toString()))
+            .body(avaliacaoGestor);
+    }
+
+    @PatchMapping("avaliacaoEbisaServico")
+    public ResponseEntity<Avaliacao> avaliacaoEbisaServico(@RequestBody AvaliacaoEbisaServicoDTO avaliacaoEbisaServicoDTO) throws URISyntaxException {
+
+        // Verifica se algum dos parâmetros obrigatórios está nulo
+        if (avaliacaoEbisaServicoDTO.getIdSolicitacao() == null || avaliacaoEbisaServicoDTO.getResposta() == null || avaliacaoEbisaServicoDTO.getAprovacao() == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        // Chama o serviço de avaliação com os parâmetros validados
+        Avaliacao avaliacaoGestor = avaliacaoService.avaliacaoEbisaServico(avaliacaoEbisaServicoDTO);
 
         // Retorna a resposta com os headers e o corpo
         return ResponseEntity.ok()

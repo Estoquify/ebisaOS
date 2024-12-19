@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ebisaos.domain.Equipe;
+import com.ebisaos.domain.Solicitacao;
+import com.ebisaos.domain.SolicitacaoEquipe;
 import com.ebisaos.repository.EquipeRepository;
+import com.ebisaos.repository.SolicitacaoEquipeRepository;
 
 @Service
 @Transactional
@@ -27,6 +30,9 @@ public class EquipeService {
 
     @Autowired
     EquipeRepository equipeRepository;
+
+    @Autowired
+    SolicitacaoEquipeRepository solicitacaoEquipeRepository;
 
     public List<Equipe> findAll(Pageable pageable) {
         return equipeRepository.findAll(pageable).getContent();
@@ -70,6 +76,17 @@ public class EquipeService {
         Page<Equipe> pageEquipe = listPage(pageable, listaEquipe, countEquipe);
 
         return pageEquipe;
+    }
+
+    public void montarSolicitacaoEquipe(Equipe equipe, Solicitacao solicitacao) {
+        SolicitacaoEquipe solicitacaoEquipe = new SolicitacaoEquipe();
+
+        solicitacaoEquipe.setEquipe(equipe);
+        solicitacaoEquipe.setSolicitacao(solicitacao);
+        solicitacaoEquipeRepository.save(solicitacaoEquipe);
+
+        equipe.setOcupada(true);
+        save(equipe);
     }
 
 }
