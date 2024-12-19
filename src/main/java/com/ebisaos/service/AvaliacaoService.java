@@ -49,7 +49,12 @@ public class AvaliacaoService {
 
     public Avaliacao avaliacaoPorSolicitacao(Long solicitacaoId) {
         return avaliacaoRepository.findBySolicitacaoId(solicitacaoId);
-    }    
+    }
+    
+    public Boolean existeAvaliacaoPorSolicitacao(Long solicitacaoId) {
+        Avaliacao avaliacao = avaliacaoRepository.findBySolicitacaoId(solicitacaoId);
+        return avaliacao != null;
+    }
 
     public void avaliacaoInicial(Solicitacao solicitacao) {
         Avaliacao avaliacao = new Avaliacao();

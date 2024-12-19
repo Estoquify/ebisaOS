@@ -237,6 +237,7 @@ public class SolicitacaoService {
         solicitacaoViewServicoDTO.setItens(itemService.montarDTOQuantItens(rawItens));
         solicitacaoViewServicoDTO.setComentarios(avaliacaoService.montarDTOChat(rawComentarios));
         solicitacaoViewServicoDTO.setEquipes(equipeService.listaEquipesPorSolicitacao(idSolicitacao));
+        solicitacaoViewServicoDTO.setFoiAvaliado(avaliacaoService.existeAvaliacaoPorSolicitacao(idSolicitacao));
 
         return solicitacaoViewServicoDTO;
     }
