@@ -27,6 +27,7 @@ import '../home/solicitacao.scss';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import axios from 'axios';
 import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
+import dayjs from 'dayjs';
 
 export const SolicitacaoEbisa = () => {
   const dispatch = useAppDispatch();
@@ -83,6 +84,11 @@ export const SolicitacaoEbisa = () => {
       default:
         return faHourglass;
     }
+  };
+
+  const handleFormatDate = (data: ISolicitacao) => {
+    const formattedDate = data?.createdDate ? dayjs(data.createdDate).format('DD/MM/YYYY') : '--------------';
+    return formattedDate;
   };
 
   useEffect(() => {
@@ -165,7 +171,7 @@ export const SolicitacaoEbisa = () => {
                     </div>
 
                     <div className="sheet-data">
-                      <span> {data?.createDate?.format(APP_LOCAL_DATE_FORMAT)}</span>
+                      <span> {handleFormatDate(data)}</span>
                     </div>
 
                     <div className="sheet-data-status-container">

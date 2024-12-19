@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Row, Table } from 'reactstrap';
-import { Translate, TextFormat, getSortState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faSort,
-  faSortUp,
-  faSortDown,
   faPlus,
   faEye,
   faCheck,
@@ -16,9 +12,6 @@ import {
   faChevronLeft,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
-import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from '../solicitacao.reducer';
@@ -27,14 +20,11 @@ import '../home/solicitacao.scss';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import axios from 'axios';
 import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
+import dayjs from 'dayjs';
 
 export const SolicitacaoUnidade = () => {
-  const dispatch = useAppDispatch();
-
-  const pageLocation = useLocation();
   const navigate = useNavigate();
-  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id)
-
+  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id);
 
   const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacao[]>([]);
 
@@ -50,17 +40,6 @@ export const SolicitacaoUnidade = () => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
-  };
-
-  const handleReturnPrioridade = (status: boolean) => {
-    switch (status) {
-      case true:
-        return 'sheet-data-prioridade-green';
-      case false:
-        return 'sheet-data-prioridade-red';
-      default:
-        return 'sheet-data-prioridade-yellow';
-    }
   };
 
   const handleReturnStatus = (status: boolean) => {
@@ -87,6 +66,19 @@ export const SolicitacaoUnidade = () => {
       default:
         return faHourglass;
     }
+  };
+
+  const handleNavigateByStatus = (data: ISolicitacao) => {
+    if( data?.aberta) {
+      navigate(`./${data?.id}`)
+    } else {
+      navigate(`./edit/${data.id}`)
+    }
+  }
+
+  const handleFormatDate = (data: ISolicitacao) => {
+    const formattedDate = data?.createdDate ? dayjs(data.createdDate).format('DD/MM/YYYY') : '--------------';
+    return formattedDate;
   };
 
   useEffect(() => {
@@ -153,18 +145,22 @@ export const SolicitacaoUnidade = () => {
                     </div>
 
                     <div className="sheet-data">
-                      <span> {data?.createDate?.format(APP_LOCAL_DATE_FORMAT)}</span>
+                      <span> {handleFormatDate(data)}</span>
                     </div>
 
                     <div className="sheet-data-status-container">
-                      <div className={handleReturnStatus(data?.aberta)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                      <div
+                        className={handleReturnStatus(data?.aberta)}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
                         <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aberta)} />
                       </div>
                     </div>
 
                     <div className="sheet-data-button-container">
-                      <Button className="sheet-data-button">
+                      <Button className="sheet-data-button" onClick={() => handleNavigateByStatus(data)}>
                         <FontAwesomeIcon icon={data?.aberta ? faEye : faPen} />
+                        <span> {data?.aberta ? 'Visualizar' : 'Editar'} </span>
                       </Button>
                     </div>
                   </div>
@@ -172,7 +168,6 @@ export const SolicitacaoUnidade = () => {
             </div>
           </div>
         )}
-
       </Row>
 
       <Row className="page-container">

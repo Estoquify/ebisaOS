@@ -1,7 +1,16 @@
 export const AUTHORITIES = {
   ADMIN: 'ROLE_ADMIN',
   USER: 'ROLE_USER',
+  EBISA: 'ROLE_EBISA',
+  GINFRA: 'ROLE_GINFRA',
+  UNIDADE: 'ROLE_UNIDADE'
 };
+
+export const TIPOSCOMENTARIOS = {
+    GINFRA: "AVALIACAO GINFRA",
+    EBISA: "AVALIACAO EBISA",
+    UNIDADE: "COMENTARIO UNIDADE"
+}
 
 export const messages = {
   DATA_ERROR_ALERT: 'Internal Error',

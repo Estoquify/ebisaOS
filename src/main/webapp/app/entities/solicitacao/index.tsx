@@ -15,9 +15,6 @@ import SolicitacaoEbisa from './Ebisa/Solicitacoes-Ebisa';
 const SolicitacaoRoutes = () => (
   <ErrorBoundaryRoutes>
     <Route index element={<Solicitacao />} />
-    <Route path="unidade" element={<SolicitacaoUnidade/>}/>
-    <Route path="ginfra" element={<SolicitacaoGinfra/>}/>
-    <Route path="ebisa" element={<SolicitacaoEbisa/>}/>
     <Route path="new" element={<SolicitacaoCreate />} />
     <Route path=":id">
       <Route index element={<SolicitacaoDetail />} />
