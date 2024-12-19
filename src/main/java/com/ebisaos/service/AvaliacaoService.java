@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ebisaos.domain.Avaliacao;
 import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.repository.AvaliacaoRepository;
+import com.ebisaos.repository.SolicitacaoRepository;
+import com.ebisaos.service.dto.AvaliacaoInfraDTO;
 import com.ebisaos.service.dto.ComentariosViewDTO;
 
 @Service
@@ -22,6 +24,12 @@ public class AvaliacaoService {
 
     @Autowired
     AvaliacaoRepository avaliacaoRepository;
+
+    @Autowired
+    ComentarioService comentarioService;
+
+    @Autowired
+    SolicitacaoRepository solicitacaoRepository;
 
     public List<Avaliacao> findAll(Pageable pageable) {
         return avaliacaoRepository.findAll(pageable).getContent();
@@ -66,12 +74,16 @@ public class AvaliacaoService {
         save(avaliacao);
     }
 
-    public Avaliacao avaliacaoGinfra(Long idSolicitacao, Boolean aprovacao, String justificativa) {
-        Avaliacao avaliacao = avaliacaoPorSolicitacao(idSolicitacao);
+    public Avaliacao avaliacaoGinfra(AvaliacaoInfraDTO avaliacaoInfraDTO) {
+        Avaliacao avaliacao = avaliacaoPorSolicitacao(avaliacaoInfraDTO.getIdSolicitacao());
 
-        avaliacao.setAprovacaoGinfra(aprovacao);
-        avaliacao.setAvalicaoGinfra(justificativa);
+        avaliacao.setAprovacaoGinfra(avaliacaoInfraDTO.getAprovacao());
         save(avaliacao);
+        comentarioService.criarComentarioAvaliacao(avaliacao, avaliacaoInfraDTO.getResposta(), "AVALIACAO GINFRA");
+        
+        Solicitacao solicitacao = avaliacao.getSolicitacao();
+        solicitacao.setPrioridade(avaliacaoInfraDTO.getPrioridade());
+        solicitacaoRepository.save(solicitacao);
 
         return avaliacao;
     }

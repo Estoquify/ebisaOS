@@ -3,6 +3,7 @@ package com.ebisaos.web.rest;
 import com.ebisaos.domain.Avaliacao;
 import com.ebisaos.repository.AvaliacaoRepository;
 import com.ebisaos.service.AvaliacaoService;
+import com.ebisaos.service.dto.AvaliacaoInfraDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -95,20 +96,16 @@ public class AvaliacaoResource {
             .body(avaliacao);
     }
 
-    @PatchMapping("avaliacaoGinfra/{idSolicitacao}/{aprovacao}/{avaliacao}")
-    public ResponseEntity<Avaliacao> avaliacaoGinfra(
-        @PathVariable(value = "idSolicitacao") Long idSolicitacao,
-        @PathVariable(value = "aprovacao") Boolean aprovacao,
-        @PathVariable(value = "avaliacao") String avaliacao
-    ) throws URISyntaxException {
+    @PatchMapping("avaliacaoGinfra")
+    public ResponseEntity<Avaliacao> avaliacaoGinfra(@RequestBody AvaliacaoInfraDTO avaliacaoInfraDTO) throws URISyntaxException {
 
         // Verifica se algum dos parâmetros obrigatórios está nulo
-        if (idSolicitacao == null || aprovacao == null || avaliacao == null) {
+        if (avaliacaoInfraDTO.getIdSolicitacao() == null || avaliacaoInfraDTO.getAprovacao() == null || avaliacaoInfraDTO.getResposta() == null) {
             return ResponseEntity.badRequest().body(null);
         }
 
         // Chama o serviço de avaliação com os parâmetros validados
-        Avaliacao avaliacaoGinfra = avaliacaoService.avaliacaoGinfra(idSolicitacao, aprovacao, avaliacao);
+        Avaliacao avaliacaoGinfra = avaliacaoService.avaliacaoGinfra(avaliacaoInfraDTO);
 
         // Retorna a resposta com os headers e o corpo
         return ResponseEntity.ok()

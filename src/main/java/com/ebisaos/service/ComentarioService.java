@@ -8,7 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ebisaos.domain.Avaliacao;
 import com.ebisaos.domain.Comentario;
+import com.ebisaos.repository.AvaliacaoRepository;
 import com.ebisaos.repository.ComentarioRepository;
 import com.ebisaos.service.dto.ComentarioDTO;
 
@@ -22,7 +24,7 @@ public class ComentarioService {
     ComentarioRepository comentarioRepository;
 
     @Autowired
-    AvaliacaoService avaliacaoService;
+    AvaliacaoRepository avaliacaoRepository;
 
     public List<Comentario> findAll(Pageable pageable) {
         return comentarioRepository.findAll(pageable).getContent();
@@ -53,9 +55,18 @@ public class ComentarioService {
         Comentario newComentario = new Comentario();
         newComentario.setRespostas(comentarioDTO.getResposta());
         newComentario.setTipoComentario("COMENTARIO UNIDADE");
-        newComentario.setAvaliacao(avaliacaoService.avaliacaoPorSolicitacao(comentarioDTO.getIdSolicitacao()));
+        newComentario.setAvaliacao(avaliacaoRepository.findBySolicitacaoId(comentarioDTO.getIdSolicitacao()));
         save(newComentario);
 
         return newComentario;
+    }
+
+    public void criarComentarioAvaliacao(Avaliacao avaliacao, String resposta, String tipoComentario) {
+
+        Comentario newComentario = new Comentario();
+        newComentario.setRespostas(resposta);
+        newComentario.setTipoComentario(tipoComentario);
+        newComentario.setAvaliacao(avaliacao);
+        save(newComentario);
     }
 }
