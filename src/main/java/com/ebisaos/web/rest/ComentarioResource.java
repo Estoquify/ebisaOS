@@ -2,6 +2,8 @@ package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Comentario;
 import com.ebisaos.repository.ComentarioRepository;
+import com.ebisaos.service.ComentarioService;
+import com.ebisaos.service.dto.ComentarioDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,8 +36,11 @@ public class ComentarioResource {
 
     private final ComentarioRepository comentarioRepository;
 
-    public ComentarioResource(ComentarioRepository comentarioRepository) {
+    private final ComentarioService comentarioService;
+
+    public ComentarioResource(ComentarioRepository comentarioRepository, ComentarioService comentarioService) {
         this.comentarioRepository = comentarioRepository;
+        this.comentarioService = comentarioService;
     }
 
     /**
@@ -46,12 +51,10 @@ public class ComentarioResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<Comentario> createComentario(@RequestBody Comentario comentario) throws URISyntaxException {
-        log.debug("REST request to save Comentario : {}", comentario);
-        if (comentario.getId() != null) {
-            throw new BadRequestAlertException("A new comentario cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        comentario = comentarioRepository.save(comentario);
+    public ResponseEntity<Comentario> createComentario(@RequestBody ComentarioDTO comentarioDTO) throws URISyntaxException {
+        log.debug("REST request to save Comentario : {}", comentarioDTO);
+        
+        Comentario comentario = comentarioService.criarComentario(comentarioDTO);
         return ResponseEntity.created(new URI("/api/comentarios/" + comentario.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, comentario.getId().toString()))
             .body(comentario);
