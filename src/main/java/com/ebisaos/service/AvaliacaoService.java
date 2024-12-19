@@ -52,7 +52,7 @@ public class AvaliacaoService {
     }
     
     public Boolean existeAvaliacaoPorSolicitacao(Long solicitacaoId) {
-        Avaliacao avaliacao = avaliacaoRepository.findBySolicitacaoId(solicitacaoId);
+        Avaliacao avaliacao = avaliacaoRepository.avaliacaoExiste(solicitacaoId);
         return avaliacao != null;
     }
 
@@ -60,6 +60,7 @@ public class AvaliacaoService {
         Avaliacao avaliacao = new Avaliacao();
 
         avaliacao.setAprovacao(null);
+        avaliacao.setAprovacaoGinfra(null);
         avaliacao.setSolicitacao(solicitacao);
 
         save(avaliacao);

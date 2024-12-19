@@ -2,9 +2,8 @@ package com.ebisaos.repository;
 
 import com.ebisaos.domain.Avaliacao;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,6 +14,10 @@ import org.springframework.stereotype.Repository;
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
 
     Avaliacao findBySolicitacaoId(Long solicitacaoId);
+
+    @Query(value = "SELECT * FROM public.avaliacao a WHERE a.aprovacao_ginfra IS NOT NULL AND a.solicitacao_id = :solicitacaoId", 
+       nativeQuery = true)
+    Avaliacao avaliacaoExiste(@Param("solicitacaoId") Long solicitacaoId);
 
 
 }
