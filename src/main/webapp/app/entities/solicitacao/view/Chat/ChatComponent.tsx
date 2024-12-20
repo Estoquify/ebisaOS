@@ -58,12 +58,12 @@ const ChatComponent = ({
           ))}
         </div>
         {/* Entrada do Chat */}
-        <div className="chat-input-container">
+        {isUnidade && <div className="chat-input-container">
           <Input placeholder="Digite uma mensagem" />
           <Button>
             <FontAwesomeIcon icon={faPaperPlane} />
           </Button>
-        </div>
+        </div>}
       </div>
     </Col>
   );

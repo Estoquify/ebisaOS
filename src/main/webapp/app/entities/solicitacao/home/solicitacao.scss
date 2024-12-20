@@ -52,7 +52,7 @@
   
         > .header-table-container {
           display: grid;
-          grid-template-columns: 0.15fr 1fr 0.5fr 0.5fr 0.4fr 0.1fr 0.1fr;
+          grid-template-columns: 0.15fr 1fr 0.5fr 0.5fr 0.4fr 0.4fr 0.4fr;
   
           gap: 1.2em;
   
@@ -86,7 +86,7 @@
             height: 10%;
   
             display: grid;
-            grid-template-columns: 0.15fr 1fr 0.5fr 0.5fr 0.4fr 0.1fr 0.1fr;
+            grid-template-columns: 0.15fr 1fr 0.5fr 0.5fr 0.4fr 0.4fr 0.4fr;
   
             gap: 1.2em;
   
@@ -177,8 +177,8 @@
   
         > .header-table-container {
           display: grid;
-          grid-template-columns: 0.15fr 0.2fr 1fr 0.5fr 0.4fr 0.3fr 0.1fr 0.1fr;
-  
+          grid-template-columns: 0.2fr 0.2fr 0.8fr 0.5fr 0.4fr 0.3fr 0.4fr 0.4fr;
+
           gap: 1.2em;
   
           width: 100%;
@@ -211,7 +211,7 @@
             height: 10%;
   
             display: grid;
-            grid-template-columns: 0.15fr 0.2fr 1fr 0.5fr 0.4fr 0.3fr 0.1fr 0.1fr;
+            grid-template-columns: 0.2fr 0.2fr 0.8fr 0.5fr 0.4fr 0.3fr 0.4fr 0.4fr;
   
             gap: 1.2em;
   

@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from '../solicitacao.reducer';
 import {
+    faCheckSquare,
   faChevronLeft,
   faComment,
   faFloppyDisk,
@@ -29,8 +30,9 @@ import { ISolicitacaoViewServicoDto } from 'app/shared/model/solicitacao-view-se
 import { IComentarioView } from 'app/shared/model/comentarios-view.model';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ChatComponent from '../view/Chat/ChatComponent';
+import ModalGinfra from './Modal/Modal-ginfra';
 
-export const SolicitacaoUnidadeDetail = () => {
+export const SolicitacaoGinfraDetail = () => {
   const navigate = useNavigate();
 
   const isUnidade = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.UNIDADE]));
@@ -40,6 +42,7 @@ export const SolicitacaoUnidadeDetail = () => {
   const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id);
 
   const [solicitacaoViewServico, setSolicitacaoViewServico] = useState<ISolicitacaoViewServicoDto>({});
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { id } = useParams<'id'>();
   const [setorUnidadeList, setSetorUnidadeList] = useState<ISetorUnidade[]>([]);
@@ -71,7 +74,7 @@ export const SolicitacaoUnidadeDetail = () => {
     : '';
 
   const handleButtonClick = () => {
-    navigate(`./edit`)
+    setIsModalOpen(true);
   }
 
   return (
@@ -94,6 +97,21 @@ export const SolicitacaoUnidadeDetail = () => {
                   <>
                     <option key={key} value={data?.id}>
                       {data?.nome}
+                    </option>
+                  </>
+                ))}
+            </Input>
+          </Col>
+
+          <Col>
+            <Label>Unidade</Label>
+            <Input type="select" value={solicitacaoViewServico?.solicitacao?.setorUnidade?.unidade?.id} readOnly disabled>
+              <option value={0}>Escolha um Unidade</option>
+              {setorUnidadeList &&
+                setorUnidadeList?.map((data, key) => (
+                  <>
+                    <option key={key} value={data?.unidade?.id}>
+                      {data?.unidade?.nome}
                     </option>
                   </>
                 ))}
@@ -196,12 +214,13 @@ export const SolicitacaoUnidadeDetail = () => {
         </Button>
 
         <Button onClick={() => handleButtonClick()} >
-          <span> Editar </span>
-          <FontAwesomeIcon icon={faPen} />
+          <span> Avaliar </span>
+          <FontAwesomeIcon icon={faCheckSquare}  />
         </Button>
       </div>
+      <ModalGinfra isOpen={isModalOpen} setIsOpen={setIsModalOpen} solicitacaoId={solicitacaoViewServico?.solicitacao?.id}/>
     </div>
   );
 };
 
-export default SolicitacaoUnidadeDetail;
+export default SolicitacaoGinfraDetail;

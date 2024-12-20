@@ -1,40 +1,29 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Alert, Button, Col, Row, Table } from 'reactstrap';
-import { Translate, TextFormat, getSortState } from 'react-jhipster';
+import { useNavigate } from 'react-router-dom';
+import { Button, Col, Row} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faSort,
-  faSortUp,
-  faSortDown,
   faPlus,
   faEye,
   faCheck,
   faX,
   faHourglass,
-  faPen,
   faChevronLeft,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
-import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { useAppDispatch, useAppSelector } from 'app/config/store';
-
-import { getEntities } from '../solicitacao.reducer';
 
 import '../home/solicitacao.scss';
-import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import axios from 'axios';
 import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
 import dayjs from 'dayjs';
+import { ISolicitacaoGinfraListagem } from 'app/shared/model/solicitacao-Ginfra-listagem.model';
 
 export const SolicitacaoGinfra = () => {
   const navigate = useNavigate();
 
-  const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacao[]>([]);
+  const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacaoGinfraListagem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputPesquisa, setInputPesquisa] = useState<string>('');
 
@@ -47,7 +36,7 @@ export const SolicitacaoGinfra = () => {
       setTotalPages(res?.data?.totalPages);
     });
   };
-
+  
   const handleReturnStatus = (status: boolean) => {
     switch (status) {
       case true:
@@ -74,7 +63,7 @@ export const SolicitacaoGinfra = () => {
     }
   };
 
-  const handleFormatDate = (data: ISolicitacao) => {
+  const handleFormatDate = (data: ISolicitacaoGinfraListagem) => {
     const formattedDate = data?.createdDate ? dayjs(data.createdDate).format('DD/MM/YYYY') : '--------------';
     return formattedDate;
   };
@@ -90,11 +79,11 @@ export const SolicitacaoGinfra = () => {
           <h2>Solicitações</h2>
         </Col>
 
-        <Col className="solicitacao-home-header_button">
+        {/* <Col className="solicitacao-home-header_button">
           <Button onClick={() => navigate('new')}>
             <FontAwesomeIcon icon={faPlus} />
           </Button>
-        </Col>
+        </Col> */}
       </Row>
 
       <Row className="solicitacao-ginfra-data">
@@ -118,11 +107,11 @@ export const SolicitacaoGinfra = () => {
               </div>
 
               <div className="header-table-data">
-                <span>Data</span>
+                <span>Unidade</span>
               </div>
 
               <div className="header-table-data">
-                <span>Status</span>
+                <span>Data</span>
               </div>
 
               <div className="header-table-data">
@@ -132,7 +121,7 @@ export const SolicitacaoGinfra = () => {
 
             <div className="sheet-data-container">
               {solicitacaoList &&
-                solicitacaoList?.map((data: ISolicitacao, key) => (
+                solicitacaoList?.map((data: ISolicitacaoGinfraListagem, key) => (
                   <div className="sheet-line-data-container" key={key}>
                     <div className="sheet-data">
                       <div>{data?.id}</div>
@@ -147,22 +136,21 @@ export const SolicitacaoGinfra = () => {
                     </div>
 
                     <div className="sheet-data">
-                      <span> {data?.setorUnidade?.nome}</span>
+                      <span> {data?.nomeSetor}</span>
+                    </div>
+
+                    <div className="sheet-data">
+                      <span> {data?.siglaUnidade}</span>
                     </div>
 
                     <div className="sheet-data">
                       <span> {handleFormatDate(data)}</span>
                     </div>
 
-                    <div className="sheet-data-status-container">
-                      <div className={handleReturnStatus(data?.aberta)} style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aberta)} />
-                      </div>
-                    </div>
-
                     <div className="sheet-data-button-container">
-                      <Button className="sheet-data-button">
-                        <FontAwesomeIcon icon={data?.aberta ? faEye : faPen} />
+                      <Button className="sheet-data-button" onClick={() => navigate(`./${data?.id}`)}>
+                        <FontAwesomeIcon icon={faEye} />
+                        <span> Visualizar </span>
                       </Button>
                     </div>
                   </div>

@@ -16,18 +16,14 @@ import {
   faChevronLeft,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
-import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-
-import { getEntities } from '../solicitacao.reducer';
 
 import '../home/solicitacao.scss';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import axios from 'axios';
 import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
 import dayjs from 'dayjs';
+import { ISolicitacaoEbisaListagem } from 'app/shared/model/solicitacao-Ebisa-listagem.model';
 
 export const SolicitacaoEbisa = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +31,7 @@ export const SolicitacaoEbisa = () => {
   const pageLocation = useLocation();
   const navigate = useNavigate();
 
-  const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacao[]>([]);
+  const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacaoEbisaListagem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputPesquisa, setInputPesquisa] = useState<string>('');
 
@@ -49,11 +45,11 @@ export const SolicitacaoEbisa = () => {
     });
   };
 
-  const handleReturnPrioridade = (status: boolean) => {
+  const handleReturnPrioridade = (status: number | string) => {
     switch (status) {
-      case true:
+      case 3:
         return 'sheet-data-prioridade-green';
-      case false:
+      case 1:
         return 'sheet-data-prioridade-red';
       default:
         return 'sheet-data-prioridade-yellow';
@@ -86,7 +82,7 @@ export const SolicitacaoEbisa = () => {
     }
   };
 
-  const handleFormatDate = (data: ISolicitacao) => {
+  const handleFormatDate = (data: ISolicitacaoEbisaListagem) => {
     const formattedDate = data?.createdDate ? dayjs(data.createdDate).format('DD/MM/YYYY') : '--------------';
     return formattedDate;
   };
@@ -102,11 +98,11 @@ export const SolicitacaoEbisa = () => {
           <h2>Solicitações</h2>
         </Col>
 
-        <Col className="solicitacao-home-header_button">
+        {/* <Col className="solicitacao-home-header_button">
           <Button onClick={() => navigate('new')}>
             <FontAwesomeIcon icon={faPlus} />
           </Button>
-        </Col>
+        </Col> */}
       </Row>
 
       <Row className="solicitacao-ebisa-data">
@@ -138,7 +134,7 @@ export const SolicitacaoEbisa = () => {
               </div>
 
               <div className="header-table-data">
-                <span>Status</span>
+                <span>Unidade</span>
               </div>
 
               <div className="header-table-data">
@@ -148,7 +144,7 @@ export const SolicitacaoEbisa = () => {
 
             <div className="sheet-data-container">
               {solicitacaoList &&
-                solicitacaoList?.map((data: ISolicitacao, key) => (
+                solicitacaoList?.map((data: ISolicitacaoEbisaListagem, key) => (
                   <div className="sheet-line-data-container" key={key}>
                     <div className={handleReturnPrioridade(data?.prioridade)}>
                       <div> </div>
@@ -167,25 +163,21 @@ export const SolicitacaoEbisa = () => {
                     </div>
 
                     <div className="sheet-data">
-                      <span> {data?.setorUnidade?.nome}</span>
+                      <span> {data?.nomeSetor}</span>
                     </div>
 
                     <div className="sheet-data">
                       <span> {handleFormatDate(data)}</span>
                     </div>
 
-                    <div className="sheet-data-status-container">
-                      <div
-                        className={handleReturnStatus(data?.aberta)}
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >
-                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aberta)} />
-                      </div>
+                    <div className="sheet-data">
+                      <span> {data?.siglaUnidade ? data?.siglaUnidade : "Não informada"}</span>
                     </div>
 
                     <div className="sheet-data-button-container">
-                      <Button className="sheet-data-button">
-                        <FontAwesomeIcon icon={data?.aberta ? faEye : faPen} />
+                      <Button className="sheet-data-button" onClick={() => navigate(`./${data?.id}`)}>
+                        <FontAwesomeIcon icon={faEye} />
+                        <span> Visualizar </span>
                       </Button>
                     </div>
                   </div>

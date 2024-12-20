@@ -23,6 +23,11 @@ export const getEntities = createAsyncThunk('equipe/fetch_entity_list', async ({
   return axios.get<IEquipe[]>(requestUrl);
 });
 
+export const getEntitiesAvailable = createAsyncThunk('equipe/fetch_entitiesAvailable_list', async () => {
+  const requestUrl = `${apiUrl}/getAllAvailableEquipes`;
+  return axios.get<IEquipe[]>(requestUrl);
+});
+
 export const getEntity = createAsyncThunk(
   'equipe/fetch_entity',
   async (id: string | number) => {
@@ -105,13 +110,22 @@ export const EquipeSlice = createEntitySlice({
           }),
         };
       })
+      .addMatcher(isFulfilled(getEntitiesAvailable), (state, action) => {
+        const { data } = action.payload;
+
+        return {
+          ...state,
+          loading: false,
+          entities: data
+        };
+      })
       .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
         state.updating = false;
         state.loading = false;
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getEntitiesAvailable, getEntity), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
