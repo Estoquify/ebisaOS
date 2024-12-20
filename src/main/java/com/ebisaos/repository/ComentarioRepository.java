@@ -25,7 +25,7 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
                     LEFT JOIN public.jhi_user AS use ON com.created_by = use.login
                     LEFT JOIN public.avaliacao AS ava ON com.avaliacao_id = ava.id
                     WHERE ava.solicitacao_id = :idSolicitacao
-                    ORDER BY com.created_date;
+                    ORDER BY com.created_date DESC;
         """,
         nativeQuery = true
     )
