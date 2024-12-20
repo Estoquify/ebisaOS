@@ -29,6 +29,8 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
     List<Equipe> listaEquipeRaw(@Param("pesquisa") String pesquisa, @Param("page") Integer page, @Param("size") Integer size);
 
 
+    List<Equipe> findAllByAtivaTrueAndOcupadaFalse();
+
     @Query(
         value = """
                 SELECT COUNT(eqi.*)

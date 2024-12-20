@@ -10,7 +10,7 @@ import SolicitacaoDeleteDialog from './solicitacao-delete-dialog';
 import SolicitacaoCreate from './create/solicitacao-create';
 import { SolicitacaoUnidade } from './Unidade/Solicitacao-Unidade';
 import SolicitacaoGinfra from './Ginfra/Solicitacao-Ginfra';
-import SolicitacaoEbisa from './Ebisa/Solicitacoes-Ebisa';
+import SolicitacaoEbisa from './Ebisa/Solicitacao-Ebisa';
 
 const SolicitacaoRoutes = () => (
   <ErrorBoundaryRoutes>

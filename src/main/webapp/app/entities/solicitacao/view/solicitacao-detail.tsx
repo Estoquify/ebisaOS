@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import './solicitacao-detail.scss';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import { SolicitacaoUnidadeDetail } from '../Unidade/Solicitacao-unidade-view';
+import SolicitacaoGinfraDetail from '../Ginfra/Solicitacao-ginfra-view';
+import SolicitacaoEbisaDetail from '../Ebisa/Solicitacao-ebisa-view';
 
 export const SolicitacaoDetail = () => {
   const dispatch = useAppDispatch();
@@ -17,14 +19,14 @@ export const SolicitacaoDetail = () => {
 
   const isAdmin = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.ADMIN]));
   const isEbisa = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.EBISA]));
-  const isGinfra = useAppSelector(state => hasAnyAuthority(state.authentication.account.authories, [AUTHORITIES.GINFRA]));
+  const isGinfra = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.GINFRA]));
   const isUnidade = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.UNIDADE]));
 
   const returnSolicitacaoByAuthorities = () => {
     if (isEbisa) {
-      // return <SolicitacaoEbisa />;
+      return <SolicitacaoEbisaDetail />;
     } else if (isGinfra) {
-      // return <SolicitacaoGinfra />;
+      return <SolicitacaoGinfraDetail />;
     } else if (isUnidade) {
       return <SolicitacaoUnidadeDetail />;
     }

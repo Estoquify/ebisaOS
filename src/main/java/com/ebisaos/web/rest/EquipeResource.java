@@ -164,6 +164,12 @@ public class EquipeResource {
         return equipeRepository.findAll();
     }
 
+    @GetMapping("/getAllAvailableEquipes")
+    public List<Equipe> getAllAvailableEquipes() {
+        log.debug("REST request to get all Equipes");
+        return equipeRepository.findAllByAtivaTrueAndOcupadaFalse();
+    }
+
     /**
      * {@code GET  /equipes/:id} : get the "id" equipe.
      *
