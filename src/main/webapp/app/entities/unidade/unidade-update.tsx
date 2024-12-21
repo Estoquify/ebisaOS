@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { Button, Row, Col, Input, Label } from 'reactstrap';
+import { translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IEndereco } from 'app/shared/model/endereco.model';
@@ -13,7 +11,10 @@ import { getEntities as getEnderecos } from 'app/entities/endereco/endereco.redu
 import { IOrgao } from 'app/shared/model/orgao.model';
 import { getEntities as getOrgaos } from 'app/entities/orgao/orgao.reducer';
 import { IUnidade } from 'app/shared/model/unidade.model';
-import { getEntity, updateEntity, createEntity, reset } from './unidade.reducer';
+import { updateEntity, createEntity, reset } from './unidade.reducer';
+import { faChevronLeft, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import { toNumber } from 'lodash';
+import axios from 'axios';
 
 export const UnidadeUpdate = () => {
   const dispatch = useAppDispatch();
@@ -25,10 +26,11 @@ export const UnidadeUpdate = () => {
 
   const enderecos = useAppSelector(state => state.endereco.entities);
   const orgaos = useAppSelector(state => state.orgao.entities);
-  const unidadeEntity = useAppSelector(state => state.unidade.entity);
   const loading = useAppSelector(state => state.unidade.loading);
   const updating = useAppSelector(state => state.unidade.updating);
   const updateSuccess = useAppSelector(state => state.unidade.updateSuccess);
+
+  const [unidadeData, setUnidadeData] = useState<IUnidade>({});
 
   const handleClose = () => {
     navigate('/unidade');
@@ -38,7 +40,12 @@ export const UnidadeUpdate = () => {
     if (isNew) {
       dispatch(reset());
     } else {
-      dispatch(getEntity(id));
+      axios
+        .get(`/api/unidades/${id}`)
+        .then(res => {
+          setUnidadeData(res?.data);
+        })
+        .catch(err => {});
     }
 
     dispatch(getEnderecos({}));
@@ -52,16 +59,15 @@ export const UnidadeUpdate = () => {
   }, [updateSuccess]);
 
   // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  const saveEntity = () => {
+    if (unidadeData.id !== undefined && typeof unidadeData.id !== 'number') {
+      unidadeData.id = Number(unidadeData.id);
     }
 
     const entity = {
-      ...unidadeEntity,
-      ...values,
-      endereco: enderecos.find(it => it.id.toString() === values.endereco?.toString()),
-      orgao: orgaos.find(it => it.id.toString() === values.orgao?.toString()),
+      ...unidadeData,
+      endereco: enderecos.find(it => it.id.toString() === unidadeData?.endereco?.id?.toString()),
+      orgao: orgaos.find(it => it.id.toString() === unidadeData?.orgao?.id?.toString()),
     };
 
     if (isNew) {
@@ -71,21 +77,12 @@ export const UnidadeUpdate = () => {
     }
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-          ...unidadeEntity,
-          endereco: unidadeEntity?.endereco?.id,
-          orgao: unidadeEntity?.orgao?.id,
-        };
-
   return (
-    <div>
+    <div className="stock-home-container">
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="ebisaOsApp.unidade.home.createOrEditLabel" data-cy="UnidadeCreateUpdateHeading">
-            <Translate contentKey="ebisaOsApp.unidade.home.createOrEditLabel">Create or edit a Unidade</Translate>
+            {isNew ? "Criar Unidade" : "Editar Unidade"}
           </h2>
         </Col>
       </Row>
@@ -94,59 +91,100 @@ export const UnidadeUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="unidade-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
-              ) : null}
-              <ValidatedField label={translate('ebisaOsApp.unidade.nome')} id="unidade-nome" name="nome" data-cy="nome" type="text" />
-              <ValidatedField label={translate('ebisaOsApp.unidade.cnpj')} id="unidade-cnpj" name="cnpj" data-cy="cnpj" type="text" />
-              <ValidatedField
-                id="unidade-endereco"
-                name="endereco"
-                data-cy="endereco"
-                label={translate('ebisaOsApp.unidade.endereco')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {enderecos
-                  ? enderecos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField id="unidade-orgao" name="orgao" data-cy="orgao" label={translate('ebisaOsApp.unidade.orgao')} type="select">
-                <option value="" key="0" />
-                {orgaos
-                  ? orgaos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/unidade" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ValidatedForm>
+            <div>
+              <Row>
+                <Col>
+                  <Label>Nome</Label>
+                  <Input
+                    label={translate('ebisaOsApp.unidade.nome')}
+                    id="unidade-nome"
+                    name="nome"
+                    data-cy="nome"
+                    type="text"
+                    placeholder="Nome"
+                    value={unidadeData?.nome}
+                    onChange={e => setUnidadeData({ ...unidadeData, nome: e.target.value })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>CNPJ</Label>
+                  <Input
+                    label={translate('ebisaOsApp.unidade.cnpj')}
+                    id="unidade-cnpj"
+                    name="cnpj"
+                    data-cy="cnpj"
+                    type="text"
+                    placeholder="CNPJ"
+                    value={unidadeData?.cnpj}
+                    onChange={e => setUnidadeData({ ...unidadeData, cnpj: e.target.value })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>Endereço</Label>
+                  <Input
+                    id="unidade-endereco"
+                    name="endereco"
+                    data-cy="endereco"
+                    label={translate('ebisaOsApp.unidade.endereco')}
+                    type="select"
+                    placeholder="Endereço"
+                    value={unidadeData?.endereco?.id}
+                    onChange={e => setUnidadeData({ ...unidadeData, endereco: { ...unidadeData?.endereco, id: toNumber(e.target.value) } })}
+                  >
+                    <option value="" key="0" />
+                    {enderecos
+                      ? enderecos.map((otherEntity: IEndereco) => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity?.logradouro}
+                          </option>
+                        ))
+                      : null}
+                  </Input>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <Label>Orgão</Label>
+                  <Input
+                    id="unidade-orgao"
+                    name="orgao"
+                    data-cy="orgao"
+                    label={translate('ebisaOsApp.unidade.orgao')}
+                    type="select"
+                    value={unidadeData?.orgao?.id}
+                    onChange={e => setUnidadeData({ ...unidadeData, orgao: { ...unidadeData?.orgao, id: toNumber(e.target.value) } })}
+                  >
+                    <option value="" key="0" />
+                    {orgaos
+                      ? orgaos.map((otherEntity: IOrgao) => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity?.nome}
+                          </option>
+                        ))
+                      : null}
+                  </Input>
+                </Col>
+              </Row>
+
+              <Row className="buttons-container">
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => saveEntity()} disabled={updating}>
+                    <span> Salvar </span>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                  </Button>
+                </Col>
+              </Row>
+            </div>
           )}
         </Col>
       </Row>
