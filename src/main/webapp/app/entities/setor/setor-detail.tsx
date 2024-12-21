@@ -1,64 +1,111 @@
-import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
-import { Translate } from 'react-jhipster';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Row, Col, Label, Input } from 'reactstrap';
+import { translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntity } from './setor.reducer';
+import { ISetor } from 'app/shared/model/setor.model';
+import { faChevronLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 export const SetorDetail = () => {
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { id } = useParams<'id'>();
 
+  const loading = useAppSelector(state => state.setor.loading);
+  const updating = useAppSelector(state => state.setor.updating);
+
+  const [setorData, setSetorData] = useState<ISetor>({});
+
+  const handleClose = () => {
+    navigate('/setor');
+  };
+
+  const handleEditar = () => {
+    navigate('./edit');
+  };
+
   useEffect(() => {
-    dispatch(getEntity(id));
+    axios
+      .get(`/api/setors/${id}`)
+      .then(res => {
+        setSetorData(res?.data);
+      })
+      .catch(err => {});
   }, []);
 
-  const setorEntity = useAppSelector(state => state.setor.entity);
   return (
-    <Row>
-      <Col md="8">
-        <h2 data-cy="setorDetailsHeading">
-          <Translate contentKey="ebisaOsApp.setor.detail.title">Setor</Translate>
-        </h2>
-        <dl className="jh-entity-details">
-          <dt>
-            <span id="id">
-              <Translate contentKey="global.field.id">ID</Translate>
-            </span>
-          </dt>
-          <dd>{setorEntity.id}</dd>
-          <dt>
-            <span id="nome">
-              <Translate contentKey="ebisaOsApp.setor.nome">Nome</Translate>
-            </span>
-          </dt>
-          <dd>{setorEntity.nome}</dd>
-          <dt>
-            <span id="descricao">
-              <Translate contentKey="ebisaOsApp.setor.descricao">Descricao</Translate>
-            </span>
-          </dt>
-          <dd>{setorEntity.descricao}</dd>
-        </dl>
-        <Button tag={Link} to="/setor" replace color="info" data-cy="entityDetailsBackButton">
-          <FontAwesomeIcon icon="arrow-left" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.back">Back</Translate>
-          </span>
-        </Button>
-        &nbsp;
-        <Button tag={Link} to={`/setor/${setorEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.edit">Edit</Translate>
-          </span>
-        </Button>
-      </Col>
-    </Row>
+    <div className="stock-home-container">
+      <Row className="justify-content-center">
+        <Col md="8">
+          <h2 id="ebisaOsApp.setor.home.createOrEditLabel" data-cy="SetorCreateUpdateHeading">
+            Visualizar Setor
+          </h2>
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md="8">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <div>
+              <Row>
+                <Col>
+                  <Label>Nome setor</Label>
+                  <Input
+                    label={translate('ebisaOsApp.setor.nome')}
+                    id="setor-nome"
+                    name="nome"
+                    data-cy="nome"
+                    type="text"
+                    placeholder='Nome Setor'
+                    disabled
+                    readOnly
+                    value={setorData?.nome}
+                    onChange={e => setSetorData({ ...setorData, nome: e.target.value })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>Descrição</Label>
+                  <Input
+                    label={translate('ebisaOsApp.setor.descricao')}
+                    id="setor-descricao"
+                    name="descricao"
+                    data-cy="descricao"
+                    type="text"
+                    placeholder='Descrição'
+                    disabled
+                    readOnly
+                    value={setorData?.descricao}
+                    onChange={e => setSetorData({ ...setorData, descricao: e.target.value })}
+                  />
+                </Col>
+              </Row>
+
+              <Row className="buttons-container">
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => handleEditar()} disabled={updating}>
+                    <span> Editar </span>
+                    <FontAwesomeIcon icon={faPen} />
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          )}
+        </Col>
+      </Row>
+    </div>
   );
 };
 

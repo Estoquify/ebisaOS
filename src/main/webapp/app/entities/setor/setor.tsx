@@ -9,6 +9,7 @@ import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './setor.reducer';
+import { ISetor } from 'app/shared/model/setor.model';
 
 export const Setor = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +65,7 @@ export const Setor = () => {
   };
 
   return (
-    <div>
+    <div className="stock-home-container">
       <h2 id="setor-heading" data-cy="SetorHeading">
         <Translate contentKey="ebisaOsApp.setor.home.title">Setors</Translate>
         <div className="d-flex justify-content-end">
@@ -84,27 +85,22 @@ export const Setor = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ebisaOsApp.setor.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.setor.id">ID</Translate>
                 </th>
-                <th className="hand" onClick={sort('nome')}>
-                  <Translate contentKey="ebisaOsApp.setor.nome">Nome</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('nome')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.setor.nome">Nome</Translate>
                 </th>
-                <th className="hand" onClick={sort('descricao')}>
-                  <Translate contentKey="ebisaOsApp.setor.descricao">Descricao</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('descricao')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.setor.descricao">Descricao</Translate>
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {setorList.map((setor, i) => (
+              {setorList.map((setor: ISetor, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/setor/${setor.id}`} color="link" size="sm">
-                      {setor.id}
-                    </Button>
-                  </td>
+                  <td>{setor.id}</td>
                   <td>{setor.nome}</td>
                   <td>{setor.descricao}</td>
                   <td className="text-end">
