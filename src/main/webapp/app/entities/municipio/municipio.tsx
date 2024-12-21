@@ -9,6 +9,7 @@ import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './municipio.reducer';
+import { IMunicipio } from 'app/shared/model/municipio.model';
 
 export const Municipio = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +65,7 @@ export const Municipio = () => {
   };
 
   return (
-    <div>
+    <div className="stock-home-container">
       <h2 id="municipio-heading" data-cy="MunicipioHeading">
         <Translate contentKey="ebisaOsApp.municipio.home.title">Municipios</Translate>
         <div className="d-flex justify-content-end">
@@ -84,28 +85,22 @@ export const Municipio = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ebisaOsApp.municipio.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.municipio.id">ID</Translate>
                 </th>
-                <th className="hand" onClick={sort('codigoIBGE')}>
-                  <Translate contentKey="ebisaOsApp.municipio.codigoIBGE">Codigo IBGE</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('codigoIBGE')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.municipio.codigoIBGE">Codigo IBGE</Translate>
                 </th>
-                <th className="hand" onClick={sort('nomeMunicipio')}>
-                  <Translate contentKey="ebisaOsApp.municipio.nomeMunicipio">Nome Municipio</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('nomeMunicipio')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.municipio.nomeMunicipio">Nome Municipio</Translate>
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {municipioList.map((municipio, i) => (
+              {municipioList.map((municipio: IMunicipio, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/municipio/${municipio.id}`} color="link" size="sm">
-                      {municipio.id}
-                    </Button>
-                  </td>
+                  <td>{municipio.id}</td>
                   <td>{municipio.codigoIBGE}</td>
                   <td>{municipio.nomeMunicipio}</td>
                   <td className="text-end">
