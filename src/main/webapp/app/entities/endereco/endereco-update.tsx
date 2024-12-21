@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
+import { Button, Row, Col, FormText, Input, Label } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -12,6 +12,10 @@ import { IMunicipio } from 'app/shared/model/municipio.model';
 import { getEntities as getMunicipios } from 'app/entities/municipio/municipio.reducer';
 import { IEndereco } from 'app/shared/model/endereco.model';
 import { getEntity, updateEntity, createEntity, reset } from './endereco.reducer';
+import { cepMask, numberMask } from 'app/shared/util/Misc';
+import { toNumber } from 'lodash';
+import { faChevronLeft, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 export const EnderecoUpdate = () => {
   const dispatch = useAppDispatch();
@@ -22,10 +26,11 @@ export const EnderecoUpdate = () => {
   const isNew = id === undefined;
 
   const municipios = useAppSelector(state => state.municipio.entities);
-  const enderecoEntity = useAppSelector(state => state.endereco.entity);
   const loading = useAppSelector(state => state.endereco.loading);
   const updating = useAppSelector(state => state.endereco.updating);
   const updateSuccess = useAppSelector(state => state.endereco.updateSuccess);
+
+  const [enderecoData, setEnderecoData] = useState<IEndereco>({});
 
   const handleClose = () => {
     navigate('/endereco');
@@ -35,7 +40,12 @@ export const EnderecoUpdate = () => {
     if (isNew) {
       dispatch(reset());
     } else {
-      dispatch(getEntity(id));
+      axios
+        .get(`/api/enderecos/${id}`)
+        .then(res => {
+          setEnderecoData(res?.data);
+        })
+        .catch(err => {});
     }
 
     dispatch(getMunicipios({}));
@@ -47,16 +57,14 @@ export const EnderecoUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  const saveEntity = () => {
+    if (enderecoData.id !== undefined && typeof enderecoData.id !== 'number') {
+      enderecoData.id = Number(enderecoData.id);
     }
 
     const entity = {
-      ...enderecoEntity,
-      ...values,
-      municipio: municipios.find(it => it.id.toString() === values.municipio?.toString()),
+      ...enderecoData,
+      municipio: municipios.find(it => it.id.toString() === enderecoData?.municipio?.id?.toString()),
     };
 
     if (isNew) {
@@ -66,20 +74,12 @@ export const EnderecoUpdate = () => {
     }
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-          ...enderecoEntity,
-          municipio: enderecoEntity?.municipio?.id,
-        };
-
   return (
-    <div>
+    <div className="stock-home-container">
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="ebisaOsApp.endereco.home.createOrEditLabel" data-cy="EnderecoCreateUpdateHeading">
-            <Translate contentKey="ebisaOsApp.endereco.home.createOrEditLabel">Create or edit a Endereco</Translate>
+            {!isNew ? 'Editar Endereço' : 'Criar Endereço'}
           </h2>
         </Col>
       </Row>
@@ -88,69 +88,108 @@ export const EnderecoUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="endereco-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
-              ) : null}
-              <ValidatedField
-                label={translate('ebisaOsApp.endereco.logradouro')}
-                id="endereco-logradouro"
-                name="logradouro"
-                data-cy="logradouro"
-                type="text"
-              />
-              <ValidatedField label={translate('ebisaOsApp.endereco.cep')} id="endereco-cep" name="cep" data-cy="cep" type="text" />
-              <ValidatedField
-                label={translate('ebisaOsApp.endereco.numero')}
-                id="endereco-numero"
-                name="numero"
-                data-cy="numero"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('ebisaOsApp.endereco.bairro')}
-                id="endereco-bairro"
-                name="bairro"
-                data-cy="bairro"
-                type="text"
-              />
-              <ValidatedField
-                id="endereco-municipio"
-                name="municipio"
-                data-cy="municipio"
-                label={translate('ebisaOsApp.endereco.municipio')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {municipios
-                  ? municipios.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/endereco" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ValidatedForm>
+            <div>
+              <Row>
+                <Col>
+                  <Label>Logradouro</Label>
+                  <Input
+                    label={translate('ebisaOsApp.endereco.logradouro')}
+                    id="endereco-logradouro"
+                    name="logradouro"
+                    data-cy="logradouro"
+                    placeholder="Logradouro"
+                    type="text"
+                    value={enderecoData?.logradouro}
+                    onChange={e => setEnderecoData({ ...enderecoData, logradouro: e.target.value })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>CEP</Label>
+                  <Input
+                    label={translate('ebisaOsApp.endereco.cep')}
+                    id="endereco-cep"
+                    name="cep"
+                    data-cy="cep"
+                    placeholder="CEP"
+                    type="text"
+                    value={enderecoData?.cep}
+                    onChange={e => setEnderecoData({ ...enderecoData, cep: cepMask(e.target.value) })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>Numero</Label>
+                  <Input
+                    label={translate('ebisaOsApp.endereco.numero')}
+                    id="endereco-numero"
+                    name="numero"
+                    placeholder="Numero"
+                    data-cy="numero"
+                    type="text"
+                    value={enderecoData?.numero}
+                    onChange={e => setEnderecoData({ ...enderecoData, numero: numberMask(e.target.value) })}
+                  />
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <Label>Bairro</Label>
+                  <Input
+                    label={translate('ebisaOsApp.endereco.bairro')}
+                    id="endereco-bairro"
+                    name="bairro"
+                    data-cy="bairro"
+                    placeholder="Bairro"
+                    type="text"
+                    value={enderecoData?.bairro}
+                    onChange={e => setEnderecoData({ ...enderecoData, bairro: e.target.value })}
+                  />
+                </Col>
+
+                <Col>
+                  <Label>Municipio</Label>
+                  <Input
+                    id="endereco-municipio"
+                    name="municipio"
+                    data-cy="municipio"
+                    label={translate('ebisaOsApp.endereco.municipio')}
+                    type="select"
+                    placeholder="Municipio"
+                    value={enderecoData?.municipio?.id}
+                    onChange={e =>
+                      setEnderecoData({ ...enderecoData, municipio: { ...enderecoData?.municipio, id: toNumber(e.target.value) } })
+                    }
+                  >
+                    <option value="" key="0" />
+                    {municipios
+                      ? municipios.map((otherEntity: IMunicipio) => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity?.nomeMunicipio}
+                          </option>
+                        ))
+                      : null}
+                  </Input>
+                </Col>
+              </Row>
+
+              <Row className="buttons-container">
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => saveEntity()} disabled={updating}>
+                    <span> Salvar </span>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                  </Button>
+                </Col>
+              </Row>
+            </div>
           )}
         </Col>
       </Row>
