@@ -64,7 +64,7 @@ export const Orgao = () => {
   };
 
   return (
-    <div>
+    <div className="stock-home-container">
       <h2 id="orgao-heading" data-cy="OrgaoHeading">
         <Translate contentKey="ebisaOsApp.orgao.home.title">Orgaos</Translate>
         <div className="d-flex justify-content-end">
@@ -84,11 +84,11 @@ export const Orgao = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ebisaOsApp.orgao.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.orgao.id">ID</Translate>
                 </th>
-                <th className="hand" onClick={sort('nome')}>
-                  <Translate contentKey="ebisaOsApp.orgao.nome">Nome</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('nome')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.orgao.nome">Nome</Translate>
                 </th>
                 <th />
               </tr>
@@ -96,11 +96,7 @@ export const Orgao = () => {
             <tbody>
               {orgaoList.map((orgao, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/orgao/${orgao.id}`} color="link" size="sm">
-                      {orgao.id}
-                    </Button>
-                  </td>
+                  <td>{orgao.id}</td>
                   <td>{orgao.nome}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
