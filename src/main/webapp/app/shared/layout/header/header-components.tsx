@@ -4,6 +4,7 @@ import { Translate } from 'react-jhipster';
 import { NavItem, NavLink, NavbarBrand } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBoxesStacked, faPeopleGroup, faTableList } from '@fortawesome/free-solid-svg-icons';
 
 export const BrandIcon = props => (
   <div {...props} className="brand-icon">
@@ -24,6 +25,40 @@ export const Home = () => (
       <FontAwesomeIcon icon="home" />
       <span>
         <Translate contentKey="global.menu.home">Home</Translate>
+      </span>
+    </NavLink>
+  </NavItem>
+);
+
+export const Solicitacao = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/solicitacao" className="d-flex align-items-center">
+      <FontAwesomeIcon icon={faTableList} />
+      <span>
+        <Translate contentKey="global.menu.entities.solicitacao" />
+      </span>
+    </NavLink>
+  </NavItem>
+);
+
+
+export const Equipes = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/equipe" className="d-flex align-items-center">
+      <FontAwesomeIcon icon={faPeopleGroup} />
+      <span>
+        Equipes
+      </span>
+    </NavLink>
+  </NavItem>
+);
+
+export const Itens = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/item" className="d-flex align-items-center">
+      <FontAwesomeIcon icon={faBoxesStacked} />
+      <span>
+        Itens
       </span>
     </NavLink>
   </NavItem>
