@@ -120,12 +120,12 @@ export const Equipe = () => {
 
                     <div className="sheet-data">
                       {data?.ocupada ? (
-                        <div className="container-activated" onClick={() => updateEquipe(data, 'Ocupada')}>
-                          <FontAwesomeIcon icon={faCheck} />
+                        <div className="container-activated">
+                          <FontAwesomeIcon icon={faCheck}  style={{cursor: 'default'}}/>
                         </div>
                       ) : (
-                        <div className="container-desactivated" onClick={() => updateEquipe(data, 'Ocupada')}>
-                          <FontAwesomeIcon icon={faX} />
+                        <div className="container-desactivated" >
+                          <FontAwesomeIcon icon={faX} style={{cursor: 'default'}} />
                         </div>
                       )}
                     </div>
