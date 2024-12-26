@@ -35,16 +35,16 @@ const ModalGinfra = (props: IModalGinfra) => {
 
   const handleSave = () => {
     const dataFormated: IAvaliacaoModals = {
-        ...dataAvaliacao,
-        idSolicitacao: solicitacaoId
-    }
+      ...dataAvaliacao,
+      idSolicitacao: solicitacaoId,
+    };
 
-    if (dataAvaliacao?.prioridade !== 0) {
+    if (dataAvaliacao?.aprovacao === false || (dataAvaliacao?.prioridade !== 0 && dataAvaliacao?.aprovacao === true)) {
       axios
         .patch(`/api/avaliacaos/avaliacaoGinfra`, dataFormated)
         .then(res => {
           toast.success('Avaliação Realizada Com Sucesso!');
-          navigate("/solicitacao")
+          navigate('/solicitacao');
         })
         .catch(err => {
           toast.error('Ops..., Ocorreu Algum erro inesperado, Tente novamente mais tarde');
@@ -53,7 +53,7 @@ const ModalGinfra = (props: IModalGinfra) => {
       toast.info('Informe uma prioridade para a solicitação');
     }
   };
-
+  
   return (
     <>
       <Modal isOpen={isOpen} toggle={() => handleReturnButton()} centered className="modal-ginfra-container">
@@ -82,19 +82,21 @@ const ModalGinfra = (props: IModalGinfra) => {
           {dataAvaliacao?.aprovacao !== undefined && (
             <div>
               <Row>
-                <Col>
-                  <Label>Prioridade</Label>
-                  <Input
-                    type="select"
-                    onChange={e => setDataAvalicao({ ...dataAvaliacao, prioridade: toNumber(e.target.value) })}
-                    value={dataAvaliacao?.prioridade}
-                  >
-                    <option>Selecione Uma Prioridade</option>
-                    <option value={1}>Urgente</option>
-                    <option value={2}>Alta</option>
-                    <option value={3}>Baixa</option>
-                  </Input>
-                </Col>
+                {dataAvaliacao?.aprovacao !== false && (
+                  <Col>
+                    <Label>Prioridade</Label>
+                    <Input
+                      type="select"
+                      onChange={e => setDataAvalicao({ ...dataAvaliacao, prioridade: toNumber(e.target.value) })}
+                      value={dataAvaliacao?.prioridade}
+                    >
+                      <option>Selecione Uma Prioridade</option>
+                      <option value={1}>Urgente</option>
+                      <option value={2}>Alta</option>
+                      <option value={3}>Baixa</option>
+                    </Input>
+                  </Col>
+                )}
               </Row>
               <Row>
                 <Col>

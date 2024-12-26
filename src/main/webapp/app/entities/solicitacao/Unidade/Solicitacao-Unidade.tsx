@@ -150,10 +150,10 @@ export const SolicitacaoUnidade = () => {
 
                     <div className="sheet-data-status-container">
                       <div
-                        className={handleReturnStatus(data?.aberta)}
+                        className={handleReturnStatus(data?.aprovacao)}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aberta)} />
+                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aprovacao)} />
                       </div>
                     </div>
 
