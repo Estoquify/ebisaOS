@@ -9,6 +9,8 @@ import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './unidade.reducer';
+import { IUnidade } from 'app/shared/model/unidade.model';
+import { cepMask } from 'app/shared/util/Misc';
 
 export const Unidade = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +66,7 @@ export const Unidade = () => {
   };
 
   return (
-    <div>
+    <div className="stock-home-container">
       <h2 id="unidade-heading" data-cy="UnidadeHeading">
         <Translate contentKey="ebisaOsApp.unidade.home.title">Unidades</Translate>
         <div className="d-flex justify-content-end">
@@ -84,36 +86,32 @@ export const Unidade = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ebisaOsApp.unidade.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.unidade.id">ID</Translate>
                 </th>
-                <th className="hand" onClick={sort('nome')}>
-                  <Translate contentKey="ebisaOsApp.unidade.nome">Nome</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('nome')} />
+                <th className="not-hand" >
+                  <Translate contentKey="ebisaOsApp.unidade.nome">Nome</Translate>
                 </th>
-                <th className="hand" onClick={sort('cnpj')}>
-                  <Translate contentKey="ebisaOsApp.unidade.cnpj">Cnpj</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('cnpj')} />
-                </th>
-                <th>
-                  <Translate contentKey="ebisaOsApp.unidade.endereco">Endereco</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.unidade.cnpj">Cnpj</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="ebisaOsApp.unidade.orgao">Orgao</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="ebisaOsApp.unidade.endereco">Endereco</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="ebisaOsApp.unidade.orgao">Orgao</Translate>
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {unidadeList.map((unidade, i) => (
+              {unidadeList.map((unidade: IUnidade, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/unidade/${unidade.id}`} color="link" size="sm">
-                      {unidade.id}
-                    </Button>
-                  </td>
+                  <td>{unidade.id}</td>
                   <td>{unidade.nome}</td>
                   <td>{unidade.cnpj}</td>
-                  <td>{unidade.endereco ? <Link to={`/endereco/${unidade.endereco.id}`}>{unidade.endereco.id}</Link> : ''}</td>
-                  <td>{unidade.orgao ? <Link to={`/orgao/${unidade.orgao.id}`}>{unidade.orgao.id}</Link> : ''}</td>
+                  <td>{unidade.endereco ? cepMask(unidade.endereco?.logradouro) : ''}</td>
+                  <td>{unidade.orgao ? unidade.orgao?.nome : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/unidade/${unidade.id}`} color="info" size="sm" data-cy="entityDetailsButton">

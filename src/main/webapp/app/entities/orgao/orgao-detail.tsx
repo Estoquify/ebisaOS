@@ -1,58 +1,95 @@
-import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
-import { Translate } from 'react-jhipster';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Row, Col, Label, Input } from 'reactstrap';
+import { translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { useAppSelector } from 'app/config/store';
 
-import { getEntity } from './orgao.reducer';
+import { IOrgao } from 'app/shared/model/orgao.model';
+import axios from 'axios';
+import { faChevronLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 
 export const OrgaoDetail = () => {
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { id } = useParams<'id'>();
 
+  const loading = useAppSelector(state => state.orgao.loading);
+  const updating = useAppSelector(state => state.orgao.updating);
+
+  const [orgaoData, setOrgaoData] = useState<IOrgao>({});
+
+  const handleClose = () => {
+    navigate('/orgao');
+  };
+
+  const handleEditar = () => {
+    navigate('./edit');
+  };
+
   useEffect(() => {
-    dispatch(getEntity(id));
+    axios
+      .get(`/api/orgaos/${id}`)
+      .then(res => {
+        setOrgaoData(res?.data);
+      })
+      .catch(err => {});
   }, []);
 
-  const orgaoEntity = useAppSelector(state => state.orgao.entity);
   return (
-    <Row>
-      <Col md="8">
-        <h2 data-cy="orgaoDetailsHeading">
-          <Translate contentKey="ebisaOsApp.orgao.detail.title">Orgao</Translate>
-        </h2>
-        <dl className="jh-entity-details">
-          <dt>
-            <span id="id">
-              <Translate contentKey="global.field.id">ID</Translate>
-            </span>
-          </dt>
-          <dd>{orgaoEntity.id}</dd>
-          <dt>
-            <span id="nome">
-              <Translate contentKey="ebisaOsApp.orgao.nome">Nome</Translate>
-            </span>
-          </dt>
-          <dd>{orgaoEntity.nome}</dd>
-        </dl>
-        <Button tag={Link} to="/orgao" replace color="info" data-cy="entityDetailsBackButton">
-          <FontAwesomeIcon icon="arrow-left" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.back">Back</Translate>
-          </span>
-        </Button>
-        &nbsp;
-        <Button tag={Link} to={`/orgao/${orgaoEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.edit">Edit</Translate>
-          </span>
-        </Button>
-      </Col>
-    </Row>
+    <div className="stock-home-container">
+      <Row className="justify-content-center">
+        <Col md="8">
+          <h2 id="ebisaOsApp.orgao.home.createOrEditLabel" data-cy="OrgaoCreateUpdateHeading">
+            Visualizar Orgão
+          </h2>
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md="8">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <div>
+              <Row>
+                <Col>
+                  <Label>Orgão Nome</Label>
+                  <Input
+                    label={translate('ebisaOsApp.orgao.nome')}
+                    id="orgao-nome"
+                    name="nome"
+                    data-cy="nome"
+                    type="text"
+                    placeholder="Orgão Nome"
+                    value={orgaoData?.nome}
+                    disabled
+                    readOnly
+                    onChange={e => setOrgaoData({ ...orgaoData, nome: e.target.value })}
+                  />
+                </Col>
+              </Row>
+
+              <Row className="buttons-container">
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => handleEditar()} disabled={updating}>
+                    <span> Editar </span>
+                    <FontAwesomeIcon icon={faPen} />
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          )}
+        </Col>
+      </Row>
+    </div>
   );
 };
 

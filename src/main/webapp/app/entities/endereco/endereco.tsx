@@ -9,6 +9,8 @@ import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './endereco.reducer';
+import { cepMask } from 'app/shared/util/Misc';
+import { IEndereco } from 'app/shared/model/endereco.model';
 
 export const Endereco = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +66,7 @@ export const Endereco = () => {
   };
 
   return (
-    <div>
+    <div className="stock-home-container">
       <h2 id="endereco-heading" data-cy="EnderecoHeading">
         <Translate contentKey="ebisaOsApp.endereco.home.title">Enderecos</Translate>
         <div className="d-flex justify-content-end">
@@ -84,43 +86,36 @@ export const Endereco = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ebisaOsApp.endereco.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.endereco.id">ID</Translate>
                 </th>
-                <th className="hand" onClick={sort('logradouro')}>
-                  <Translate contentKey="ebisaOsApp.endereco.logradouro">Logradouro</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('logradouro')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.endereco.logradouro">Logradouro</Translate>
                 </th>
-                <th className="hand" onClick={sort('cep')}>
-                  <Translate contentKey="ebisaOsApp.endereco.cep">Cep</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('cep')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.endereco.cep">Cep</Translate>
                 </th>
-                <th className="hand" onClick={sort('numero')}>
-                  <Translate contentKey="ebisaOsApp.endereco.numero">Numero</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('numero')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.endereco.numero">Numero</Translate>
                 </th>
-                <th className="hand" onClick={sort('bairro')}>
-                  <Translate contentKey="ebisaOsApp.endereco.bairro">Bairro</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('bairro')} />
+                <th className="not-hand">
+                  <Translate contentKey="ebisaOsApp.endereco.bairro">Bairro</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="ebisaOsApp.endereco.municipio">Municipio</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="ebisaOsApp.endereco.municipio">Municipio</Translate>
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {enderecoList.map((endereco, i) => (
+              {enderecoList.map((endereco: IEndereco, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/endereco/${endereco.id}`} color="link" size="sm">
-                      {endereco.id}
-                    </Button>
-                  </td>
+                  <td>{endereco.id}</td>
                   <td>{endereco.logradouro}</td>
-                  <td>{endereco.cep}</td>
+                  <td>{cepMask(endereco.cep)}</td>
                   <td>{endereco.numero}</td>
                   <td>{endereco.bairro}</td>
-                  <td>{endereco.municipio ? <Link to={`/municipio/${endereco.municipio.id}`}>{endereco.municipio.id}</Link> : ''}</td>
+                  <td>{endereco.municipio ? endereco.municipio?.nomeMunicipio : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/endereco/${endereco.id}`} color="info" size="sm" data-cy="entityDetailsButton">

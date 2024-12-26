@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Row, Col, Label, Input } from 'reactstrap';
+import {  translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IOrgao } from 'app/shared/model/orgao.model';
-import { getEntity, updateEntity, createEntity, reset } from './orgao.reducer';
+import {  updateEntity, createEntity, reset } from './orgao.reducer';
+import axios from 'axios';
+import { faChevronLeft, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
 export const OrgaoUpdate = () => {
   const dispatch = useAppDispatch();
@@ -19,10 +19,11 @@ export const OrgaoUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const orgaoEntity = useAppSelector(state => state.orgao.entity);
   const loading = useAppSelector(state => state.orgao.loading);
   const updating = useAppSelector(state => state.orgao.updating);
   const updateSuccess = useAppSelector(state => state.orgao.updateSuccess);
+
+  const [orgaoData, setOrgaoData] = useState<IOrgao>({});
 
   const handleClose = () => {
     navigate('/orgao');
@@ -32,7 +33,12 @@ export const OrgaoUpdate = () => {
     if (isNew) {
       dispatch(reset());
     } else {
-      dispatch(getEntity(id));
+      axios
+        .get(`/api/orgaos/${id}`)
+        .then(res => {
+          setOrgaoData(res?.data);
+        })
+        .catch(err => {});
     }
   }, []);
 
@@ -43,36 +49,24 @@ export const OrgaoUpdate = () => {
   }, [updateSuccess]);
 
   // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  const saveEntity = () => {
+    if (orgaoData.id !== undefined && typeof orgaoData.id !== 'number') {
+      orgaoData.id = Number(orgaoData.id);
     }
 
-    const entity = {
-      ...orgaoEntity,
-      ...values,
-    };
-
     if (isNew) {
-      dispatch(createEntity(entity));
+      dispatch(createEntity(orgaoData));
     } else {
-      dispatch(updateEntity(entity));
+      dispatch(updateEntity(orgaoData));
     }
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-          ...orgaoEntity,
-        };
-
   return (
-    <div>
+    <div className="stock-home-container">
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="ebisaOsApp.orgao.home.createOrEditLabel" data-cy="OrgaoCreateUpdateHeading">
-            <Translate contentKey="ebisaOsApp.orgao.home.createOrEditLabel">Create or edit a Orgao</Translate>
+            {isNew ? 'Criar Orgão' : 'Editar Orgão'}
           </h2>
         </Col>
       </Row>
@@ -81,32 +75,39 @@ export const OrgaoUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="orgao-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
-              ) : null}
-              <ValidatedField label={translate('ebisaOsApp.orgao.nome')} id="orgao-nome" name="nome" data-cy="nome" type="text" />
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/orgao" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ValidatedForm>
+            <div>
+              <Row>
+                <Col>
+                  <Label>Orgão Nome</Label>
+                  <Input
+                    label={translate('ebisaOsApp.orgao.nome')}
+                    id="orgao-nome"
+                    name="nome"
+                    data-cy="nome"
+                    type="text"
+                    placeholder='Orgão Nome'
+                    value={orgaoData?.nome}
+                    onChange={e => setOrgaoData({ ...orgaoData, nome: e.target.value })}
+                  />
+                </Col>
+              </Row>
+
+              <Row className="buttons-container">
+                <Col>
+                  <Button onClick={() => handleClose()}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <span> Voltar </span>
+                  </Button>
+                </Col>
+
+                <Col>
+                  <Button onClick={() => saveEntity()} disabled={updating}>
+                    <span> Salvar </span>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                  </Button>
+                </Col>
+              </Row>
+            </div>
           )}
         </Col>
       </Row>
