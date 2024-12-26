@@ -21,59 +21,67 @@ import { ISetorUnidade } from 'app/shared/model/setor-unidade.model';
 // import { getEntity } from './solicitacao.reducer';
 
 const SolicitacaoUpdate = () => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { id } = useParams<'id'>();
 
   const itens: IItem[] = useAppSelector(state => state?.item?.entities);
-  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id)
+  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id);
 
   const [setorUnidadeList, setSetorUnidadeList] = useState<ISetorUnidade[]>([]);
   const [solicitacao, setSolicitacao] = useState<ISolicitacao>({ titulo: '', descricao: '' });
-  const [itensSelecionados, setItensSelecionados] = useState<IItemSelecionados[]>([])
+  const [itensSelecionados, setItensSelecionados] = useState<IItemSelecionados[]>([]);
+
+  useEffect(() => {
+    axios
+      .get(`/api/solicitacaos/solicitacaoViewServico/${id}`)
+      .then(res => {
+        setSolicitacao(res?.data?.solicitacao);
+        setItensSelecionados(res?.data?.itens);
+      })
+      .catch(err => {});
+  }, []);
 
   useEffect(() => {
     dispatch(getItens({}));
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(getEntity(id))
-  // }, [])
-
   useEffect(() => {
-    if(setorUnidadeId !== undefined) {
-      axios.get(`/api/setorUnidades/unidade/${setorUnidadeId}`)
-      .then((res) => {
-        setSetorUnidadeList(res?.data)
-      })
-      .catch((err) => {
-        toast.error("Não foi possivel identificar sua unidade tente novamente mais tarde")
-      })
+    if (setorUnidadeId !== undefined) {
+      axios
+        .get(`/api/setorUnidades/unidade/${setorUnidadeId}`)
+        .then(res => {
+          setSetorUnidadeList(res?.data);
+        })
+        .catch(err => {
+          toast.error('Não foi possivel identificar sua unidade tente novamente mais tarde');
+        });
     }
-  }, [setorUnidadeId])
+  }, [setorUnidadeId]);
 
   const handleCreateSolicitacao = () => {
-    const solicitacaoFixed: ISolicitacao = { ...solicitacao, setorUnidade: setorUnidadeList?.find(data => solicitacao?.setorUnidade?.id === data?.id)};
+    const solicitacaoFixed: ISolicitacao = {
+      ...solicitacao,
+      setorUnidade: setorUnidadeList?.find(data => solicitacao?.setorUnidade?.id === data?.id),
+    };
 
     const entityFixed: ISolicitacaoDTO = {
       itensSelecionados,
-      solicitacao: solicitacaoFixed
-    }
+      solicitacao: solicitacaoFixed,
+    };
 
-    axios.post(`/api/solicitacaos`, entityFixed).then((res) => {
-      toast.success("Solicitação criada com sucesso!")
-      navigate(-1)
-    })
+    axios.put(`/api/solicitacaos/${entityFixed?.solicitacao?.id}`, entityFixed).then(res => {
+      toast.success('Solicitação atualizada com sucesso!');
+      navigate("/solicitacao");
+    });
   };
-  
+
   const handleAddItem = (item: IItem) => {
     setItensSelecionados(prevItensSelecionados => {
-      const itemExistente = prevItensSelecionados.find(data => data.item === item);
-  
+      const itemExistente = prevItensSelecionados.find(data => data.item?.id === item?.id);
+
       if (itemExistente) {
-        return prevItensSelecionados.map(data =>
-          data.item === item ? { ...data, quantidade: (data.quantidade || 0) + 1 } : data,
-        );
+        return prevItensSelecionados.map(data => (data.item?.id === item?.id ? { ...data, quantidade: (data.quantidade || 0) + 1 } : data));
       } else {
         return [...prevItensSelecionados, { item, quantidade: 1 }];
       }
@@ -83,21 +91,19 @@ const navigate = useNavigate();
   const handleRemoveItem = (item: IItem) => {
     setItensSelecionados(prevItensSelecionados => {
       const itemExistente = prevItensSelecionados.find(data => data.item === item);
-  
+
       if (itemExistente) {
         if ((itemExistente.quantidade || 0) > 1) {
-          return prevItensSelecionados.map(data =>
-            data.item === item ? { ...data, quantidade: (data.quantidade || 0) - 1 } : data,
-          );
+          return prevItensSelecionados.map(data => (data.item === item ? { ...data, quantidade: (data.quantidade || 0) - 1 } : data));
         } else {
           return prevItensSelecionados.filter(data => data.item !== item);
         }
       }
-  
+
       return prevItensSelecionados;
     });
   };
-  
+
   const validateCreateSolicitacao = (solicitacaoData: ISolicitacao) => {
     const errors: string[] = [];
 
@@ -156,17 +162,13 @@ const navigate = useNavigate();
           </Col>
           {/* Input para escolher a unidade usado apenas para teste */}
           <Col>
-            <Label>
-              Setor
-            </Label>
+            <Label>Setor</Label>
             <Input
               type="select"
               onChange={e => setSolicitacao({ ...solicitacao, setorUnidade: { id: toNumber(e.target.value) } })}
               value={solicitacao?.setorUnidade?.id}
             >
-              <option value={0}>
-                Escolha um Setor
-              </option>
+              <option value={0}>Escolha um Setor</option>
               {setorUnidadeList &&
                 setorUnidadeList?.map((data, key) => (
                   <>
@@ -192,11 +194,11 @@ const navigate = useNavigate();
           </Col>
 
           <Col>
-            <Label>Prazo</Label>
+            <Label>Prazo</Label>{' '}
             <Input
               type="datetime-local"
               onChange={e => setSolicitacao({ ...solicitacao, prazoDate: dayjs(e.target.value?.toString()) })}
-              value={solicitacao?.prazoDate ? solicitacao.prazoDate.format('YYYY-MM-DDTHH:mm') : ''}
+              value={solicitacao?.prazoDate ? dayjs(solicitacao.prazoDate).format('YYYY-MM-DDTHH:mm') : ''}
             />
           </Col>
         </Row>
@@ -204,7 +206,12 @@ const navigate = useNavigate();
         <Row>
           <Col className="descricao-container">
             <Label>Descrição</Label>
-            <Input type="textarea" placeholder="Descrição" onChange={e => setSolicitacao({ ...solicitacao, descricao: e.target.value })} />
+            <Input
+              type="textarea"
+              placeholder="Descrição"
+              onChange={e => setSolicitacao({ ...solicitacao, descricao: e.target.value })}
+              value={solicitacao?.descricao}
+            />
           </Col>
 
           <Col>
