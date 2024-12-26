@@ -25,7 +25,7 @@ import com.ebisaos.repository.SolicitacaoEquipeRepository;
 @Service
 @Transactional
 public class EquipeService {
-    
+
     private final Logger log = LoggerFactory.getLogger(EquipeService.class);
 
     @Autowired
@@ -58,7 +58,7 @@ public class EquipeService {
         equipeRepository.delete(obj);
     }
 
-    public List<Equipe> listaEquipesPorSolicitacao(Long idSolicitacao){
+    public List<Equipe> listaEquipesPorSolicitacao(Long idSolicitacao) {
         return equipeRepository.listEquipePorSolicitacao(idSolicitacao);
     }
 
@@ -71,8 +71,9 @@ public class EquipeService {
 
     public Page<Equipe> listaPageEquipe(Pageable pageable, Map<String, String> params) {
         Long countEquipe = equipeRepository.countListaEquipe(params.get("pesquisa"));
-        List<Equipe> listaEquipe = equipeRepository.listaEquipeRaw(params.get("pesquisa"), Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
-        
+        List<Equipe> listaEquipe = equipeRepository.listaEquipeRaw(params.get("pesquisa"),
+                Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
+
         Page<Equipe> pageEquipe = listPage(pageable, listaEquipe, countEquipe);
 
         return pageEquipe;
@@ -87,6 +88,15 @@ public class EquipeService {
 
         equipe.setOcupada(true);
         save(equipe);
+    }
+
+    public void liberarEquipe(Long idSolicitacao) {
+        List<Equipe> equipes = listaEquipesPorSolicitacao(idSolicitacao);
+
+        for (Equipe row : equipes) {
+            row.setOcupada(false);
+            save(row);
+        }
     }
 
 }

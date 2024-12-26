@@ -62,6 +62,7 @@ public class EquipeResource {
         if (equipe.getId() != null) {
             throw new BadRequestAlertException("A new equipe cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        equipe.setOcupada(false);
         equipe = equipeRepository.save(equipe);
         return ResponseEntity.created(new URI("/api/equipes/" + equipe.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, equipe.getId().toString()))

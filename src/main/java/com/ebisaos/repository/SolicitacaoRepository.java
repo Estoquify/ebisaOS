@@ -74,7 +74,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
     Long countListagemSolicitacaoAvaliacaoGInfra(@Param("pesquisa") String pesquisa);
 
     @Query(value = """
-                SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.sigla AS sigla_unidade, seu.nome AS nome_setor
+                SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.sigla AS sigla_unidade, seu.nome AS nome_setor, ava.aprovacao
                     FROM public.solicitacao AS sol
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
@@ -85,6 +85,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
                  AND sol.aberta = true
                  AND ava.aprovacao_ginfra = true
+                 AND ava.aprovacao IS DISTINCT FROM false
                  ORDER BY sol.created_date
                  LIMIT :size OFFSET :page * :size
             """, nativeQuery = true)

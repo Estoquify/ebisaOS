@@ -11,9 +11,10 @@ public class SolicitacaoAvaliacaoDTO {
     private LocalDateTime prazoDate;
     private String siglaUnidade;
     private String nomeSetor;
+    private Boolean avaliacao;
 
     // Construtor completo
-    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String siglaUnidade, String nomeSetor) {
+    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String siglaUnidade, String nomeSetor, Boolean avaliacao) {
         this.id = id;
         this.prioridade = prioridade;
         this.titulo = titulo;
@@ -22,6 +23,7 @@ public class SolicitacaoAvaliacaoDTO {
         this.prazoDate = prazoDate;
         this.siglaUnidade = siglaUnidade;
         this.nomeSetor = nomeSetor;
+        this.avaliacao = avaliacao;
     }
 
     // Getters e Setters
@@ -88,5 +90,13 @@ public class SolicitacaoAvaliacaoDTO {
 
     public void setNomeSetor(String nomeSetor) {
         this.nomeSetor = nomeSetor;
+    }
+
+    public Boolean getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(Boolean avaliacao) {
+        this.avaliacao = avaliacao;
     }
 }
