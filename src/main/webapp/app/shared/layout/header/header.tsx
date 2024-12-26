@@ -5,14 +5,16 @@ import { Translate, Storage } from 'react-jhipster';
 import { Navbar, Nav, NavbarToggler, Collapse } from 'reactstrap';
 import LoadingBar from 'react-redux-loading-bar';
 
-import { Home, Brand } from './header-components';
+import { Home, Brand, Solicitacao, Itens, Equipes } from './header-components';
 import { AdminMenu, EntitiesMenu, AccountMenu, LocaleMenu } from '../menus';
 import { useAppDispatch } from 'app/config/store';
 import { setLocale } from 'app/shared/reducers/locale';
+import { hasAnyAuthority } from 'app/shared/auth/private-route';
+import { AUTHORITIES } from 'app/config/constants';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
-  isAdmin: boolean;
+  authorities: Array<string>;
   ribbonEnv: string;
   isInProduction: boolean;
   isOpenAPIEnabled: boolean;
@@ -44,6 +46,12 @@ const Header = (props: IHeaderProps) => {
 
   /* jhipster-needle-add-element-to-menu - JHipster will add new menu items here */
 
+  const isAdmin = () => hasAnyAuthority(props?.authorities, [AUTHORITIES.ADMIN])
+  const isEbisa = () => hasAnyAuthority(props?.authorities, [AUTHORITIES.EBISA])
+  const isGinfra = () => hasAnyAuthority(props?.authorities, [AUTHORITIES.GINFRA])
+  const isUnidade = () => hasAnyAuthority(props?.authorities, [AUTHORITIES.UNIDADE])
+
+
   return (
     <div id="app-header">
       {renderDevRibbon()}
@@ -54,8 +62,11 @@ const Header = (props: IHeaderProps) => {
         <Collapse isOpen={menuOpen} navbar>
           <Nav id="header-tabs" className="ms-auto entities-navbar" navbar>
             <Home />
-            {props.isAuthenticated && <EntitiesMenu />}
-            {props.isAuthenticated && props.isAdmin && <AdminMenu showOpenAPI={props.isOpenAPIEnabled} />}
+            {props?.isAuthenticated && <Solicitacao/>}
+            {isEbisa && props?.isAuthenticated && <Itens/>}
+            {isEbisa && props?.isAuthenticated && <Equipes/>}
+            {isAdmin && props.isAuthenticated && <EntitiesMenu />}
+            {props.isAuthenticated && isAdmin && <AdminMenu showOpenAPI={props.isOpenAPIEnabled} />}
             <LocaleMenu currentLocale={props.currentLocale} onClick={handleLocaleChange} />
           </Nav>
           <Nav id="header-tabs" className="ms-auto user-navbar" navbar>
