@@ -2,16 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Row, Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPlus,
-  faEye,
-  faCheck,
-  faX,
-  faHourglass,
-  faPen,
-  faChevronLeft,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEye, faCheck, faX, faHourglass, faPen, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from '../solicitacao.reducer';
@@ -69,12 +60,12 @@ export const SolicitacaoUnidade = () => {
   };
 
   const handleNavigateByStatus = (data: ISolicitacao) => {
-    if( data?.aberta) {
-      navigate(`./${data?.id}`)
+    if (data?.aberta) {
+      navigate(`./${data?.id}`);
     } else {
-      navigate(`./edit/${data.id}`)
+      navigate(`./edit/${data.id}`);
     }
-  }
+  };
 
   const handleFormatDate = (data: ISolicitacao) => {
     const formattedDate = data?.createdDate ? dayjs(data.createdDate).format('DD/MM/YYYY') : '--------------';
@@ -159,34 +150,48 @@ export const SolicitacaoUnidade = () => {
 
                     <div className="sheet-data-button-container">
                       <Button className="sheet-data-button" onClick={() => handleNavigateByStatus(data)}>
-                        <FontAwesomeIcon icon={data?.aberta ? faEye : faPen} />
-                        <span> {data?.aberta ? 'Visualizar' : 'Editar'} </span>
+                        {data?.aprovacao === false && (
+                          <>
+                            <FontAwesomeIcon icon={faPen} />
+                            <span> Editar </span>
+                          </>
+                        )}
+                        {data?.aprovacao !== false && (
+                          <>
+                            <FontAwesomeIcon icon={faEye} />
+                            <span> Visualizar </span>
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>
                 ))}
+
+              {solicitacaoList?.length === 0 && <Alert color="info">Não existem nenhuma Solicitação criada</Alert>}
             </div>
           </div>
         )}
       </Row>
 
-      <Row className="page-container">
-        <Col>
-          <Button onClick={() => handlePassPagePrevious(setPageAtual, pageAtual)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-        </Col>
+      {solicitacaoList?.length > 0 && (
+        <Row className="page-container">
+          <Col>
+            <Button onClick={() => handlePassPagePrevious(setPageAtual, pageAtual)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+          </Col>
 
-        <Col>
-          <span>{`${pageAtual + 1} de ${totalPages}`}</span>
-        </Col>
+          <Col>
+            <span>{`${pageAtual + 1} de ${totalPages}`}</span>
+          </Col>
 
-        <Col>
-          <Button onClick={() => handlePassPageNext(setPageAtual, pageAtual, totalPages)}>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </Col>
-      </Row>
+          <Col>
+            <Button onClick={() => handlePassPageNext(setPageAtual, pageAtual, totalPages)}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };

@@ -44,14 +44,15 @@ export const Equipe = () => {
       };
     }
 
-    axios.patch(`/api/equipes/${data?.id}`, newEntity)
-    .then((res) => {
-      toast.success("Equipe Atualizada com sucesso")
-      getAllEntitites();
-    })
-    .catch((err) => {
-      toast.error("Aconteceu algum erro ao atualizar os dados da equipe, tente novamente mais tarde")
-    })
+    axios
+      .patch(`/api/equipes/${data?.id}`, newEntity)
+      .then(res => {
+        toast.success('Equipe Atualizada com sucesso');
+        getAllEntitites();
+      })
+      .catch(err => {
+        toast.error('Aconteceu algum erro ao atualizar os dados da equipe, tente novamente mais tarde');
+      });
   };
 
   useEffect(() => {
@@ -121,11 +122,11 @@ export const Equipe = () => {
                     <div className="sheet-data">
                       {data?.ocupada ? (
                         <div className="container-activated">
-                          <FontAwesomeIcon icon={faCheck}  style={{cursor: 'default'}}/>
+                          <FontAwesomeIcon icon={faCheck} style={{ cursor: 'default' }} />
                         </div>
                       ) : (
-                        <div className="container-desactivated" >
-                          <FontAwesomeIcon icon={faX} style={{cursor: 'default'}} />
+                        <div className="container-desactivated">
+                          <FontAwesomeIcon icon={faX} style={{ cursor: 'default' }} />
                         </div>
                       )}
                     </div>
@@ -162,23 +163,25 @@ export const Equipe = () => {
         {equipeList && equipeList?.length === 0 && <Alert color="info">Nenhuma Equipe Cadastrado</Alert>}
       </Row>
 
-      <Row className="page-container">
-        <Col>
-          <Button onClick={() => handlePassPagePrevious(setPage, page)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-        </Col>
+      {equipeList?.length > 0 && (
+        <Row className="page-container">
+          <Col>
+            <Button onClick={() => handlePassPagePrevious(setPage, page)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+          </Col>
 
-        <Col>
-          <span>{`${page + 1} de ${totalPages}`}</span>
-        </Col>
+          <Col>
+            <span>{`${page + 1} de ${totalPages}`}</span>
+          </Col>
 
-        <Col>
-          <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </Col>
-      </Row>
+          <Col>
+            <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };

@@ -1,18 +1,8 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Col, Row} from 'reactstrap';
+import { Alert, Button, Col, Row } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPlus,
-  faEye,
-  faCheck,
-  faX,
-  faHourglass,
-  faChevronLeft,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEye, faCheck, faX, faHourglass, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 import '../home/solicitacao.scss';
 import axios from 'axios';
@@ -35,32 +25,6 @@ export const SolicitacaoGinfra = () => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
-  };
-  
-  const handleReturnStatus = (status: boolean) => {
-    switch (status) {
-      case true:
-        return 'sheet-data-status-accept';
-
-      case false:
-        return 'sheet-data-status-rejected';
-
-      default:
-        return 'sheet-data-status-waiting';
-    }
-  };
-
-  const handleReturnStatusIcons = (status: boolean) => {
-    switch (status) {
-      case true:
-        return faCheck;
-
-      case false:
-        return faX;
-
-      default:
-        return faHourglass;
-    }
   };
 
   const handleFormatDate = (data: ISolicitacaoGinfraListagem) => {
@@ -158,26 +122,28 @@ export const SolicitacaoGinfra = () => {
             </div>
           </div>
         )}
-
+        {solicitacaoList?.length === 0 && <Alert color="info">Não existem nenhuma Solicitação criada</Alert>}
       </Row>
 
-      <Row className="page-container">
-        <Col>
-          <Button onClick={() => handlePassPagePrevious(setPageAtual, pageAtual)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-        </Col>
+      {solicitacaoList?.length > 0 && (
+        <Row className="page-container">
+          <Col>
+            <Button onClick={() => handlePassPagePrevious(setPageAtual, pageAtual)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+          </Col>
 
-        <Col>
-          <span>{`${pageAtual + 1} de ${totalPages}`}</span>
-        </Col>
+          <Col>
+            <span>{`${pageAtual + 1} de ${totalPages}`}</span>
+          </Col>
 
-        <Col>
-          <Button onClick={() => handlePassPageNext(setPageAtual, pageAtual, totalPages)}>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </Col>
-      </Row>
+          <Col>
+            <Button onClick={() => handlePassPageNext(setPageAtual, pageAtual, totalPages)}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };

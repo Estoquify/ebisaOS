@@ -28,7 +28,7 @@ export const EquipeUpdate = () => {
   const updating = useAppSelector(state => state.equipe.updating);
   const updateSuccess = useAppSelector(state => state.equipe.updateSuccess);
 
-  const [equipeData, setEquipeData] = useState<IEquipe>({});
+  const [equipeData, setEquipeData] = useState<IEquipe>({ativa: true, ocupada: false});
 
   const handleClose = () => {
     dispatch(reset());

@@ -22,7 +22,7 @@ export const Solicitacao = () => {
       return <SolicitacaoUnidade />;
     }
   };
-
+  
   return (
     <>
       {returnSolicitacaoByAuthorities()}

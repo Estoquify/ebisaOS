@@ -11,6 +11,7 @@ export interface ISolicitacaoEbisaListagem {
   prioridade?: number | null;
   tipoSolicitacao?: string | null;
   titulo?: string | null;
+  avaliacao?: boolean | null;
 }
 
 export const defaultValue: Readonly<ISolicitacaoEbisaListagem> = {};

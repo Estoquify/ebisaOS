@@ -106,7 +106,7 @@ export const StockUpdate = () => {
   };
 
   return (
-    <div className='stock-update-container'>
+    <div className="stock-update-container">
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="ebisaOsApp.stock.home.createOrEditLabel" data-cy="StockCreateUpdateHeading">
@@ -143,7 +143,12 @@ export const StockUpdate = () => {
               <Row>
                 <Col>
                   <Label>Stock Item</Label>
-                  <Input placeholder="Item" type="select" value={stockData?.item?.id}>
+                  <Input
+                    placeholder="Item"
+                    type="select"
+                    value={stockData?.item?.id}
+                    onChange={e => setStockData({ ...stockData, item: { id: toNumber(e.target.value) } })}
+                  >
                     <option>escolha um Item</option>
                     {items?.map((data, key) => (
                       <option value={data?.id} key={key}>
@@ -154,7 +159,12 @@ export const StockUpdate = () => {
                 </Col>
                 <Col>
                   <Label>Stock Setor</Label>
-                  <Input placeholder="Item" type="select" value={stockData?.setor?.id}>
+                  <Input
+                    placeholder="Item"
+                    type="select"
+                    value={stockData?.setor?.id}
+                    onChange={e => setStockData({ ...stockData, setor: { id: toNumber(e.target.value) } })}
+                  >
                     <option>escolha um Setor</option>
                     {setors?.map((data, key) => (
                       <option value={data?.id} key={key}>
@@ -165,7 +175,7 @@ export const StockUpdate = () => {
                 </Col>
               </Row>
 
-              <Row className='buttons-container'>
+              <Row className="buttons-container">
                 <Col>
                   <Button onClick={() => handleClose()}>
                     <FontAwesomeIcon icon={faChevronLeft} />

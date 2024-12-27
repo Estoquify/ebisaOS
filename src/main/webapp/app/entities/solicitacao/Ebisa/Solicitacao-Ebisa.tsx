@@ -1,39 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Row, Table } from 'reactstrap';
-import { Translate, TextFormat, getSortState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSort,
-  faSortUp,
-  faSortDown,
-  faPlus,
-  faEye,
-  faCheck,
-  faX,
-  faHourglass,
-  faPen,
-  faChevronLeft,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
-import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { faEye, faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import '../home/solicitacao.scss';
-import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import axios from 'axios';
 import { handlePassPageNext, handlePassPagePrevious } from 'app/shared/util/Misc';
 import dayjs from 'dayjs';
 import { ISolicitacaoEbisaListagem } from 'app/shared/model/solicitacao-Ebisa-listagem.model';
+import ModalEbisaComprovante from './Modal/Modal-ebisa-comprovante';
 
 export const SolicitacaoEbisa = () => {
-  const dispatch = useAppDispatch();
-
-  const pageLocation = useLocation();
   const navigate = useNavigate();
 
   const [solicitacaoList, setSolicitacaoList] = useState<ISolicitacaoEbisaListagem[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [inputPesquisa, setInputPesquisa] = useState<string>('');
+
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const [pageAtual, setPageAtual] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -45,6 +28,12 @@ export const SolicitacaoEbisa = () => {
     });
   };
 
+  useEffect(() => {
+    if(!openModal) {
+      getAllEntities()
+    }
+  }, [openModal])
+
   const handleReturnPrioridade = (status: number | string) => {
     switch (status) {
       case 3:
@@ -53,32 +42,6 @@ export const SolicitacaoEbisa = () => {
         return 'sheet-data-prioridade-red';
       default:
         return 'sheet-data-prioridade-yellow';
-    }
-  };
-
-  const handleReturnStatus = (status: boolean) => {
-    switch (status) {
-      case true:
-        return 'sheet-data-status-accept';
-
-      case false:
-        return 'sheet-data-status-rejected';
-
-      default:
-        return 'sheet-data-status-waiting';
-    }
-  };
-
-  const handleReturnStatusIcons = (status: boolean) => {
-    switch (status) {
-      case true:
-        return faCheck;
-
-      case false:
-        return faX;
-
-      default:
-        return faHourglass;
     }
   };
 
@@ -106,7 +69,7 @@ export const SolicitacaoEbisa = () => {
       </Row>
 
       <Row className="solicitacao-ebisa-data">
-        {solicitacaoList && solicitacaoList?.length > 0 && (
+        {solicitacaoList && solicitacaoList?.length > 0 ? (
           <div>
             <div className="header-table-container">
               <div className="header-table-data">
@@ -146,6 +109,7 @@ export const SolicitacaoEbisa = () => {
               {solicitacaoList &&
                 solicitacaoList?.map((data: ISolicitacaoEbisaListagem, key) => (
                   <div className="sheet-line-data-container" key={key}>
+                    <ModalEbisaComprovante isOpen={openModal} setIsOpen={setOpenModal} idSolicitacao={data?.id} />
                     <div className={handleReturnPrioridade(data?.prioridade)}>
                       <div> </div>
                     </div>
@@ -171,39 +135,50 @@ export const SolicitacaoEbisa = () => {
                     </div>
 
                     <div className="sheet-data">
-                      <span> {data?.siglaUnidade ? data?.siglaUnidade : "Não informada"}</span>
+                      <span> {data?.siglaUnidade ? data?.siglaUnidade : 'Não informada'}</span>
                     </div>
 
                     <div className="sheet-data-button-container">
-                      <Button className="sheet-data-button" onClick={() => navigate(`./${data?.id}`)}>
-                        <FontAwesomeIcon icon={faEye} />
-                        <span> Visualizar </span>
-                      </Button>
+                      {data?.avaliacao ? (
+                        <Button className="sheet-data-button" onClick={() => setOpenModal(true)}>
+                          <FontAwesomeIcon icon={faCheck} />
+                          <span> Concluir </span>
+                        </Button>
+                      ) : (
+                        <Button className="sheet-data-button" onClick={() => navigate(`./${data?.id}`)}>
+                          <FontAwesomeIcon icon={faEye} />
+                          <span> Visualizar </span>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ))}
             </div>
           </div>
+        ) : (
+          <Alert color="info">Não existem nenhuma Solicitação criada </Alert>
         )}
       </Row>
 
-      <Row className="page-container">
-        <Col>
-          <Button onClick={() => handlePassPagePrevious(setPageAtual, pageAtual)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-        </Col>
+      {solicitacaoList?.length > 0 && (
+        <Row className="page-container">
+          <Col>
+            <Button onClick={() => handlePassPagePrevious(setPageAtual, pageAtual)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+          </Col>
 
-        <Col>
-          <span>{`${pageAtual + 1} de ${totalPages}`}</span>
-        </Col>
+          <Col>
+            <span>{`${pageAtual + 1} de ${totalPages}`}</span>
+          </Col>
 
-        <Col>
-          <Button onClick={() => handlePassPageNext(setPageAtual, pageAtual, totalPages)}>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </Col>
-      </Row>
+          <Col>
+            <Button onClick={() => handlePassPageNext(setPageAtual, pageAtual, totalPages)}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };

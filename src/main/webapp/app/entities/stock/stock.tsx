@@ -79,10 +79,7 @@ export const Stock = () => {
     const buttonIcon = isOpen ? faFolderClosed : faFolderPlus;
 
     return (
-      <Button
-        className="sheet-data-adicionar-itens-container"
-        onClick={() => openModal(data)}
-      >
+      <Button className="sheet-data-adicionar-itens-container" onClick={() => openModal(data)}>
         <span>{buttonText}</span>
         <FontAwesomeIcon icon={buttonIcon} />
       </Button>
@@ -90,10 +87,10 @@ export const Stock = () => {
   };
 
   const handleInputPesquisaChange = (data: string) => {
-    setInputPesquisa(data)
-    setPage(0)
-  }
-  
+    setInputPesquisa(data);
+    setPage(0);
+  };
+
   const openModal = (data: IStockDTO) => {
     setSelectedStock(data);
     setIsModalOpen(true);
@@ -200,27 +197,29 @@ export const Stock = () => {
         {stockList && stockList?.length === 0 && <Alert color="info">Nenhum stock criado</Alert>}
       </Row>
 
-      <Row className="page-container">
-        <Col>
-          <Button onClick={() => handlePassPagePrevious(setPage, page)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-        </Col>
+      {stockList?.length > 0 && (
+        <Row className="page-container">
+          <Col>
+            <Button onClick={() => handlePassPagePrevious(setPage, page)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+          </Col>
 
-        <Col>
-          <span>{`${page + 1} de ${totalPages}`}</span>
-        </Col>
+          <Col>
+            <span>{`${page + 1} de ${totalPages}`}</span>
+          </Col>
 
-        <Col>
-          <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </Col>
-      </Row>
+          <Col>
+            <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </Col>
+        </Row>
+      )}
 
       {isModalOpen && selectedStock && (
         <ModalStock
-          typeModal={selectedStock?.aberta ? TypeModal.fecharSolicitacao : TypeModal.abrirSolicitacao }
+          typeModal={selectedStock?.aberta ? TypeModal.fecharSolicitacao : TypeModal.abrirSolicitacao}
           isOpen={isModalOpen}
           setIsOpen={setIsModalOpen}
           data={selectedStock}

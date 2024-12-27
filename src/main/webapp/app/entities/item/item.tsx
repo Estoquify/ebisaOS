@@ -33,8 +33,8 @@ export const Item = () => {
   };
 
   useEffect(() => {
-    getAllEntitites()
-  }, [page])
+    getAllEntitites();
+  }, [page]);
 
   useEffect(() => {
     getAllEntitites();
@@ -116,23 +116,25 @@ export const Item = () => {
         {itemList && itemList?.length === 0 && <Alert color="info">Nenhum Item Cadastrado</Alert>}
       </Row>
 
-      <Row className="page-container">
-        <Col>
-          <Button onClick={() => handlePassPagePrevious(setPage, page)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-        </Col>
+      {itemList?.length !== 0 && (
+        <Row className="page-container">
+          <Col>
+            <Button onClick={() => handlePassPagePrevious(setPage, page)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+          </Col>
 
-        <Col>
-          <span>{`${page + 1} de ${totalPages}`}</span>
-        </Col>
+          <Col>
+            <span>{`${page + 1} de ${totalPages}`}</span>
+          </Col>
 
-        <Col>
-          <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </Col>
-      </Row>
+          <Col>
+            <Button onClick={() => handlePassPageNext(setPage, page, totalPages)}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };
