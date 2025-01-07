@@ -108,11 +108,6 @@ export const SolicitacaoUnidadeDetail = () => {
               <option value="MATERIAL">Material</option>
             </Input>
           </Col>
-
-          <Col>
-            <Label>Prazo</Label>
-            <Input type="datetime-local" value={formattedPrazoDate} readOnly disabled />
-          </Col>
         </Row>
 
         <Row>

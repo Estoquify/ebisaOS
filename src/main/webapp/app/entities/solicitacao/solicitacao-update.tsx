@@ -193,14 +193,6 @@ const SolicitacaoUpdate = () => {
             </Input>
           </Col>
 
-          <Col>
-            <Label>Prazo</Label>{' '}
-            <Input
-              type="datetime-local"
-              onChange={e => setSolicitacao({ ...solicitacao, prazoDate: dayjs(e.target.value?.toString()) })}
-              value={solicitacao?.prazoDate ? dayjs(solicitacao.prazoDate).format('YYYY-MM-DDTHH:mm') : ''}
-            />
-          </Col>
         </Row>
 
         <Row>
