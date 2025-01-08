@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from '../solicitacao.reducer';
 import {
-    faCheckSquare,
+  faCheckSquare,
   faChevronLeft,
   faComment,
   faFloppyDisk,
@@ -75,7 +75,7 @@ export const SolicitacaoEbisaDetail = () => {
 
   const handleButtonClick = () => {
     setIsModalOpen(true);
-  }
+  };
 
   return (
     <div className="solicitacao-create-container">
@@ -84,10 +84,17 @@ export const SolicitacaoEbisaDetail = () => {
       <div className="solicitacao-create-data-container">
         <Row>
           <Col>
+            <Label>Solicitante</Label>
+            <Input placeholder="Solicitante" readOnly disabled value={solicitacaoViewServico?.solicitacao?.createdBy} />
+          </Col>
+
+          <Col>
             <Label>Titulo</Label>
             <Input placeholder="Titulo" readOnly disabled value={solicitacaoViewServico?.solicitacao?.titulo} />
           </Col>
-
+        </Row>
+        
+        <Row>
           <Col>
             <Label>Setor</Label>
             <Input type="select" value={solicitacaoViewServico?.solicitacao?.setorUnidade?.id} readOnly disabled>
@@ -203,7 +210,9 @@ export const SolicitacaoEbisaDetail = () => {
             </div>
           </Col>
 
-          {solicitacaoViewServico?.foiAvaliado && <ChatComponent solicitacaoViewServico={solicitacaoViewServico} isEbisa={isEbisa} isGinfra={isGinfra} isUnidade={isUnidade} />}
+          {solicitacaoViewServico?.foiAvaliado && (
+            <ChatComponent solicitacaoViewServico={solicitacaoViewServico} isEbisa={isEbisa} isGinfra={isGinfra} isUnidade={isUnidade} />
+          )}
         </Row>
       </div>
 
@@ -213,12 +222,12 @@ export const SolicitacaoEbisaDetail = () => {
           <span> Voltar </span>
         </Button>
 
-        <Button onClick={() => handleButtonClick()} >
+        <Button onClick={() => handleButtonClick()}>
           <span> Avaliar </span>
-          <FontAwesomeIcon icon={faCheckSquare}  />
+          <FontAwesomeIcon icon={faCheckSquare} />
         </Button>
       </div>
-      <ModalEbisaIndex isOpen={isModalOpen} setIsOpen={setIsModalOpen} solicitacaoData={solicitacaoViewServico}/>
+      <ModalEbisaIndex isOpen={isModalOpen} setIsOpen={setIsModalOpen} solicitacaoData={solicitacaoViewServico} />
     </div>
   );
 };

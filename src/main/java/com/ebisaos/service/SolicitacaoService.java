@@ -27,6 +27,8 @@ import com.ebisaos.repository.ComentarioRepository;
 import com.ebisaos.repository.EquipeRepository;
 import com.ebisaos.repository.ItemRepository;
 import com.ebisaos.repository.SolicitacaoRepository;
+import com.ebisaos.repository.UserRepository;
+import com.ebisaos.security.SecurityUtils;
 import com.ebisaos.service.dto.QuantidadeItensDTO;
 import com.ebisaos.service.dto.SolicitacaoAvaliacaoDTO;
 import com.ebisaos.service.dto.SolicitacaoAvaliacaoGInfraDTO;
@@ -53,6 +55,9 @@ public class SolicitacaoService {
 
     @Autowired
     ComentarioRepository comentarioRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     ItemService itemService;
@@ -94,6 +99,21 @@ public class SolicitacaoService {
             solicitacaoItemService.montarSolicitacaoItem(item, solicitacaoDTO.getSolicitacao());
         }
 
+    }
+
+    public Solicitacao updateSolicitacao(Solicitacao solicitacaoData, boolean create) {
+        solicitacaoData.setAberta(true);
+
+        SecurityUtils.getCurrentUserLogin()
+                .flatMap(userRepository::findOneByLogin)
+                .ifPresent(user -> {
+                    if (create) {
+                        solicitacaoData.setCreatedBy(user.getFirstName() + " " + user.getLastName());
+                    }
+                    solicitacaoData.setLastModifiedBy(user.getFirstName() + " " + user.getLastName());
+                });
+
+        return solicitacaoRepository.save(solicitacaoData);
     }
 
     public void editarSolicitacao(SolicitacaoDTO solicitacaoDTO) {

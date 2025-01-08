@@ -27,7 +27,7 @@ export const SolicitacaoUnidade = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${5}&idUnidade=${setorUnidadeId}`).then(res => {
+    axios.get(`/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${10}&idUnidade=${setorUnidadeId}`).then(res => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
