@@ -7,8 +7,10 @@ import { ISetorUnidade } from './setor-unidade.model';
 export interface ISolicitacao {
   id?: number;
   prazoDate?: dayjs.Dayjs | null;
-  createdDate?: dayjs.Dayjs | null;
-  lastModifiedDate?: dayjs.Dayjs | null;
+  createdBy?: string;
+  createdDate?: Date | null;
+  lastModifiedBy?: string;
+  lastModifiedDate?: Date | null;
   finishDate?: dayjs.Dayjs | null;
   aberta?: boolean | null;
   prioridade?: boolean | null;

@@ -5,9 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * A Solicitacao.
@@ -16,7 +20,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "solicitacao")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Solicitacao extends AbstractAuditingEntity<Long> {
+public class Solicitacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,6 +59,20 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_solicitacao")
     private TipoSolicitacaoEnum tipoSolicitacaoEnum;
+
+    @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+    private String createdBy;
+
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private Instant createdDate = Instant.now();
+
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate = Instant.now();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -188,7 +206,52 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
         return this;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
+    public TipoSolicitacaoEnum getTipoSolicitacaoEnum() {
+        return tipoSolicitacaoEnum;
+    }
+
+    public void setTipoSolicitacaoEnum(TipoSolicitacaoEnum tipoSolicitacaoEnum) {
+        this.tipoSolicitacaoEnum = tipoSolicitacaoEnum;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -203,7 +266,8 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -211,14 +275,14 @@ public class Solicitacao extends AbstractAuditingEntity<Long> {
     @Override
     public String toString() {
         return "Solicitacao{" +
-            "id=" + getId() +
-            ", prazoDate='" + getPrazoDate() + "'" +
-            ", finishDate='" + getFinishDate() + "'" +
-            ", aberta='" + getAberta() + "'" +
-            ", descricao='" + getDescricao() + "'" +
-            ", observacao='" + getObservacao() + "'" +
-            ", titulo='" + getTitulo() + "'" +
-            ", prioridade='" + getPrioridade() + "'" +
-            "}";
+                "id=" + getId() +
+                ", prazoDate='" + getPrazoDate() + "'" +
+                ", finishDate='" + getFinishDate() + "'" +
+                ", aberta='" + getAberta() + "'" +
+                ", descricao='" + getDescricao() + "'" +
+                ", observacao='" + getObservacao() + "'" +
+                ", titulo='" + getTitulo() + "'" +
+                ", prioridade='" + getPrioridade() + "'" +
+                "}";
     }
 }

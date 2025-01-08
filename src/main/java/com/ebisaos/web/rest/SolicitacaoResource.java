@@ -71,8 +71,7 @@ public class SolicitacaoResource {
             throw new BadRequestAlertException("A new solicitacao cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        solicitacaoDTO.getSolicitacao().setAberta(true);
-        Solicitacao solicitacao = solicitacaoService.save(solicitacaoDTO.getSolicitacao());
+        Solicitacao solicitacao = solicitacaoService.updateSolicitacao(solicitacaoDTO.getSolicitacao(), true);
         solicitacaoDTO.setSolicitacao(solicitacao);
         solicitacaoService.montarSolicicao(solicitacaoDTO);
         return ResponseEntity.created(new URI("/api/solicitacaos/" + solicitacao.getId()))
@@ -107,9 +106,7 @@ public class SolicitacaoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-
-        solicitacaoDTO.getSolicitacao().setAberta(true);
-        Solicitacao solicitacao = solicitacaoService.save(solicitacaoDTO.getSolicitacao());
+        Solicitacao solicitacao = solicitacaoService.updateSolicitacao(solicitacaoDTO.getSolicitacao(), false);
         solicitacaoDTO.setSolicitacao(solicitacao);
         solicitacaoService.editarSolicitacao(solicitacaoDTO);
         return ResponseEntity.ok()
