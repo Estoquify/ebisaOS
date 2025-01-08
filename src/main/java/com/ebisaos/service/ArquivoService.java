@@ -23,9 +23,6 @@ public class ArquivoService {
     @Autowired
     ArquivoRepository arquivoRepository;
 
-    @Autowired
-    SolicitacaoService solicitacaoService;
-
     public List<Arquivo> findAll(Pageable pageable) {
         return arquivoRepository.findAll(pageable).getContent();
     }
@@ -50,17 +47,19 @@ public class ArquivoService {
         arquivoRepository.delete(obj);
     }
 
-    public Arquivo criarArquivos(ArquivosDTO arquivosDTO) {
-
-        Solicitacao solicitacao = solicitacaoService.finalizarSolicitacao(arquivosDTO.getIdSolicitacao());
+    public Arquivo criarArquivos(ArquivosDTO arquivosDTO, Solicitacao solicitacao) {
 
         for (Arquivo arquivo : arquivosDTO.getArquivos()) {
-            arquivo.setSolicitacao(solicitacao);
-            arquivo.setTipoDocumento("fotos ebisa");
-            save(arquivo);
+            criarArquivo(arquivo, "fotoEbisa", solicitacao);
         }
 
         return arquivosDTO.getArquivos().get(0);
+    }
+
+    public void criarArquivo(Arquivo arquivo, String tipoArquivo, Solicitacao solicitacao) {
+        arquivo.setSolicitacao(solicitacao);
+        arquivo.setTipoDocumento(tipoArquivo);
+        save(arquivo);
     }
 
 }

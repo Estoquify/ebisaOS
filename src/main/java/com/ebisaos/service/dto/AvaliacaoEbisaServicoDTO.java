@@ -2,6 +2,7 @@ package com.ebisaos.service.dto;
 
 import java.util.List;
 
+import com.ebisaos.domain.Arquivo;
 import com.ebisaos.domain.Equipe;
 
 public class AvaliacaoEbisaServicoDTO {
@@ -10,6 +11,7 @@ public class AvaliacaoEbisaServicoDTO {
     private Long idSolicitacao;
     private Boolean aprovacao;
     private List<Equipe> equipes;
+    private Arquivo arquivo;
 
     public AvaliacaoEbisaServicoDTO() {
     }
@@ -46,9 +48,17 @@ public class AvaliacaoEbisaServicoDTO {
         this.equipes = equipes;
     }
 
+    public Arquivo getArquivo() {
+        return arquivo;
+    }
+
+    public void setArquivo(Arquivo arquivo) {
+        this.arquivo = arquivo;
+    }
+
     @Override
     public String toString() {
-        return "AvaliacaoEbisaServicoDTO [resposta=" + resposta + ", idSolicitacao=" + idSolicitacao + ", aprovacao=" + aprovacao + ", equipes=" + equipes
+        return "AvaliacaoEbisaServicoDTO [resposta=" + resposta + ", idSolicitacao=" + idSolicitacao + ", aprovacao=" + aprovacao + ", equipes=" + equipes + ", arquivo=" + arquivo
                 + "]";
     }
 
@@ -60,6 +70,7 @@ public class AvaliacaoEbisaServicoDTO {
         result = prime * result + ((idSolicitacao == null) ? 0 : idSolicitacao.hashCode());
         result = prime * result + ((aprovacao == null) ? 0 : aprovacao.hashCode());
         result = prime * result + ((equipes == null) ? 0 : equipes.hashCode());
+        result = prime * result + ((arquivo == null) ? 0 : arquivo.hashCode());
         return result;
     }
 
@@ -91,7 +102,12 @@ public class AvaliacaoEbisaServicoDTO {
             if (other.equipes != null)
                 return false;
         } else if (!equipes.equals(other.equipes))
-            return false;   
+            return false; 
+        if (arquivo == null) {
+            if (other.arquivo != null)
+                return false;
+        } else if (!arquivo.equals(other.arquivo))
+            return false;  
         return true;
     }
 

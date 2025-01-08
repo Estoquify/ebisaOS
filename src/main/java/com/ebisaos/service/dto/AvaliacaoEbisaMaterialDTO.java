@@ -1,10 +1,13 @@
 package com.ebisaos.service.dto;
 
+import com.ebisaos.domain.Arquivo;
+
 public class AvaliacaoEbisaMaterialDTO {
     
     private String resposta;
     private Long idSolicitacao;
     private Boolean aprovacao;
+    private Arquivo arquivo;
 
     public AvaliacaoEbisaMaterialDTO() {
     }
@@ -33,9 +36,17 @@ public class AvaliacaoEbisaMaterialDTO {
         this.aprovacao = aprovacao;
     }
 
+    public Arquivo getArquivo() {
+        return arquivo;
+    }
+
+    public void setArquivo(Arquivo arquivo) {
+        this.arquivo = arquivo;
+    }
+
     @Override
     public String toString() {
-        return "AvaliacaoEbisaMaterialDTO [resposta=" + resposta + ", idSolicitacao=" + idSolicitacao + ", aprovacao=" + aprovacao
+        return "AvaliacaoEbisaMaterialDTO [resposta=" + resposta + ", idSolicitacao=" + idSolicitacao + ", aprovacao=" + aprovacao + ", arquivo=" + arquivo
                 + "]";
     }
 
@@ -46,6 +57,7 @@ public class AvaliacaoEbisaMaterialDTO {
         result = prime * result + ((resposta == null) ? 0 : resposta.hashCode());
         result = prime * result + ((idSolicitacao == null) ? 0 : idSolicitacao.hashCode());
         result = prime * result + ((aprovacao == null) ? 0 : aprovacao.hashCode());
+        result = prime * result + ((arquivo == null) ? 0 : arquivo.hashCode());
         return result;
     }
 
@@ -72,7 +84,12 @@ public class AvaliacaoEbisaMaterialDTO {
             if (other.aprovacao != null)
                 return false;
         } else if (!aprovacao.equals(other.aprovacao))
-            return false;     
+            return false;
+        if (arquivo == null) {
+            if (other.arquivo != null)
+                return false;
+        } else if (!arquivo.equals(other.arquivo))
+            return false;
         return true;
     }
 

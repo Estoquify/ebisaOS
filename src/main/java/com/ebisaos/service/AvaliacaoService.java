@@ -37,6 +37,9 @@ public class AvaliacaoService {
     @Autowired
     EquipeService equipeService;
 
+    @Autowired
+    ArquivoService arquivoService;
+
     public List<Avaliacao> findAll(Pageable pageable) {
         return avaliacaoRepository.findAll(pageable).getContent();
     }
@@ -96,20 +99,24 @@ public class AvaliacaoService {
 
     public Avaliacao avaliacaoEbisaMaterial(AvaliacaoEbisaMaterialDTO avaliacaoEbisaMaterialDTO) {
         Avaliacao avaliacao = avaliacaoPorSolicitacao(avaliacaoEbisaMaterialDTO.getIdSolicitacao());
+        Solicitacao solicitacao = solicitacaoRepository.findById(avaliacaoEbisaMaterialDTO.getIdSolicitacao()).get();
 
         avaliacao.setAprovacao(avaliacaoEbisaMaterialDTO.getAprovacao());
         save(avaliacao);
         comentarioService.criarComentarioAvaliacao(avaliacao, avaliacaoEbisaMaterialDTO.getResposta(), "AVALIACAO EBISA");
+        arquivoService.criarArquivo(avaliacaoEbisaMaterialDTO.getArquivo(), "orcamentoMaterial", solicitacao);
 
         return avaliacao;
     }
 
     public Avaliacao avaliacaoEbisaServico(AvaliacaoEbisaServicoDTO avaliacaoEbisaServicoDTO) {
         Avaliacao avaliacao = avaliacaoPorSolicitacao(avaliacaoEbisaServicoDTO.getIdSolicitacao());
+        Solicitacao solicitacao = solicitacaoRepository.findById(avaliacaoEbisaServicoDTO.getIdSolicitacao()).get();
 
         avaliacao.setAprovacao(avaliacaoEbisaServicoDTO.getAprovacao());
         save(avaliacao);
         comentarioService.criarComentarioAvaliacao(avaliacao, avaliacaoEbisaServicoDTO.getResposta(), "AVALIACAO EBISA");
+        arquivoService.criarArquivo(avaliacaoEbisaServicoDTO.getArquivo(), "orcamentoServico", solicitacao);
 
         for(Equipe equipe: avaliacaoEbisaServicoDTO.getEquipes()) {
             equipeService.montarSolicitacaoEquipe(equipe, avaliacao.getSolicitacao());

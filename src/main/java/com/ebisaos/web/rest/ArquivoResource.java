@@ -1,8 +1,10 @@
 package com.ebisaos.web.rest;
 
 import com.ebisaos.domain.Arquivo;
+import com.ebisaos.domain.Solicitacao;
 import com.ebisaos.repository.ArquivoRepository;
 import com.ebisaos.service.ArquivoService;
+import com.ebisaos.service.SolicitacaoService;
 import com.ebisaos.service.dto.ArquivosDTO;
 import com.ebisaos.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -37,11 +39,14 @@ public class ArquivoResource {
 
     private final ArquivoRepository arquivoRepository;
 
+    private final SolicitacaoService solicitacaoService;
+
     @Autowired
     private ArquivoService arquivoService;
 
-    public ArquivoResource(ArquivoRepository arquivoRepository) {
+    public ArquivoResource(ArquivoRepository arquivoRepository, SolicitacaoService solicitacaoService) {
         this.arquivoRepository = arquivoRepository;
+        this.solicitacaoService = solicitacaoService;
     }
 
     /**
@@ -57,7 +62,8 @@ public class ArquivoResource {
     public ResponseEntity<Arquivo> createArquivo(@RequestBody ArquivosDTO arquivo) throws URISyntaxException {
         log.debug("REST request to save Arquivo : {}", arquivo);
 
-        Arquivo newArquivo = arquivoService.criarArquivos(arquivo);
+        Solicitacao solicitacao = solicitacaoService.findById(arquivo.getIdSolicitacao());
+        Arquivo newArquivo = arquivoService.criarArquivos(arquivo, solicitacao);
         return ResponseEntity.created(new URI("/api/arquivos/" + newArquivo.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME,
                         newArquivo.getId().toString()))
