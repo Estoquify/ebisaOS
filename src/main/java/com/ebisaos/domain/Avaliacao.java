@@ -35,6 +35,9 @@ public class Avaliacao extends AbstractAuditingEntity<Long> {
     @Column(name = "aprovacao")
     private Boolean aprovacao;
 
+    @Column(name = "orcamento")
+    private Boolean orcamento;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "avaliacaos" }, allowSetters = true)
@@ -107,6 +110,19 @@ public class Avaliacao extends AbstractAuditingEntity<Long> {
         this.aprovacaoGinfra = aprovacaoGinfra;
     }
 
+    public Boolean getOrcamento() {
+        return this.orcamento;
+    }
+
+    public Avaliacao orcamento(Boolean orcamento) {
+        this.setOrcamento(orcamento);
+        return this;
+    }
+
+    public void setOrcamento(Boolean orcamento) {
+        this.orcamento = orcamento;
+    }
+
     public Solicitacao getSolicitacao() {
         return this.solicitacao;
     }
@@ -148,6 +164,7 @@ public class Avaliacao extends AbstractAuditingEntity<Long> {
             ", avalicao='" + getAvalicao() + "'" +
             ", aprovacao='" + getAprovacao() + "'" +
             ", aprovacaoGinfra='" + getAprovacaoGinfra() + "'" +
+            ", orcamento='" + getOrcamento() + "'" +
             "}";
     }
 }
