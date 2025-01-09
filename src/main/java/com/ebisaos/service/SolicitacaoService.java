@@ -225,9 +225,12 @@ public class SolicitacaoService {
 
     public Page<SolicitacaoAvaliacaoGInfraDTO> listaPageSolicitacaoAvaliacaoGInfra(Pageable pageable,
             Map<String, String> params) {
-        Long countSolicitacao = solicitacaoRepository.countListagemSolicitacaoAvaliacaoGInfra(params.get("pesquisa"));
+        Long countSolicitacao = solicitacaoRepository.countListagemSolicitacaoAvaliacaoGInfra(params.get("pesquisa"), Boolean.parseBoolean(params.get("filtrarNegados")));
         List<Object[]> rawResults = solicitacaoRepository.getListagemSolicitacaoAvaliacaoGInfraRaw(
-                params.get("pesquisa"), Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
+                params.get("pesquisa"),
+                Boolean.parseBoolean(params.get("filtrarNegados")),
+                Integer.parseInt(params.get("page")), 
+                Integer.parseInt(params.get("size")));
         List<SolicitacaoAvaliacaoGInfraDTO> listaSolicitacao = montarListaPageSolicitacaoAvaliacaoGInfra(rawResults);
 
         Page<SolicitacaoAvaliacaoGInfraDTO> pageSolicitacao = listPageAvaliacaoGInfra(pageable, listaSolicitacao,

@@ -19,9 +19,10 @@ export const SolicitacaoGinfra = () => {
 
   const [pageAtual, setPageAtual] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [filtrarNegados, setFiltrarNegados] = useState<boolean>(false);
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoAvaliacaoGInfra?page=${pageAtual}&size=${5}`).then(res => {
+    axios.get(`/api/solicitacaos/listaPageSolicitacaoAvaliacaoGInfra?page=${pageAtual}&size=${5}&filtrarNegados=${filtrarNegados}`).then(res => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
