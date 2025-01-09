@@ -30,7 +30,6 @@ import { ISolicitacaoViewServicoDto } from 'app/shared/model/solicitacao-view-se
 import { IComentarioView } from 'app/shared/model/comentarios-view.model';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ChatComponent from '../view/Chat/ChatComponent';
-import ModalEbisaIndex from './Modal/Modal-ebisa-index';
 
 export const SolicitacaoEbisaDetail = () => {
   const navigate = useNavigate();
@@ -74,7 +73,7 @@ export const SolicitacaoEbisaDetail = () => {
     : '';
 
   const handleButtonClick = () => {
-    setIsModalOpen(true);
+    navigate(`avaliarEbisa`)
   };
 
   return (
@@ -227,7 +226,6 @@ export const SolicitacaoEbisaDetail = () => {
           <FontAwesomeIcon icon={faCheckSquare} />
         </Button>
       </div>
-      <ModalEbisaIndex isOpen={isModalOpen} setIsOpen={setIsModalOpen} solicitacaoData={solicitacaoViewServico} />
     </div>
   );
 };
