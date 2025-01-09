@@ -25,9 +25,11 @@ export const SolicitacaoUnidade = () => {
 
   const [pageAtual, setPageAtual] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [filtrarStatus, setFiltrarStatus] = useState<boolean>(false);
+  const [status, setStatus] = useState<boolean>(null);
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${10}&idUnidade=${setorUnidadeId}`).then(res => {
+    axios.get(`/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${10}&idUnidade=${setorUnidadeId}&filtrarStatus=${filtrarStatus}&status=${status}`).then(res => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });

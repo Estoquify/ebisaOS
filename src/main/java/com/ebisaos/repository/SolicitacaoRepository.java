@@ -16,18 +16,23 @@ import org.springframework.stereotype.Repository;
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> {
 
     @Query(value = """
-                SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.aberta, ava.aprovacao, sol.finish_date, sol.prazo_date, seu.nome AS nome_setor
+                SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.aberta, ava.aprovacao_ginfra, sol.finish_date, sol.prazo_date, seu.nome AS nome_setor
                     FROM public.solicitacao AS sol
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
+                 AND (:filtrarStatus = false
+                    OR (:filtrarStatus = true 
+                       AND ((:status IS NULL AND ava.aprovacao_ginfra IS NULL) 
+                         OR (:status IS NOT NULL AND (ava.aprovacao_ginfra = :status)) 
+                 )))
                  AND seu.unidade_id = :idUnidade
                  ORDER BY sol.aberta, sol.created_date
                  LIMIT :size OFFSET :page * :size
             """, nativeQuery = true)
-    List<Object[]> getListagemSolicitacaoUnidadeRaw(@Param("pesquisa") String pesquisa, @Param("idUnidade") Long idUnidade, @Param("page") Integer page, @Param("size") Integer size);
+    List<Object[]> getListagemSolicitacaoUnidadeRaw(@Param("pesquisa") String pesquisa, @Param("filtrarStatus") Boolean filtrarStatus, @Param("status") Boolean status, @Param("idUnidade") Long idUnidade, @Param("page") Integer page, @Param("size") Integer size);
 
     @Query(value = """
                 SELECT COUNT(*)
@@ -37,9 +42,14 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
+                 AND (:filtrarStatus = false
+                    OR (:filtrarStatus = true 
+                       AND ((:status IS NULL AND ava.aprovacao IS NULL AND ava.aprovacao_ginfra IS NULL) 
+                         OR (:status IS NOT NULL AND (ava.aprovacao = :status OR ava.aprovacao_ginfra = :status)) 
+                 )))
                  AND seu.unidade_id = :idUnidade
             """, nativeQuery = true)
-    Long countListagemSolicitacaoUnidade(@Param("pesquisa") String pesquisa, @Param("idUnidade") Long idUnidade);
+    Long countListagemSolicitacaoUnidade(@Param("pesquisa") String pesquisa, @Param("filtrarStatus") Boolean filtrarStatus, @Param("status") Boolean status, @Param("idUnidade") Long idUnidade);
 
     @Query(value = """
                 SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.sigla AS sigla_unidade, seu.nome AS nome_setor

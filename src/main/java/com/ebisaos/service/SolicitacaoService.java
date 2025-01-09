@@ -153,7 +153,7 @@ public class SolicitacaoService {
                 obj[3] != null ? ((Timestamp) obj[3]).toLocalDateTime() : null, // Converte Timestamp para
                                                                                 // LocalDateTime, createdDate
                 (Boolean) obj[4], // aberta
-                (Boolean) obj[5], // aprovacao
+                (Boolean) obj[5], // aprovacaoGinfra
                 obj[6] != null ? ((Timestamp) obj[6]).toLocalDateTime() : null, // Converte Timestamp para
                                                                                 // LocalDateTime, finishDate
                 obj[7] != null ? ((Timestamp) obj[7]).toLocalDateTime() : null, // Converte Timestamp para
@@ -171,10 +171,26 @@ public class SolicitacaoService {
     }
 
     public Page<SolicitacaoUnidadeDTO> listaPageSolicitacaoUnidade(Pageable pageable, Map<String, String> params) {
+        String statusString = params.get("status");
+        Boolean status = null;
+
+        if (statusString != null) {
+            if ("null".equalsIgnoreCase(statusString)) {
+                status = null; 
+            } else {
+                status = Boolean.parseBoolean(statusString); 
+            }
+        }
+
         Long countSolicitacao = solicitacaoRepository.countListagemSolicitacaoUnidade(params.get("pesquisa"),
+                Boolean.parseBoolean(params.get("filtrarStatus")),
+                status,
                 Long.parseLong(params.get("idUnidade")));
         List<Object[]> rawResults = solicitacaoRepository.getListagemSolicitacaoUnidadeRaw(params.get("pesquisa"),
-                Long.parseLong(params.get("idUnidade")), Integer.parseInt(params.get("page")),
+                Boolean.parseBoolean(params.get("filtrarStatus")),
+                status,
+                Long.parseLong(params.get("idUnidade")), 
+                Integer.parseInt(params.get("page")),
                 Integer.parseInt(params.get("size")));
         List<SolicitacaoUnidadeDTO> listaSolicitacao = montarListaPageSolicitacao(rawResults);
 

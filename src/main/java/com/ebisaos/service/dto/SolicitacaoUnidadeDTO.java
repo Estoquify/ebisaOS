@@ -9,19 +9,19 @@ public class SolicitacaoUnidadeDTO {
     private String tipoSolicitacao;
     private LocalDateTime createdDate;
     private Boolean aberta;
-    private Boolean aprovacao;
+    private Boolean aprovacaoGinfra;
     private LocalDateTime finishDate;
     private LocalDateTime prazoDate;
     private String nomeSetor;
 
     // Construtor completo
-    public SolicitacaoUnidadeDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, Boolean aberta, Boolean aprovacao, LocalDateTime finishDate, LocalDateTime prazoDate, String nomeSetor) {
+    public SolicitacaoUnidadeDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, Boolean aberta, Boolean aprovacaoGinfra, LocalDateTime finishDate, LocalDateTime prazoDate, String nomeSetor) {
         this.id = id;
         this.titulo = titulo;
         this.tipoSolicitacao = tipoSolicitacao;
         this.createdDate = createdDate;
         this.aberta = aberta;
-        this.aprovacao = aprovacao;
+        this.aprovacaoGinfra = aprovacaoGinfra;
         this.finishDate = finishDate;
         this.prazoDate = prazoDate;
         this.nomeSetor = nomeSetor;
@@ -69,12 +69,12 @@ public class SolicitacaoUnidadeDTO {
         this.aberta = aberta;
     }
 
-    public Boolean getAprovacao() {
-        return aprovacao;
+    public Boolean getAprovacaoGinfra() {
+        return aprovacaoGinfra;
     }
 
-    public void setAprovacao(Boolean aprovacao) {
-        this.aprovacao = aprovacao;
+    public void setAprovacaoGinfra(Boolean aprovacaoGinfra) {
+        this.aprovacaoGinfra = aprovacaoGinfra;
     }
 
     public LocalDateTime getFinishDate() {
