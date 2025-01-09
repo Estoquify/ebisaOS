@@ -7,6 +7,8 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 
+import './Modal-ebisa.scss'
+
 interface IModalEbisaComprovante {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean | undefined>>;
@@ -49,7 +51,7 @@ const ModalEbisaComprovante = (props: IModalEbisaComprovante) => {
         </ModalHeader>
         <ModalBody>
           <div>
-            <DragAndDrop arquivoList={arquivosList} setArquivoList={setArquivosList} />
+            <DragAndDrop arquivoList={arquivosList} setArquivoList={setArquivosList} multiFiles/>
           </div>
         </ModalBody>
 

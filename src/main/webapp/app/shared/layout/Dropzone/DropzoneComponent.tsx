@@ -1,18 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import dayjs from 'dayjs';
 import { IArquivoModal } from 'app/shared/model/arquivo-modals.model';
 import { IArquivo } from 'app/shared/model/arquivo.model';
-
-import './DropzoneComponents.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faUpload } from '@fortawesome/free-solid-svg-icons';
+import './DropzoneComponents.scss';
 
 interface DragAndDropProps {
   arquivoList: IArquivoModal;
   setArquivoList: React.Dispatch<React.SetStateAction<IArquivoModal>>;
+  multiFiles?: boolean;
 }
 
-const DragAndDrop: React.FC<DragAndDropProps> = ({ arquivoList, setArquivoList }) => {
+const DragAndDrop: React.FC<DragAndDropProps> = ({ arquivoList, setArquivoList, multiFiles = false }) => {
   const [isDragging, setIsDragging] = useState(false);
   const dragCounter = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,7 +50,9 @@ const DragAndDrop: React.FC<DragAndDropProps> = ({ arquivoList, setArquivoList }
   };
 
   const processFiles = (files: File[]) => {
-    files.forEach(file => {
+    const validFiles = multiFiles ? files : [files[0]]; // Permite apenas um arquivo se multiFiles for false
+
+    validFiles.forEach(file => {
       const reader = new FileReader();
       reader.onload = () => {
         const base64 = reader.result as string;
@@ -70,10 +71,20 @@ const DragAndDrop: React.FC<DragAndDropProps> = ({ arquivoList, setArquivoList }
       id: null,
       tipoDocumento: null,
     };
-    setArquivoList(prevList => ({
-      ...prevList,
-      arquivos: prevList.arquivos ? [...prevList.arquivos, newFile] : [newFile],
-    }));
+
+    setArquivoList(prevList => {
+      if (multiFiles) {
+        return {
+          ...prevList,
+          arquivos: prevList.arquivos ? [...prevList.arquivos, newFile] : [newFile],
+        };
+      } else {
+        return {
+          ...prevList,
+          arquivos: [newFile], // Substitui o arquivo existente
+        };
+      }
+    });
   };
 
   useEffect(() => {
@@ -101,14 +112,16 @@ const DragAndDrop: React.FC<DragAndDropProps> = ({ arquivoList, setArquivoList }
   }, []);
 
   return (
-    <div className="dropzone-container">
+    <div className="dropzone-container" >
       {!isDragging && (
         <button type="button" onClick={handleButtonClick} className="button-dropzone-component">
-          <FontAwesomeIcon icon={faUpload} />
-          <span>Selecionar arquivos</span>
+          <FontAwesomeIcon icon={arquivoList?.arquivos?.length === 1 && !multiFiles ? faFile : faUpload} />
+          <span style={multiFiles ? {} : { textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+            {arquivoList?.arquivos?.length === 1 && !multiFiles ? arquivoList?.arquivos[0]?.nomeDocumento : 'Selecionar arquivos'}
+          </span>
         </button>
       )}
-      <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileInputChange} multiple />
+      <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileInputChange} multiple={multiFiles} />
       {isDragging && (
         <div
           onDrop={handleDrop}
@@ -120,7 +133,7 @@ const DragAndDrop: React.FC<DragAndDropProps> = ({ arquivoList, setArquivoList }
           <p>Arraste e solte os arquivos aqui</p>
         </div>
       )}
-      {arquivoList && arquivoList?.arquivos?.length !== 0 && (
+      {arquivoList && arquivoList?.arquivos?.length !== 0 && multiFiles && (
         <div className="dropzone-files-container">
           {arquivoList?.arquivos?.map((arquivo, index) => (
             <div key={index} className="dropzone-files-data">

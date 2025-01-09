@@ -26,6 +26,14 @@
     color: #fff;
 
     font-weight: bold;
+
+    > svg {
+      width: 20%;
+    }
+
+    > span {
+      width: 80%;
+    }
   }
 
   > .dropzone-container-drag {
