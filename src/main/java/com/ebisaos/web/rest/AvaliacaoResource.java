@@ -222,6 +222,14 @@ public class AvaliacaoResource {
         return ResponseUtil.wrapOrNotFound(avaliacao);
     }
 
+    @GetMapping("avaliarOrcamento/{idSolicitacao}/{avaliacaoOrcamento}")
+    public Avaliacao getAvaliarOrcamento(@PathVariable("idSolicitacao") Long idSolicitacao, @PathVariable("avaliacaoOrcamento") Boolean avaliacaoOrcamento) {
+        Avaliacao avaliacao = avaliacaoService.avaliacaoPorSolicitacao(idSolicitacao);
+        avaliacao.setOrcamento(avaliacaoOrcamento);
+        avaliacaoRepository.save(avaliacao);
+        return avaliacao;
+    }
+
     /**
      * {@code DELETE  /avaliacaos/:id} : delete the "id" avaliacao.
      *
