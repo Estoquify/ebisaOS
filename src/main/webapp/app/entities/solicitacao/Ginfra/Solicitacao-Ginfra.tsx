@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Col, Row } from 'reactstrap';
+import { Alert, Button, Col, Input, Row } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEye, faCheck, faX, faHourglass, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEye, faCheck, faX, faHourglass, faChevronLeft, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import '../home/solicitacao.scss';
 import axios from 'axios';
@@ -22,10 +22,14 @@ export const SolicitacaoGinfra = () => {
   const [filtrarNegados, setFiltrarNegados] = useState<boolean>(false);
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoAvaliacaoGInfra?page=${pageAtual}&size=${5}&filtrarNegados=${filtrarNegados}`).then(res => {
-      setSolicitacaoList(res?.data?.content);
-      setTotalPages(res?.data?.totalPages);
-    });
+    axios
+      .get(
+        `/api/solicitacaos/listaPageSolicitacaoAvaliacaoGInfra?page=${pageAtual}&pesquisa=${inputPesquisa}&size=${5}&filtrarNegados=${filtrarNegados}`,
+      )
+      .then(res => {
+        setSolicitacaoList(res?.data?.content);
+        setTotalPages(res?.data?.totalPages);
+      });
   };
 
   const handleFormatDate = (data: ISolicitacaoGinfraListagem) => {
@@ -35,7 +39,16 @@ export const SolicitacaoGinfra = () => {
 
   useEffect(() => {
     getAllEntities();
-  }, [pageAtual]);
+  }, [pageAtual, inputPesquisa, filtrarNegados]);
+
+  const handleInputPesquisaChange = (data: string) => {
+    setInputPesquisa(data);
+    setPageAtual(0);
+  };
+
+  const handleChangeFilter = (data: string) => {
+    setFiltrarNegados(data === 'true' ? true : false);
+  };
 
   return (
     <div className="solicitacao-home-container">
@@ -44,11 +57,23 @@ export const SolicitacaoGinfra = () => {
           <h2>Solicitações</h2>
         </Col>
 
-        {/* <Col className="solicitacao-home-header_button">
-          <Button onClick={() => navigate('new')}>
-            <FontAwesomeIcon icon={faPlus} />
+        <Col md={2} className="stock-home-header-search-container">
+          <Input type="select" placeholder="Pesquisa" value={`${filtrarNegados}`} onChange={e => handleChangeFilter(e.target.value)}>
+            <option value={'false'} key={1}>
+              Orçamentos aprovados
+            </option>
+            <option value={'true'} key={2}>
+              Orçamentos negados
+            </option>
+          </Input>
+        </Col>
+
+        <Col md={3} className="stock-home-header-search-container">
+          <Input placeholder="Pesquisa" value={inputPesquisa} onChange={e => handleInputPesquisaChange(e.target.value)} />
+          <Button className="search-icon-container" onClick={() => getAllEntities()}>
+            <FontAwesomeIcon icon={faSearch} />
           </Button>
-        </Col> */}
+        </Col>
       </Row>
 
       <Row className="solicitacao-ginfra-data">

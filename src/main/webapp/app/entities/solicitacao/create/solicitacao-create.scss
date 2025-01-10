@@ -10,8 +10,6 @@
   background: #fff;
   border-radius: 18px;
 
-  gap: 3em;
-
   > h2 {
     font-weight: bold;
   }
@@ -217,6 +215,8 @@
   > .buttons-container {
     width: 100%;
     display: flex;
+
+    margin-top: auto;
 
     align-items: center;
     justify-content: space-between;

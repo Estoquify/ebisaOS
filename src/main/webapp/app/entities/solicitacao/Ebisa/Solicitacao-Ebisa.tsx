@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Col, Row, Table } from 'reactstrap';
+import { Alert, Button, Col, Input, Row, Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faChevronLeft, faChevronRight, faCheck, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import '../home/solicitacao.scss';
 import axios from 'axios';
@@ -20,20 +20,25 @@ export const SolicitacaoEbisa = () => {
 
   const [pageAtual, setPageAtual] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [filtrarFinalizados, setFiltrarFinalizados] = useState<boolean>(false)
+  const [filtrarFinalizados, setFiltrarFinalizados] = useState<boolean>(false);
+  const [inputPesquisa, setInputPesquisa] = useState<string>('');
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoAvaliacao?page=${pageAtual}&size=${5}&filtrarFinalizados=${filtrarFinalizados}`).then(res => {
-      setSolicitacaoList(res?.data?.content);
-      setTotalPages(res?.data?.totalPages);
-    });
+    axios
+      .get(
+        `/api/solicitacaos/listaPageSolicitacaoAvaliacao?page=${pageAtual}&pesquisa=${inputPesquisa}&filtrarFinalizados=${filtrarFinalizados}&size=${5}&filtrarFinalizados=${filtrarFinalizados}`,
+      )
+      .then(res => {
+        setSolicitacaoList(res?.data?.content);
+        setTotalPages(res?.data?.totalPages);
+      });
   };
 
   useEffect(() => {
-    if(!openModal) {
-      getAllEntities()
+    if (!openModal) {
+      getAllEntities();
     }
-  }, [openModal])
+  }, [openModal]);
 
   const handleReturnPrioridade = (status: number | string) => {
     switch (status) {
@@ -53,7 +58,16 @@ export const SolicitacaoEbisa = () => {
 
   useEffect(() => {
     getAllEntities();
-  }, [pageAtual]);
+  }, [pageAtual, inputPesquisa, filtrarFinalizados]);
+
+  const handleInputPesquisaChange = (data: string) => {
+    setInputPesquisa(data);
+    setPageAtual(0);
+  };
+
+  const handleChangeFilter = (data: string) => {
+    setFiltrarFinalizados(data === "true" ? true : false);
+  }
 
   return (
     <div className="solicitacao-home-container">
@@ -62,11 +76,28 @@ export const SolicitacaoEbisa = () => {
           <h2>Solicitações</h2>
         </Col>
 
-        {/* <Col className="solicitacao-home-header_button">
-          <Button onClick={() => navigate('new')}>
-            <FontAwesomeIcon icon={faPlus} />
+        <Col md={2} className="stock-home-header-search-container">
+          <Input
+            type="select"
+            placeholder="Pesquisa"
+            value={`${filtrarFinalizados}`}
+            onChange={e => handleChangeFilter(e.target.value)}
+          >
+            <option value={"false"} key={1}>
+              OS abertas
+              </option>
+            <option value={"true"} key={2}>
+              OS finalizadas
+            </option>
+          </Input>
+        </Col>
+
+        <Col md={3} className="stock-home-header-search-container">
+          <Input placeholder="Pesquisa" value={inputPesquisa} onChange={e => handleInputPesquisaChange(e.target.value)} />
+          <Button className="search-icon-container" onClick={() => getAllEntities()}>
+            <FontAwesomeIcon icon={faSearch} />
           </Button>
-        </Col> */}
+        </Col>
       </Row>
 
       <Row className="solicitacao-ebisa-data">

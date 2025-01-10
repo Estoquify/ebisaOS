@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Alert, Button, Col, Row, Table } from 'reactstrap';
+import { Alert, Button, Col, Input, Row, Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEye, faCheck, faX, faHourglass, faPen, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEye, faCheck, faX, faHourglass, faPen, faChevronLeft, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from '../solicitacao.reducer';
@@ -29,10 +29,19 @@ export const SolicitacaoUnidade = () => {
   const [status, setStatus] = useState<boolean>(null);
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${10}&idUnidade=${setorUnidadeId}&filtrarStatus=${filtrarStatus}&status=${status}`).then(res => {
+    axios.get(`/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${10}&idUnidade=${setorUnidadeId}&pesquisa=${inputPesquisa}&filtrarStatus=${filtrarStatus}&status=${status}`).then(res => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });
+  };
+
+  const handleInputPesquisaChange = (data: string) => {
+    setInputPesquisa(data);
+    setPageAtual(0);
+  };
+
+  const handleChangeFilter = (data: string) => {
+    setFiltrarStatus(data === 'true' ? true : false);
   };
 
   const handleReturnStatus = (status: boolean) => {
@@ -76,13 +85,32 @@ export const SolicitacaoUnidade = () => {
 
   useEffect(() => {
     getAllEntities();
-  }, [pageAtual]);
+  }, [pageAtual, inputPesquisa, status, filtrarStatus]);
 
   return (
     <div className="solicitacao-home-container">
       <Row className="solicitacao-home-header">
         <Col className="solicitacao-home-header_title">
           <h2>Solicitações</h2>
+        </Col>
+
+        
+        <Col md={2} className="stock-home-header-search-container">
+          <Input type="select" placeholder="Pesquisa" value={`${filtrarStatus}`} onChange={e => handleChangeFilter(e.target.value)}>
+            <option value={'false'} key={1}>
+              Orçamentos aprovados
+            </option>
+            <option value={'true'} key={2}>
+              Orçamentos negados
+            </option>
+          </Input>
+        </Col>
+
+        <Col md={3} className="stock-home-header-search-container">
+          <Input placeholder="Pesquisa" value={inputPesquisa} onChange={e => handleInputPesquisaChange(e.target.value)} />
+          <Button className="search-icon-container" onClick={() => getAllEntities()}>
+            <FontAwesomeIcon icon={faSearch} />
+          </Button>
         </Col>
 
         <Col className="solicitacao-home-header_button">
