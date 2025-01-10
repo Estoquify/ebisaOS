@@ -13,6 +13,7 @@ public class SolicitacaoViewServicoDTO {
     private List<ComentariosViewDTO> comentarios;
     private List<Equipe> equipes;
     private Boolean foiAvaliado;
+    private Boolean orcamentoAberto;
 
     public Solicitacao getSolicitacao() {
         return solicitacao;
@@ -54,9 +55,17 @@ public class SolicitacaoViewServicoDTO {
         this.foiAvaliado = foiAvaliado;
     }
 
+    public Boolean getOrcamentoAberto() {
+        return orcamentoAberto;
+    }
+
+    public void setOrcamentoAberto(Boolean orcamentoAberto) {
+        this.orcamentoAberto = orcamentoAberto;
+    }
+
     @Override
     public String toString() {
-        return "SolicitacaoViewServicoDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios + ", equipes=" + equipes + ", foiAvaliado=" + foiAvaliado
+        return "SolicitacaoViewServicoDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios + ", equipes=" + equipes + ", foiAvaliado=" + foiAvaliado + ", orcamentoAberto=" + orcamentoAberto
                 + "]";
     }
 
@@ -69,6 +78,7 @@ public class SolicitacaoViewServicoDTO {
         result = prime * result + ((comentarios == null) ? 0 : comentarios.hashCode());
         result = prime * result + ((equipes == null) ? 0 : equipes.hashCode());
         result = prime * result + ((foiAvaliado == null) ? 0 : foiAvaliado.hashCode());
+        result = prime * result + ((orcamentoAberto == null) ? 0 : orcamentoAberto.hashCode());
         return result;
     }
 
@@ -105,6 +115,11 @@ public class SolicitacaoViewServicoDTO {
             if (other.foiAvaliado != null)
                 return false;
         } else if (!foiAvaliado.equals(other.foiAvaliado))
+            return false; 
+        if (orcamentoAberto == null) {
+            if (other.orcamentoAberto != null)
+                return false;
+        } else if (!orcamentoAberto.equals(other.orcamentoAberto))
             return false;     
         return true;
     }

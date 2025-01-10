@@ -9,6 +9,7 @@ public class SolicitacaoViewMaterialDTO {
     private Solicitacao solicitacao;
     private List<QuantidadeItensDTO> itens;
     private List<ComentariosViewDTO> comentarios;
+    private Boolean orcamentoAberto;
 
     public Solicitacao getSolicitacao() {
         return solicitacao;
@@ -34,9 +35,17 @@ public class SolicitacaoViewMaterialDTO {
         this.comentarios = comentarios;
     }
 
+    public Boolean getOrcamentoAberto() {
+        return orcamentoAberto;
+    }
+
+    public void setOrcamentoAberto(Boolean orcamentoAberto) {
+        this.orcamentoAberto = orcamentoAberto;
+    }
+
     @Override
     public String toString() {
-        return "SolicitacaoViewMaterialDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios
+        return "SolicitacaoViewMaterialDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios + ", orcamentoAberto=" + orcamentoAberto
                 + "]";
     }
 
@@ -47,6 +56,7 @@ public class SolicitacaoViewMaterialDTO {
         result = prime * result + ((solicitacao == null) ? 0 : solicitacao.hashCode());
         result = prime * result + ((itens == null) ? 0 : itens.hashCode());
         result = prime * result + ((comentarios == null) ? 0 : comentarios.hashCode());
+        result = prime * result + ((orcamentoAberto == null) ? 0 : orcamentoAberto.hashCode());
         return result;
     }
 
@@ -73,7 +83,12 @@ public class SolicitacaoViewMaterialDTO {
             if (other.comentarios != null)
                 return false;
         } else if (!comentarios.equals(other.comentarios))
-            return false;          
+            return false; 
+        if (orcamentoAberto == null) {
+            if (other.orcamentoAberto != null)
+                return false;
+        } else if (!orcamentoAberto.equals(other.orcamentoAberto))
+            return false;         
         return true;
     }
 }

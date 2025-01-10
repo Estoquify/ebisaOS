@@ -133,4 +133,16 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR (:filtrarFinalizados = false AND sol.aberta = true))
             """, nativeQuery = true)
     Long countListagemSolicitacaoAvaliacao(@Param("pesquisa") String pesquisa, @Param("filtrarFinalizados") Boolean filtrarFinalizados);
+
+    @Query(value = """
+                  SELECT EXISTS (
+                     SELECT 1
+                     FROM public.arquivo AS arq
+                     LEFT JOIN public.avaliacao AS ava ON arq.solicitacao_id = ava.solicitacao_id
+                     WHERE arq.solicitacao_id = :idSolicitacao
+                        AND arq.tipo_documento IN ('orcamentoServico', 'orcamentoMaterial')
+                        AND ava.orcamento IS NULL 
+                  ) AS resultado
+          """, nativeQuery = true)
+    Boolean orcamentoAberto(@Param("idSolicitacao") Long idSolicitacao);
 }
