@@ -92,8 +92,17 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
     Long countListagemSolicitacaoAvaliacaoGInfra(@Param("pesquisa") String pesquisa, @Param("filtrarNegados") Boolean filtrarNegados);
 
     @Query(value = """
-                SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.sigla AS sigla_unidade, seu.nome AS nome_setor, ava.aprovacao
-                    FROM public.solicitacao AS sol
+                SELECT sol.id, sol.prioridade, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.prazo_date, uni.sigla AS sigla_unidade, seu.nome AS nome_setor, ava.orcamento,
+                    CASE 
+                        WHEN EXISTS (
+                            SELECT 1 
+                            FROM public.arquivo AS arq 
+                            WHERE arq.solicitacao_id = sol.id 
+                              AND arq.tipo_documento IN ('orcamentoServico', 'orcamentoMaterial')
+                        ) THEN true
+                        ELSE false
+                    END AS possui_orcamento
+                 FROM public.solicitacao AS sol
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
                  LEFT JOIN public.unidade AS uni ON seu.unidade_id = uni.id
@@ -101,13 +110,13 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
-                 AND sol.aberta = true
                  AND ava.aprovacao_ginfra = true
-                 AND ava.aprovacao IS DISTINCT FROM false
+                 AND ((:filtrarFinalizados = true AND sol.aberta = false)
+                    OR (:filtrarFinalizados = false AND sol.aberta = true))
                  ORDER BY sol.created_date
                  LIMIT :size OFFSET :page * :size
             """, nativeQuery = true)
-    List<Object[]> getListagemSolicitacaoAvaliacaoRaw(@Param("pesquisa") String pesquisa, @Param("page") Integer page, @Param("size") Integer size);
+    List<Object[]> getListagemSolicitacaoAvaliacaoRaw(@Param("pesquisa") String pesquisa, @Param("filtrarFinalizados") Boolean filtrarFinalizados, @Param("page") Integer page, @Param("size") Integer size);
 
     @Query(value = """
                 SELECT COUNT(*)
@@ -119,8 +128,9 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
-                 AND sol.aberta = true
                  AND ava.aprovacao_ginfra = true
+                 AND ((:filtrarFinalizados = true AND sol.aberta = false)
+                    OR (:filtrarFinalizados = false AND sol.aberta = true))
             """, nativeQuery = true)
-    Long countListagemSolicitacaoAvaliacao(@Param("pesquisa") String pesquisa);
+    Long countListagemSolicitacaoAvaliacao(@Param("pesquisa") String pesquisa, @Param("filtrarFinalizados") Boolean filtrarFinalizados);
 }

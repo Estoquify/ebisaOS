@@ -20,9 +20,10 @@ export const SolicitacaoEbisa = () => {
 
   const [pageAtual, setPageAtual] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [filtrarFinalizados, setFiltrarFinalizados] = useState<boolean>(false)
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoAvaliacao?page=${pageAtual}&size=${5}`).then(res => {
+    axios.get(`/api/solicitacaos/listaPageSolicitacaoAvaliacao?page=${pageAtual}&size=${5}&filtrarFinalizados=${filtrarFinalizados}`).then(res => {
       setSolicitacaoList(res?.data?.content);
       setTotalPages(res?.data?.totalPages);
     });

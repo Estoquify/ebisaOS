@@ -252,7 +252,8 @@ public class SolicitacaoService {
                                                                                 // LocalDateTime, prazoDate
                 (String) obj[6], // siglaUnidade
                 (String) obj[7], // nomeSetor
-                (Boolean) obj[8] // avaliacao
+                (Boolean) obj[8], // orcamento
+                (Boolean) obj[9] // possuiOrcamento
         )).collect(Collectors.toList());
     }
 
@@ -266,9 +267,11 @@ public class SolicitacaoService {
     }
 
     public Page<SolicitacaoAvaliacaoDTO> listaPageSolicitacaoAvaliacao(Pageable pageable, Map<String, String> params) {
-        Long countSolicitacao = solicitacaoRepository.countListagemSolicitacaoAvaliacao(params.get("pesquisa"));
+        Long countSolicitacao = solicitacaoRepository.countListagemSolicitacaoAvaliacao(params.get("pesquisa"), Boolean.parseBoolean(params.get("filtrarFinalizados")));
         List<Object[]> rawResults = solicitacaoRepository.getListagemSolicitacaoAvaliacaoRaw(params.get("pesquisa"),
-                Integer.parseInt(params.get("page")), Integer.parseInt(params.get("size")));
+                Boolean.parseBoolean(params.get("filtrarFinalizados")),
+                Integer.parseInt(params.get("page")), 
+                Integer.parseInt(params.get("size")));
         List<SolicitacaoAvaliacaoDTO> listaSolicitacao = montarListaPageSolicitacaoAvaliacao(rawResults);
 
         Page<SolicitacaoAvaliacaoDTO> pageSolicitacao = listPageAvaliacao(pageable, listaSolicitacao, countSolicitacao);

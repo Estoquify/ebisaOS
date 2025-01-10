@@ -11,10 +11,11 @@ public class SolicitacaoAvaliacaoDTO {
     private LocalDateTime prazoDate;
     private String siglaUnidade;
     private String nomeSetor;
-    private Boolean avaliacao;
+    private Boolean orcamento;
+    private Boolean possuiOrcamento;
 
     // Construtor completo
-    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String siglaUnidade, String nomeSetor, Boolean avaliacao) {
+    public SolicitacaoAvaliacaoDTO(Long id, Long prioridade, String titulo, String tipoSolicitacao, LocalDateTime createdDate, LocalDateTime prazoDate, String siglaUnidade, String nomeSetor, Boolean orcamento, Boolean possuiOrcamento) {
         this.id = id;
         this.prioridade = prioridade;
         this.titulo = titulo;
@@ -23,7 +24,8 @@ public class SolicitacaoAvaliacaoDTO {
         this.prazoDate = prazoDate;
         this.siglaUnidade = siglaUnidade;
         this.nomeSetor = nomeSetor;
-        this.avaliacao = avaliacao;
+        this.orcamento = orcamento;
+        this.possuiOrcamento = possuiOrcamento;
     }
 
     // Getters e Setters
@@ -92,11 +94,19 @@ public class SolicitacaoAvaliacaoDTO {
         this.nomeSetor = nomeSetor;
     }
 
-    public Boolean getAvaliacao() {
-        return avaliacao;
+    public Boolean getOrcamento() {
+        return orcamento;
     }
 
-    public void setAvaliacao(Boolean avaliacao) {
-        this.avaliacao = avaliacao;
+    public void setOrcamento(Boolean orcamento) {
+        this.orcamento = orcamento;
+    }
+
+    public Boolean getPossuiOrcamento() {
+        return possuiOrcamento;
+    }
+
+    public void setPossuiOrcamento(Boolean possuiOrcamento) {
+        this.possuiOrcamento = possuiOrcamento;
     }
 }
