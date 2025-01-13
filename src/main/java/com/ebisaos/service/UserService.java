@@ -154,12 +154,8 @@ public class UserService {
             user.setEmail(userDTO.getEmail().toLowerCase());
         }
         user.setImageUrl(userDTO.getImageUrl());
-        if (userDTO.getLangKey() == null) {
-            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
-        } else {
-            user.setLangKey(userDTO.getLangKey());
-        }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        String encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
@@ -200,7 +196,7 @@ public class UserService {
                 }
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
-                user.setLangKey(userDTO.getLangKey());
+                user.setLangKey(Constants.DEFAULT_LANGUAGE);
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO
