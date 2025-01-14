@@ -8,7 +8,9 @@ export interface ISolicitacaoViewServicoDto {
   itens?: IItemSelecionados[] | null;
   equipes?: IEquipe[] | null;
   solicitacao?: ISolicitacao | null;
-  foiAvaliado?: boolean | null
+  foiAvaliado?: boolean | null;
+  orcamentoAberto?: boolean | null;
+  avaliacaoOrcamento?: boolean | null;
   comentarios?: IComentarioView[] | null;
 }
 

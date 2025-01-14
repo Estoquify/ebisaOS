@@ -13,15 +13,17 @@ interface IModalEbisaComprovante {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   idSolicitacao: number;
+  setIdSolicitacao: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 const ModalEbisaComprovante = (props: IModalEbisaComprovante) => {
-  const { isOpen, setIsOpen, idSolicitacao } = props;
+  const { isOpen, setIsOpen, idSolicitacao, setIdSolicitacao } = props;
 
   const [arquivosList, setArquivosList] = useState<IArquivoModal>({ arquivos: [] });
 
   const handleReturnButton = () => {
     setArquivosList({ arquivos: [] });
+    setIdSolicitacao(0)
     setIsOpen(false);
   };
 

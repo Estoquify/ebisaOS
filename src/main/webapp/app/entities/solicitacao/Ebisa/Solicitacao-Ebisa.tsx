@@ -23,10 +23,12 @@ export const SolicitacaoEbisa = () => {
   const [filtrarFinalizados, setFiltrarFinalizados] = useState<boolean>(false);
   const [inputPesquisa, setInputPesquisa] = useState<string>('');
 
+  const [idSolicitacao, setIdSolicitacao] = useState<number>(0);
+
   const getAllEntities = () => {
     axios
       .get(
-        `/api/solicitacaos/listaPageSolicitacaoAvaliacao?page=${pageAtual}&pesquisa=${inputPesquisa}&filtrarFinalizados=${filtrarFinalizados}&size=${5}&filtrarFinalizados=${filtrarFinalizados}`,
+        `/api/solicitacaos/listaPageSolicitacaoAvaliacao?page=${pageAtual}&pesquisa=${inputPesquisa}&filtrarFinalizados=${filtrarFinalizados}&size=${10}&filtrarFinalizados=${filtrarFinalizados}`,
       )
       .then(res => {
         setSolicitacaoList(res?.data?.content);
@@ -66,27 +68,30 @@ export const SolicitacaoEbisa = () => {
   };
 
   const handleChangeFilter = (data: string) => {
-    setFiltrarFinalizados(data === "true" ? true : false);
-  }
+    setFiltrarFinalizados(data === 'true' ? true : false);
+  };
+
+  useEffect(() => {
+    if (idSolicitacao !== 0) {
+      setOpenModal(true);
+    }
+  }, [idSolicitacao]);
 
   return (
     <div className="solicitacao-home-container">
+      <ModalEbisaComprovante isOpen={openModal} setIsOpen={setOpenModal} idSolicitacao={idSolicitacao} setIdSolicitacao={setIdSolicitacao} />
+
       <Row className="solicitacao-home-header">
         <Col className="solicitacao-home-header_title">
           <h2>Solicitações</h2>
         </Col>
 
         <Col md={2} className="stock-home-header-search-container">
-          <Input
-            type="select"
-            placeholder="Pesquisa"
-            value={`${filtrarFinalizados}`}
-            onChange={e => handleChangeFilter(e.target.value)}
-          >
-            <option value={"false"} key={1}>
+          <Input type="select" placeholder="Pesquisa" value={`${filtrarFinalizados}`} onChange={e => handleChangeFilter(e.target.value)}>
+            <option value={'false'} key={1}>
               OS abertas
-              </option>
-            <option value={"true"} key={2}>
+            </option>
+            <option value={'true'} key={2}>
               OS finalizadas
             </option>
           </Input>
@@ -141,7 +146,6 @@ export const SolicitacaoEbisa = () => {
               {solicitacaoList &&
                 solicitacaoList?.map((data: ISolicitacaoEbisaListagem, key) => (
                   <div className="sheet-line-data-container" key={key}>
-                    <ModalEbisaComprovante isOpen={openModal} setIsOpen={setOpenModal} idSolicitacao={data?.id} />
                     <div className={handleReturnPrioridade(data?.prioridade)}>
                       <div> </div>
                     </div>
@@ -171,8 +175,8 @@ export const SolicitacaoEbisa = () => {
                     </div>
 
                     <div className="sheet-data-button-container">
-                      {data?.avaliacao ? (
-                        <Button className="sheet-data-button" onClick={() => setOpenModal(true)}>
+                      {data?.orcamento ? (
+                        <Button className="sheet-data-button" onClick={() => setIdSolicitacao(data?.id)}>
                           <FontAwesomeIcon icon={faCheck} />
                           <span> Concluir </span>
                         </Button>

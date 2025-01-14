@@ -19,6 +19,7 @@ export interface ISolicitacao {
   observacao?: string | null;
   setorUnidade?: ISetorUnidade | null;
   aprovacaoGinfra?: boolean | null;
+  orcamento?: boolean | null;
   // itensSelecionados?: Array<IItemSelecionados> | null;
   tipoSolicitacao?: tipoSolicitacao | null
 }

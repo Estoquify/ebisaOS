@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { IArquivo } from './arquivo.model';
 import { IEquipe } from './equipe.model';
 
@@ -8,6 +9,10 @@ export interface IAvaliacaoModals {
   aprovacao?: boolean | null;
   prioridade?: number | null;
   equipes?: IEquipe[] | null
+  prazoDate?: dayjs.Dayjs | null;
+  orcamentoAberto?: boolean | null;
+  foiAvaliado?: boolean | null;
+  avaliacaoOrcamento?: boolean | null;
 }
 
 export const defaultValue: Readonly<IAvaliacaoModals> = {

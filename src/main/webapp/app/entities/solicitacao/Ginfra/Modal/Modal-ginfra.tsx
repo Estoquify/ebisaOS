@@ -4,12 +4,13 @@ import { IAvaliacaoModals } from 'app/shared/model/avaliacao-modals.model';
 import { ISolicitacaoViewServicoDto } from 'app/shared/model/solicitacao-view-servico-dto.model';
 import axios from 'axios';
 import { toNumber } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Button, Col, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 
 import './Modal-ginfra.scss';
 import { toast } from 'react-toastify';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface IModalGinfra {
   isOpen: boolean;
@@ -26,11 +27,30 @@ const ModalGinfra = (props: IModalGinfra) => {
     aprovacao: undefined,
     prioridade: 0,
     resposta: '',
-  });
+ });
 
   const handleReturnButton = () => {
     setDataAvalicao({ aprovacao: undefined, prioridade: 0, resposta: '' });
     setIsOpen(false);
+  };
+
+  const validate = () => {
+    if (!dataAvaliacao) {
+      toast.error('Dados de avaliação ausentes.');
+      return false;
+    }
+
+    if (dataAvaliacao.prioridade === 0 && dataAvaliacao.aprovacao === true) {
+      toast.info('Informe uma Prioridade.');
+      return false;
+    }
+
+    if (!!dataAvaliacao.prazoDate && !dayjs(dataAvaliacao.prazoDate).isAfter(dayjs()) && dataAvaliacao.aprovacao === true) {
+      toast.info('A data do prazo deve estar no futuro.');
+      return false;
+    }
+
+    return true;
   };
 
   const handleSave = () => {
@@ -39,21 +59,23 @@ const ModalGinfra = (props: IModalGinfra) => {
       idSolicitacao: solicitacaoId,
     };
 
-    if (dataAvaliacao?.aprovacao === false || (dataAvaliacao?.prioridade !== 0 && dataAvaliacao?.aprovacao === true)) {
-      axios
-        .patch(`/api/avaliacaos/avaliacaoGinfra`, dataFormated)
-        .then(res => {
-          toast.success('Avaliação Realizada Com Sucesso!');
-          navigate('/solicitacao');
-        })
-        .catch(err => {
-          toast.error('Ops..., Ocorreu Algum erro inesperado, Tente novamente mais tarde');
-        });
-    } else {
-      toast.info('Informe uma prioridade para a solicitação');
+    axios
+      .patch(`/api/avaliacaos/avaliacaoGinfra`, dataFormated)
+      .then(res => {
+        toast.success('Avaliação Realizada Com Sucesso!');
+        navigate('/solicitacao');
+      })
+      .catch(err => {
+        toast.error('Ops..., Ocorreu Algum erro inesperado, Tente novamente mais tarde');
+      });
+  };
+
+  const onSubmit = () => {
+    if (validate()) {
+      handleSave();
     }
   };
-  
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={() => handleReturnButton()} centered className="modal-ginfra-container">
@@ -83,19 +105,30 @@ const ModalGinfra = (props: IModalGinfra) => {
             <div>
               <Row>
                 {dataAvaliacao?.aprovacao !== false && (
-                  <Col>
-                    <Label>Prioridade</Label>
-                    <Input
-                      type="select"
-                      onChange={e => setDataAvalicao({ ...dataAvaliacao, prioridade: toNumber(e.target.value) })}
-                      value={dataAvaliacao?.prioridade}
-                    >
-                      <option>Selecione Uma Prioridade</option>
-                      <option value={1}>Urgente</option>
-                      <option value={2}>Alta</option>
-                      <option value={3}>Baixa</option>
-                    </Input>
-                  </Col>
+                  <>
+                    <Col>
+                      <Label>Prioridade</Label>
+                      <Input
+                        type="select"
+                        onChange={e => setDataAvalicao({ ...dataAvaliacao, prioridade: toNumber(e.target.value) })}
+                        value={dataAvaliacao?.prioridade}
+                      >
+                        <option>Selecione Uma Prioridade</option>
+                        <option value={1}>Urgente</option>
+                        <option value={2}>Alta</option>
+                        <option value={3}>Baixa</option>
+                      </Input>
+                    </Col>
+
+                    <Col>
+                      <Label>Prazo</Label>
+                      <Input
+                        type="datetime-local"
+                        onChange={e => setDataAvalicao({ ...dataAvaliacao, prazoDate: dayjs(e.target.value?.toString()) })}
+                        value={dataAvaliacao?.prazoDate ? dataAvaliacao.prazoDate.format('YYYY-MM-DDTHH:mm') : ''}
+                      />
+                    </Col>
+                  </>
                 )}
               </Row>
               <Row>
@@ -123,7 +156,7 @@ const ModalGinfra = (props: IModalGinfra) => {
             </Col>
 
             <Col>
-              <Button onClick={() => handleSave()} disabled={dataAvaliacao?.aprovacao === undefined}>
+              <Button onClick={() => onSubmit()} disabled={dataAvaliacao?.aprovacao === undefined}>
                 <span> Salvar </span>
                 <FontAwesomeIcon icon={faFloppyDisk} />
               </Button>
