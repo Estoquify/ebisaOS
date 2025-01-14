@@ -60,10 +60,10 @@ export const SolicitacaoGinfra = () => {
         <Col md={2} className="stock-home-header-search-container">
           <Input type="select" placeholder="Pesquisa" value={`${filtrarNegados}`} onChange={e => handleChangeFilter(e.target.value)}>
             <option value={'false'} key={1}>
-              Orçamentos aprovados
+              Aguardando Avaliação
             </option>
             <option value={'true'} key={2}>
-              Orçamentos negados
+              Orçamentos Negados
             </option>
           </Input>
         </Col>
