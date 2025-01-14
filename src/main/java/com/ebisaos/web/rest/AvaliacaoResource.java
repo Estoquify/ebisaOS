@@ -3,6 +3,7 @@ package com.ebisaos.web.rest;
 import com.ebisaos.domain.Avaliacao;
 import com.ebisaos.repository.AvaliacaoRepository;
 import com.ebisaos.service.AvaliacaoService;
+import com.ebisaos.service.SolicitacaoService;
 import com.ebisaos.service.dto.AvaliacaoEbisaMaterialDTO;
 import com.ebisaos.service.dto.AvaliacaoEbisaServicoDTO;
 import com.ebisaos.service.dto.AvaliacaoInfraDTO;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,9 @@ public class AvaliacaoResource {
 
     @Autowired
     private AvaliacaoService avaliacaoService;
+
+    @Autowired
+    private SolicitacaoService solicitacaoService;
 
     public AvaliacaoResource(AvaliacaoRepository avaliacaoRepository) {
         this.avaliacaoRepository = avaliacaoRepository;
@@ -125,6 +130,17 @@ public class AvaliacaoResource {
 
         // Chama o serviço de avaliação com os parâmetros validados
         Avaliacao avaliacaoGestor = avaliacaoService.avaliacaoEbisaMaterial(avaliacaoEbisaMaterialDTO);
+        
+        if (avaliacaoGestor != null && Boolean.FALSE.equals(avaliacaoGestor.getAprovacao())) {
+            Long idSolicitacao = avaliacaoGestor.getSolicitacao() != null ? avaliacaoGestor.getSolicitacao().getId() : null;
+        
+            if (idSolicitacao != null) {
+                finalizarSolicitacao(idSolicitacao);
+            } else {
+                // Caso `idSolicitacao` seja nulo, faça algo aqui, como lançar uma exceção ou logar o erro.
+                log.error("Não foi possível finalizar a solicitação: ID da solicitação é nulo.");
+            }
+        }
 
         // Retorna a resposta com os headers e o corpo
         return ResponseEntity.ok()
@@ -142,6 +158,17 @@ public class AvaliacaoResource {
 
         // Chama o serviço de avaliação com os parâmetros validados
         Avaliacao avaliacaoGestor = avaliacaoService.avaliacaoEbisaServico(avaliacaoEbisaServicoDTO);
+        
+        if (avaliacaoGestor != null && Boolean.FALSE.equals(avaliacaoGestor.getAprovacao())) {
+            Long idSolicitacao = avaliacaoGestor.getSolicitacao() != null ? avaliacaoGestor.getSolicitacao().getId() : null;
+        
+            if (idSolicitacao != null) {
+                finalizarSolicitacao(idSolicitacao);
+            } else {
+                // Caso `idSolicitacao` seja nulo, faça algo aqui, como lançar uma exceção ou logar o erro.
+                log.error("Não foi possível finalizar a solicitação: ID da solicitação é nulo.");
+            }
+        }
 
         // Retorna a resposta com os headers e o corpo
         return ResponseEntity.ok()
@@ -223,12 +250,48 @@ public class AvaliacaoResource {
     }
 
     @GetMapping("avaliarOrcamento/{idSolicitacao}/{avaliacaoOrcamento}")
-    public Avaliacao getAvaliarOrcamento(@PathVariable("idSolicitacao") Long idSolicitacao, @PathVariable("avaliacaoOrcamento") Boolean avaliacaoOrcamento) {
+    public ResponseEntity<Avaliacao> getAvaliarOrcamento(
+            @PathVariable("idSolicitacao") Long idSolicitacao,
+            @PathVariable("avaliacaoOrcamento") Boolean avaliacaoOrcamento) {
+        // Busca a avaliação
         Avaliacao avaliacao = avaliacaoService.avaliacaoPorSolicitacao(idSolicitacao);
+
+        // Valida se a avaliação existe
+        if (avaliacao == null) {
+            log.error("Avaliação não encontrada para a solicitação ID: {}", idSolicitacao);
+            return ResponseEntity.notFound().build();
+        }
+
+        // Define a avaliação do orçamento
         avaliacao.setOrcamento(avaliacaoOrcamento);
+
+        // Finaliza a solicitação se necessário
+        if (Boolean.FALSE.equals(avaliacaoOrcamento)) {
+            try {
+                finalizarSolicitacao(idSolicitacao);
+            } catch (Exception e) {
+                log.error("Erro ao finalizar a solicitação ID: {}", idSolicitacao, e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(avaliacao);
+            }
+        }
+
+        // Salva a avaliação atualizada
         avaliacaoRepository.save(avaliacao);
-        return avaliacao;
+
+        // Retorna a avaliação salva
+        return ResponseEntity.ok(avaliacao);
     }
+
+    // Método auxiliar para finalizar a solicitação
+    private void finalizarSolicitacao(Long idSolicitacao) {
+        if (idSolicitacao == null) {
+            throw new IllegalArgumentException("ID da solicitação não pode ser nulo.");
+        }
+
+        solicitacaoService.finalizarSolicitacao(idSolicitacao);
+        log.info("Solicitação finalizada com sucesso para ID: {}", idSolicitacao);
+    }
+
 
     /**
      * {@code DELETE  /avaliacaos/:id} : delete the "id" avaliacao.
