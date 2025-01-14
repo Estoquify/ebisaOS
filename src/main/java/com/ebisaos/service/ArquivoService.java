@@ -62,4 +62,8 @@ public class ArquivoService {
         save(arquivo);
     }
 
+    public Arquivo arquivoEbisaPorIdSolicitacao(Long idSolicitacao) {
+        return arquivoRepository.arquivoEbisaPorIdSolicitacao(idSolicitacao);
+    }
+
 }
