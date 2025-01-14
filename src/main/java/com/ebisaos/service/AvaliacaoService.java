@@ -92,6 +92,7 @@ public class AvaliacaoService {
         
         Solicitacao solicitacao = avaliacao.getSolicitacao();
         solicitacao.setPrioridade(avaliacaoInfraDTO.getPrioridade());
+        solicitacao.setPrazoDate(avaliacaoInfraDTO.getPrazoDate().toInstant());
         solicitacaoRepository.save(solicitacao);
 
         return avaliacao;

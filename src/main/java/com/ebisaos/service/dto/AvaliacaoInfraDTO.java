@@ -1,11 +1,14 @@
 package com.ebisaos.service.dto;
 
+import java.util.Date;
+
 public class AvaliacaoInfraDTO {
     
     private String resposta;
     private Long idSolicitacao;
     private Boolean aprovacao;
     private Long prioridade;
+    private Date prazoDate;
 
     public AvaliacaoInfraDTO() {
     }
@@ -42,9 +45,17 @@ public class AvaliacaoInfraDTO {
         this.prioridade = prioridade;
     }
 
+    public Date getPrazoDate() {
+        return prazoDate;
+    }
+
+    public void setPrazoDate(Date prazoDate) {
+        this.prazoDate = prazoDate;
+    }
+
     @Override
     public String toString() {
-        return "AvaliacaoInfraDTO [resposta=" + resposta + ", idSolicitacao=" + idSolicitacao + ", aprovacao=" + aprovacao + ", prioridade=" + prioridade
+        return "AvaliacaoInfraDTO [resposta=" + resposta + ", idSolicitacao=" + idSolicitacao + ", aprovacao=" + aprovacao + ", prioridade=" + prioridade + ", prazoDate=" + prazoDate
                 + "]";
     }
 
@@ -56,6 +67,7 @@ public class AvaliacaoInfraDTO {
         result = prime * result + ((idSolicitacao == null) ? 0 : idSolicitacao.hashCode());
         result = prime * result + ((aprovacao == null) ? 0 : aprovacao.hashCode());
         result = prime * result + ((prioridade == null) ? 0 : prioridade.hashCode());
+        result = prime * result + ((prazoDate == null) ? 0 : prazoDate.hashCode());
         return result;
     }
 
@@ -87,7 +99,12 @@ public class AvaliacaoInfraDTO {
             if (other.prioridade != null)
                 return false;
         } else if (!prioridade.equals(other.prioridade))
-            return false;      
+            return false;
+        if (prazoDate == null) {
+            if (other.prazoDate != null)
+                return false;
+        } else if (!prazoDate.equals(other.prazoDate))
+            return false;
         return true;
     }
 
