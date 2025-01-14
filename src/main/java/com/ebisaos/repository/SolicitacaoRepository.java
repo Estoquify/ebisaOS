@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> {
 
     @Query(value = """
-                SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.aberta, ava.aprovacao_ginfra, sol.finish_date, sol.prazo_date, seu.nome AS nome_setor
+                SELECT sol.id, sol.titulo, sol.tipo_solicitacao, sol.created_date, sol.aberta, ava.aprovacao_ginfra, sol.finish_date, sol.prazo_date, seu.nome AS nome_setor, ava.orcamento
                     FROM public.solicitacao AS sol
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
@@ -26,7 +26,8 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  AND (:filtrarStatus = false
                     OR (:filtrarStatus = true 
                        AND ((:status IS NULL AND ava.aprovacao_ginfra IS NULL) 
-                         OR (:status IS NOT NULL AND (ava.aprovacao_ginfra = :status)) 
+                         OR (:status = false AND (ava.aprovacao_ginfra = false OR ava.orcamento = false))
+                         OR (:status = true AND (ava.aprovacao_ginfra = true AND ava.orcamento = true)) 
                  )))
                  AND seu.unidade_id = :idUnidade
                  ORDER BY sol.aberta, sol.created_date
@@ -44,8 +45,9 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
                  AND (:filtrarStatus = false
                     OR (:filtrarStatus = true 
-                       AND ((:status IS NULL AND ava.aprovacao IS NULL AND ava.aprovacao_ginfra IS NULL) 
-                         OR (:status IS NOT NULL AND (ava.aprovacao = :status OR ava.aprovacao_ginfra = :status)) 
+                       AND ((:status IS NULL AND ava.aprovacao_ginfra IS NULL)
+                         OR (:status = false AND (ava.aprovacao_ginfra = false OR ava.orcamento = false))
+                         OR (:status = true AND (ava.aprovacao_ginfra = true AND ava.orcamento = true)) 
                  )))
                  AND seu.unidade_id = :idUnidade
             """, nativeQuery = true)

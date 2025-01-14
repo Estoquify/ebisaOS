@@ -158,7 +158,8 @@ public class SolicitacaoService {
                                                                                 // LocalDateTime, finishDate
                 obj[7] != null ? ((Timestamp) obj[7]).toLocalDateTime() : null, // Converte Timestamp para
                                                                                 // LocalDateTime, prazoDate
-                (String) obj[8] // nomeSetor
+                (String) obj[8], // nomeSetor
+                (Boolean) obj[9] // orcamento
         )).collect(Collectors.toList());
     }
 

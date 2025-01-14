@@ -13,9 +13,10 @@ public class SolicitacaoUnidadeDTO {
     private LocalDateTime finishDate;
     private LocalDateTime prazoDate;
     private String nomeSetor;
+    private Boolean orcamento;
 
     // Construtor completo
-    public SolicitacaoUnidadeDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, Boolean aberta, Boolean aprovacaoGinfra, LocalDateTime finishDate, LocalDateTime prazoDate, String nomeSetor) {
+    public SolicitacaoUnidadeDTO(Long id, String titulo, String tipoSolicitacao, LocalDateTime createdDate, Boolean aberta, Boolean aprovacaoGinfra, LocalDateTime finishDate, LocalDateTime prazoDate, String nomeSetor, Boolean orcamento) {
         this.id = id;
         this.titulo = titulo;
         this.tipoSolicitacao = tipoSolicitacao;
@@ -25,6 +26,7 @@ public class SolicitacaoUnidadeDTO {
         this.finishDate = finishDate;
         this.prazoDate = prazoDate;
         this.nomeSetor = nomeSetor;
+        this.orcamento = orcamento;
     }
 
     // Getters e Setters
@@ -99,6 +101,14 @@ public class SolicitacaoUnidadeDTO {
 
     public void setNomeSetor(String nomeSetor) {
         this.nomeSetor = nomeSetor;
+    }
+
+    public Boolean getOrcamento() {
+        return orcamento;
+    }
+
+    public void setOrcamento(Boolean orcamento) {
+        this.orcamento = orcamento;
     }
 }
 
