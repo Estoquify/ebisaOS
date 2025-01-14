@@ -64,6 +64,7 @@ public class ArquivoResource {
 
         Solicitacao solicitacao = solicitacaoService.findById(arquivo.getIdSolicitacao());
         Arquivo newArquivo = arquivoService.criarArquivos(arquivo, solicitacao);
+        solicitacaoService.finalizarSolicitacao(arquivo.getIdSolicitacao());
         return ResponseEntity.created(new URI("/api/arquivos/" + newArquivo.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME,
                         newArquivo.getId().toString()))
@@ -94,6 +95,12 @@ public class ArquivoResource {
         log.debug("REST request to get Arquivo : {}", id);
         Optional<Arquivo> arquivo = arquivoRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(arquivo);
+    }
+
+    @GetMapping("/arquivoEbisa/{id}")
+    public Arquivo getArquivoEbisa(@PathVariable("id") Long id) {
+        log.debug("REST request to get Arquivo : {}", id);
+        return arquivoService.arquivoEbisaPorIdSolicitacao(id);
     }
 
     /**

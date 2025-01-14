@@ -322,7 +322,7 @@ public class SolicitacaoService {
         return solicitacaoRepository.avaliacaoOrcamento(idSolicitacao);
     }
 
-    public Solicitacao finalizarSolicitacao(Long idSolicitacao) {
+    public void finalizarSolicitacao(Long idSolicitacao) {
 
         Solicitacao solicitacao = findById(idSolicitacao);
         solicitacao.setAberta(false);
@@ -330,8 +330,6 @@ public class SolicitacaoService {
         save(solicitacao);
 
         equipeService.liberarEquipe(idSolicitacao);
-
-        return solicitacao;
     }
 
 }
