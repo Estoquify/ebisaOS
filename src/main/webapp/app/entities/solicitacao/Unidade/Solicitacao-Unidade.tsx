@@ -41,7 +41,18 @@ export const SolicitacaoUnidade = () => {
   };
 
   const handleChangeFilter = (data: string) => {
-    setFiltrarStatus(data === 'true' ? true : false);
+    const statusMapping: Record<string, boolean | null> = {
+      aguardando: null,
+      aprovados: true,
+      negados: false,
+    };
+  
+    if (data === 'todas') {
+      setFiltrarStatus(false);
+    } else {
+      setFiltrarStatus(true);
+      setStatus(statusMapping[data] ?? null);
+    }
   };
 
   const handleReturnStatus = (status: boolean) => {
@@ -96,12 +107,26 @@ export const SolicitacaoUnidade = () => {
 
         
         <Col md={2} className="stock-home-header-search-container">
-          <Input type="select" placeholder="Pesquisa" value={`${filtrarStatus}`} onChange={e => handleChangeFilter(e.target.value)}>
-            <option value={'false'} key={1}>
-              Orçamentos aprovados
+          <Input
+            type="select"
+            placeholder="Pesquisa"
+            value={filtrarStatus ? 'custom' : 'todas'} 
+            onChange={(e) => handleChangeFilter(e.target.value)}
+          >
+            <option value="todas" key={1}>
+              Pesquisar por Status
             </option>
-            <option value={'true'} key={2}>
-              Orçamentos negados
+            <option value="todas" key={2}>
+              Todas as OS
+            </option>
+            <option value="aguardando" key={3}>
+              Aguardando avaliação
+            </option>
+            <option value="aprovados" key={4}>
+              Aprovadas
+            </option>
+            <option value="negados" key={5}>
+              Negados
             </option>
           </Input>
         </Col>
@@ -171,31 +196,24 @@ export const SolicitacaoUnidade = () => {
 
                     <div className="sheet-data-status-container">
                       <div
-                        className={handleReturnStatus(data?.aprovacao)}
+                        className={handleReturnStatus(data?.aprovacaoGinfra)}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aprovacao)} />
+                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aprovacaoGinfra)} />
                       </div>
                     </div>
 
                     <div className="sheet-data-button-container">
                       <Button className="sheet-data-button" onClick={() => handleNavigateByStatus(data)}>
-                        {data?.aprovacao === false && (
-                          <>
-                            <FontAwesomeIcon icon={faPen} />
-                            <span> Editar </span>
-                          </>
-                        )}
-                        {data?.aprovacao !== false && (
                           <>
                             <FontAwesomeIcon icon={faEye} />
                             <span> Visualizar </span>
                           </>
-                        )}
                       </Button>
                     </div>
                   </div>
-                ))}
+                ))
+              }
 
               {solicitacaoList?.length === 0 && <Alert color="info">Não existem nenhuma Solicitação criada</Alert>}
             </div>
