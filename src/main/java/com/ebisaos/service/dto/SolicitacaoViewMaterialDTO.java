@@ -10,6 +10,7 @@ public class SolicitacaoViewMaterialDTO {
     private List<QuantidadeItensDTO> itens;
     private List<ComentariosViewDTO> comentarios;
     private Boolean orcamentoAberto;
+    private Boolean avaliacaoOrcamento;
 
     public Solicitacao getSolicitacao() {
         return solicitacao;
@@ -43,9 +44,17 @@ public class SolicitacaoViewMaterialDTO {
         this.orcamentoAberto = orcamentoAberto;
     }
 
+    public Boolean getAvaliacaoOrcamento() {
+        return avaliacaoOrcamento;
+    }
+
+    public void setAvaliacaoOrcamento(Boolean avaliacaoOrcamento) {
+        this.avaliacaoOrcamento = avaliacaoOrcamento;
+    }
+
     @Override
     public String toString() {
-        return "SolicitacaoViewMaterialDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios + ", orcamentoAberto=" + orcamentoAberto
+        return "SolicitacaoViewMaterialDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios + ", orcamentoAberto=" + orcamentoAberto + ", avaliacaoOrcamento=" + avaliacaoOrcamento
                 + "]";
     }
 
@@ -57,6 +66,7 @@ public class SolicitacaoViewMaterialDTO {
         result = prime * result + ((itens == null) ? 0 : itens.hashCode());
         result = prime * result + ((comentarios == null) ? 0 : comentarios.hashCode());
         result = prime * result + ((orcamentoAberto == null) ? 0 : orcamentoAberto.hashCode());
+        result = prime * result + ((avaliacaoOrcamento == null) ? 0 : avaliacaoOrcamento.hashCode());
         return result;
     }
 
@@ -88,7 +98,12 @@ public class SolicitacaoViewMaterialDTO {
             if (other.orcamentoAberto != null)
                 return false;
         } else if (!orcamentoAberto.equals(other.orcamentoAberto))
-            return false;         
+            return false;
+        if (avaliacaoOrcamento == null) {
+            if (other.avaliacaoOrcamento != null)
+                return false;
+        } else if (!avaliacaoOrcamento.equals(other.avaliacaoOrcamento))
+            return false;       
         return true;
     }
 }

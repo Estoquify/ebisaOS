@@ -291,6 +291,7 @@ public class SolicitacaoService {
         solicitacaoViewMaterialDTO.setItens(itemService.montarDTOQuantItens(rawItens));
         solicitacaoViewMaterialDTO.setComentarios(avaliacaoService.montarDTOChat(rawComentarios));
         solicitacaoViewMaterialDTO.setOrcamentoAberto(verificarOrcamento(idSolicitacao));
+        solicitacaoViewMaterialDTO.setAvaliacaoOrcamento(verificarAvaliacaoOrcamento(idSolicitacao));
 
         return solicitacaoViewMaterialDTO;
     }
@@ -308,12 +309,17 @@ public class SolicitacaoService {
         solicitacaoViewServicoDTO.setEquipes(equipeService.listaEquipesPorSolicitacao(idSolicitacao));
         solicitacaoViewServicoDTO.setFoiAvaliado(avaliacaoService.existeAvaliacaoPorSolicitacao(idSolicitacao));
         solicitacaoViewServicoDTO.setOrcamentoAberto(verificarOrcamento(idSolicitacao));
+        solicitacaoViewServicoDTO.setAvaliacaoOrcamento(verificarAvaliacaoOrcamento(idSolicitacao));
 
         return solicitacaoViewServicoDTO;
     }
 
     public Boolean verificarOrcamento(Long idSolicitacao) {
         return solicitacaoRepository.orcamentoAberto(idSolicitacao);
+    }
+
+    public Boolean verificarAvaliacaoOrcamento(Long idSolicitacao) {
+        return solicitacaoRepository.avaliacaoOrcamento(idSolicitacao);
     }
 
     public Solicitacao finalizarSolicitacao(Long idSolicitacao) {

@@ -147,4 +147,14 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                   ) AS resultado
           """, nativeQuery = true)
     Boolean orcamentoAberto(@Param("idSolicitacao") Long idSolicitacao);
+
+    @Query(value = """
+                  SELECT EXISTS (
+                     SELECT 1
+                     FROM public.avaliacao AS ava
+                     WHERE ava.orcamento = true
+                     	AND ava.solicitacao_id = :idSolicitacao
+                  ) AS resultado
+          """, nativeQuery = true)
+    Boolean avaliacaoOrcamento(@Param("idSolicitacao") Long idSolicitacao);
 }

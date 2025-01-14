@@ -14,6 +14,7 @@ public class SolicitacaoViewServicoDTO {
     private List<Equipe> equipes;
     private Boolean foiAvaliado;
     private Boolean orcamentoAberto;
+    private Boolean avaliacaoOrcamento;
 
     public Solicitacao getSolicitacao() {
         return solicitacao;
@@ -63,9 +64,17 @@ public class SolicitacaoViewServicoDTO {
         this.orcamentoAberto = orcamentoAberto;
     }
 
+    public Boolean getAvaliacaoOrcamento() {
+        return avaliacaoOrcamento;
+    }
+
+    public void setAvaliacaoOrcamento(Boolean avaliacaoOrcamento) {
+        this.avaliacaoOrcamento = avaliacaoOrcamento;
+    }
+
     @Override
     public String toString() {
-        return "SolicitacaoViewServicoDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios + ", equipes=" + equipes + ", foiAvaliado=" + foiAvaliado + ", orcamentoAberto=" + orcamentoAberto
+        return "SolicitacaoViewServicoDTO [solicitacao=" + solicitacao + ", itens=" + itens + ", comentarios=" + comentarios + ", equipes=" + equipes + ", foiAvaliado=" + foiAvaliado + ", orcamentoAberto=" + orcamentoAberto + ", avaliacaoOrcamento=" + avaliacaoOrcamento
                 + "]";
     }
 
@@ -79,6 +88,7 @@ public class SolicitacaoViewServicoDTO {
         result = prime * result + ((equipes == null) ? 0 : equipes.hashCode());
         result = prime * result + ((foiAvaliado == null) ? 0 : foiAvaliado.hashCode());
         result = prime * result + ((orcamentoAberto == null) ? 0 : orcamentoAberto.hashCode());
+        result = prime * result + ((avaliacaoOrcamento == null) ? 0 : avaliacaoOrcamento.hashCode());
         return result;
     }
 
@@ -120,7 +130,12 @@ public class SolicitacaoViewServicoDTO {
             if (other.orcamentoAberto != null)
                 return false;
         } else if (!orcamentoAberto.equals(other.orcamentoAberto))
-            return false;     
+            return false;
+        if (avaliacaoOrcamento == null) {
+            if (other.avaliacaoOrcamento != null)
+                return false;
+        } else if (!avaliacaoOrcamento.equals(other.avaliacaoOrcamento))
+            return false;
         return true;
     }
 }
