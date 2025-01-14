@@ -84,7 +84,6 @@ public class User extends AbstractAuditingEntity<Long> {
     private Instant resetDate = null;
 
     @ManyToOne(optional = false)
-    @NotNull
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private SetorUnidade setorUnidade;
 

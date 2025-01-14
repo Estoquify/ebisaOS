@@ -34,6 +34,9 @@ public class AdminUserDTO implements Serializable {
     @Size(min = 5, max = 254)
     private String email;
 
+    @Size(min = 6, max = 60)
+    private String password;
+
     @Size(max = 256)
     private String imageUrl;
 
@@ -73,6 +76,7 @@ public class AdminUserDTO implements Serializable {
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
         this.setorUnidade = user.getSetorUnidade();
+        this.password = user.getPassword();
     }
 
     public Long getId() {
@@ -121,6 +125,14 @@ public class AdminUserDTO implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isActivated() {
