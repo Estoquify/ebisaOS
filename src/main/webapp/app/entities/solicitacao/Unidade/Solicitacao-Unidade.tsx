@@ -55,8 +55,8 @@ export const SolicitacaoUnidade = () => {
     }
   };
 
-  const handleReturnStatus = (status: boolean) => {
-    switch (status) {
+  const handleReturnStatus = (aprovacaoGinfra: boolean, aprovacaoOrcamento: boolean) => {
+    switch (aprovacaoGinfra && aprovacaoOrcamento) {
       case true:
         return 'sheet-data-status-accept';
 
@@ -68,8 +68,8 @@ export const SolicitacaoUnidade = () => {
     }
   };
 
-  const handleReturnStatusIcons = (status: boolean) => {
-    switch (status) {
+  const handleReturnStatusIcons = (aprovacaoGinfra: boolean, aprovacaoOrcamento: boolean) => {
+    switch (aprovacaoGinfra && aprovacaoOrcamento) {
       case true:
         return faCheck;
 
@@ -196,10 +196,10 @@ export const SolicitacaoUnidade = () => {
 
                     <div className="sheet-data-status-container">
                       <div
-                        className={handleReturnStatus(data?.aprovacaoGinfra)}
+                        className={handleReturnStatus(data?.aprovacaoGinfra, data?.orcamento)}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aprovacaoGinfra)} />
+                        <FontAwesomeIcon icon={handleReturnStatusIcons(data?.aprovacaoGinfra, data?.orcamento)} />
                       </div>
                     </div>
 

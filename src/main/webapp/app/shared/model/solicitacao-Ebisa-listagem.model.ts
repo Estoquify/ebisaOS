@@ -10,6 +10,7 @@ export interface ISolicitacaoEbisaListagem {
   siglaUnidade?: string | null;
   prioridade?: number | null;
   tipoSolicitacao?: string | null;
+  orcamento?: boolean | null;
   titulo?: string | null;
   avaliacao?: boolean | null;
 }

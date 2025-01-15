@@ -30,7 +30,7 @@ import { ISolicitacaoViewServicoDto } from 'app/shared/model/solicitacao-view-se
 import { IComentarioView } from 'app/shared/model/comentarios-view.model';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ChatComponent from '../view/Chat/ChatComponent';
-import ModalGinfra from './Modal/Modal-ginfra';
+import ModalIndex from './Modal/Modal-index';
 
 export const SolicitacaoGinfraDetail = () => {
   const navigate = useNavigate();
@@ -77,6 +77,18 @@ export const SolicitacaoGinfraDetail = () => {
     setIsModalOpen(true);
   };
 
+  const handleReturnAvaliarButton = (): boolean => {
+    if (!solicitacaoViewServico?.foiAvaliado) {
+      return true
+    }
+
+    if (!solicitacaoViewServico?.avaliacaoOrcamento && solicitacaoViewServico?.orcamentoAberto) {
+      return true
+    }
+
+    return false
+  }
+
   return (
     <div className="solicitacao-create-container">
       <h2>Solicitação</h2>
@@ -93,7 +105,7 @@ export const SolicitacaoGinfraDetail = () => {
             <Input placeholder="Titulo" readOnly disabled value={solicitacaoViewServico?.solicitacao?.titulo} />
           </Col>
         </Row>
-        
+
         <Row>
           <Col>
             <Label>Setor</Label>
@@ -134,10 +146,12 @@ export const SolicitacaoGinfraDetail = () => {
             </Input>
           </Col>
 
-          <Col>
-            <Label>Prazo</Label>
-            <Input type="datetime-local" value={formattedPrazoDate} readOnly disabled />
-          </Col>
+          {formattedPrazoDate && (
+            <Col>
+              <Label>Prazo</Label>
+              <Input type="datetime-local" value={formattedPrazoDate} readOnly disabled />
+            </Col>
+          )}
         </Row>
 
         <Row>
@@ -222,12 +236,14 @@ export const SolicitacaoGinfraDetail = () => {
           <span> Voltar </span>
         </Button>
 
-        <Button onClick={() => handleButtonClick()}>
-          <span> Avaliar </span>
-          <FontAwesomeIcon icon={faCheckSquare} />
-        </Button>
+        {handleReturnAvaliarButton() && (
+          <Button onClick={() => handleButtonClick()}>
+            <span> Avaliar </span>
+            <FontAwesomeIcon icon={faCheckSquare} />
+          </Button>
+        )}
       </div>
-      <ModalGinfra isOpen={isModalOpen} setIsOpen={setIsModalOpen} solicitacaoId={solicitacaoViewServico?.solicitacao?.id} />
+      <ModalIndex isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataAvaliacao={solicitacaoViewServico} />
     </div>
   );
 };

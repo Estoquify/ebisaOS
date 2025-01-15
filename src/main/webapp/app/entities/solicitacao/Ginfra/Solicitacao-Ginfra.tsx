@@ -24,7 +24,7 @@ export const SolicitacaoGinfra = () => {
   const getAllEntities = () => {
     axios
       .get(
-        `/api/solicitacaos/listaPageSolicitacaoAvaliacaoGInfra?page=${pageAtual}&pesquisa=${inputPesquisa}&size=${5}&filtrarNegados=${filtrarNegados}`,
+        `/api/solicitacaos/listaPageSolicitacaoAvaliacaoGInfra?page=${pageAtual}&pesquisa=${inputPesquisa}&size=${10}&filtrarNegados=${filtrarNegados}`,
       )
       .then(res => {
         setSolicitacaoList(res?.data?.content);
