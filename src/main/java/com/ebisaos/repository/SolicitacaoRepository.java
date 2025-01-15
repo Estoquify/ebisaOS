@@ -84,12 +84,12 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
+                 AND sol.aberta = true
                  AND ((:filtrarNegados = false 
                     AND ((ava.aprovacao_ginfra IS NULL)
                        OR (ava.aprovacao_ginfra = true AND ava.orcamento IS NULL)))
                  OR (:filtrarNegados = true 
                     AND ava.orcamento = false))
-                 AND ava.aprovacao_ginfra IS NULL
             """, nativeQuery = true)
     Long countListagemSolicitacaoAvaliacaoGInfra(@Param("pesquisa") String pesquisa, @Param("filtrarNegados") Boolean filtrarNegados);
 
