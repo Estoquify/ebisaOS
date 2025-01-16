@@ -160,6 +160,7 @@ public class UserService {
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
+        user.setSetorUnidade(userDTO.getSetorUnidade());
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = userDTO
                 .getAuthorities()

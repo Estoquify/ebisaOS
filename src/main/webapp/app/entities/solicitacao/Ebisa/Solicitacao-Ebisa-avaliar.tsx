@@ -62,7 +62,7 @@ const SolicitacaoEbisaAvaliacao = () => {
       toast.info('Escolha pelo menos uma equipe.');
       return;
     }
-    
+
     const dataFormated: IAvaliacaoModals = {
       ...dataAvaliacao,
       idSolicitacao: toNumber(id),
@@ -247,7 +247,12 @@ const SolicitacaoEbisaAvaliacao = () => {
 
                 <Row style={{ marginTop: '1em' }}>
                   <Col>
-                    <DragAndDrop arquivoList={arquivosList} setArquivoList={setArquivosList} />
+                    <Row>
+                      <h4 style={{textAlign: 'center'}}>Enviar Orçamento</h4>
+                    </Row>
+                    <Row>
+                      <DragAndDrop arquivoList={arquivosList} setArquivoList={setArquivosList} />
+                    </Row>
                   </Col>
                 </Row>
               </>

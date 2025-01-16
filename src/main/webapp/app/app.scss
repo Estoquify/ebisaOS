@@ -32,6 +32,10 @@ a {
   .view-container {
     width: 100%;
     height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
     // height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
@@ -46,7 +50,7 @@ a {
       flex-direction: column;
       > div {
         height: 90%;
-        margin-top: 65px;
+        margin-top: 70px;
 
         padding: 1.5em;
 

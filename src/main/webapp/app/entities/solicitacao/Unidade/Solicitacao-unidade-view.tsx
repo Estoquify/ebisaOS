@@ -190,10 +190,10 @@ export const SolicitacaoUnidadeDetail = () => {
           <span> Voltar </span>
         </Button>
 
-        <Button onClick={() => handleButtonClick()} disabled={solicitacaoViewServico?.foiAvaliado === false} >
+        {/* <Button onClick={() => handleButtonClick()} disabled={solicitacaoViewServico?.foiAvaliado === false} >
           <span> Editar </span>
           <FontAwesomeIcon icon={faPen} />
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

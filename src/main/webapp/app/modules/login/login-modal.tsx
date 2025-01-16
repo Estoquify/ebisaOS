@@ -9,6 +9,7 @@ import { removeMask } from 'app/shared/util/Misc';
 import { toast } from 'react-toastify';
 
 import './login.scss';
+import Footer from 'app/shared/layout/footer/footer';
 
 export interface ILoginModalProps {
   handleLogin: (username: string, password: string, rememberMe: boolean) => void;
@@ -66,6 +67,9 @@ const LoginModal = (props: ILoginModalProps) => {
             </Button>
           </div>
         </div>
+      </div>
+      <div className='login-container-footer'>
+        <Footer />
       </div>
     </div>
   );

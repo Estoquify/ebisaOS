@@ -14,7 +14,7 @@ const initialState: EntityState<ISetorUnidade> = {
   updateSuccess: false,
 };
 
-const apiUrl = 'api/setorsUnidade';
+const apiUrl = 'api/setorUnidades';
 
 // Actions
 

@@ -33,11 +33,11 @@ export const App = () => {
   const ribbonEnv = useAppSelector(state => state.applicationProfile.ribbonEnv);
   const isInProduction = useAppSelector(state => state.applicationProfile.inProduction);
   const isOpenAPIEnabled = useAppSelector(state => state.applicationProfile.isOpenAPIEnabled);
-  const userName = useAppSelector(state => state?.authentication?.account?.firstName)
+  const userName = useAppSelector(state => state?.authentication?.account?.firstName);
 
   return (
     <BrowserRouter basename={baseHref}>
-      <div className="app-container" >
+      <div className="app-container">
         <ToastContainer position="top-left" className="toastify-container" toastClassName="toastify-toast" />
         <ErrorBoundary>
           {isAuthenticated && (
@@ -53,12 +53,10 @@ export const App = () => {
           )}
         </ErrorBoundary>
         <div className="container-fluid view-container" id="app-view-container">
-          {/* <Card className="jh-card"> */}
           <ErrorBoundary>
             <AppRoutes />
+            {isAuthenticated && <Footer />}
           </ErrorBoundary>
-          {/* </Card> */}
-          {/* {isAuthenticated && <Footer />} */}
         </div>
       </div>
     </BrowserRouter>

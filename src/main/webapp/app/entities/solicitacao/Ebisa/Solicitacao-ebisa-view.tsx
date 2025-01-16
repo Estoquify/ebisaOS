@@ -1,33 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, Label, Input } from 'reactstrap';
-import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT, AUTHORITIES, TIPOSCOMENTARIOS } from 'app/config/constants';
-import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { AUTHORITIES } from 'app/config/constants';
+import { useAppSelector } from 'app/config/store';
 
-import { getEntity } from '../solicitacao.reducer';
 import {
   faCheckSquare,
   faChevronLeft,
-  faComment,
-  faFloppyDisk,
-  faMinus,
-  faPaperPlane,
-  faPen,
-  faPlus,
   faSearch,
-  faUser,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import dayjs from 'dayjs';
 import { ISetorUnidade } from 'app/shared/model/setor-unidade.model';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ISolicitacaoViewServicoDto } from 'app/shared/model/solicitacao-view-servico-dto.model';
-import { IComentarioView } from 'app/shared/model/comentarios-view.model';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ChatComponent from '../view/Chat/ChatComponent';
 
@@ -73,7 +62,7 @@ export const SolicitacaoEbisaDetail = () => {
     : '';
 
   const handleButtonClick = () => {
-    navigate(`avaliarEbisa`)
+    navigate(`avaliarEbisa`);
   };
 
   return (
@@ -92,7 +81,7 @@ export const SolicitacaoEbisaDetail = () => {
             <Input placeholder="Titulo" readOnly disabled value={solicitacaoViewServico?.solicitacao?.titulo} />
           </Col>
         </Row>
-        
+
         <Row>
           <Col>
             <Label>Setor</Label>
@@ -221,10 +210,12 @@ export const SolicitacaoEbisaDetail = () => {
           <span> Voltar </span>
         </Button>
 
-        <Button onClick={() => handleButtonClick()}>
-          <span> Avaliar </span>
-          <FontAwesomeIcon icon={faCheckSquare} />
-        </Button>
+        {solicitacaoViewServico?.foiAvaliado && (!solicitacaoViewServico?.orcamentoAberto && solicitacaoViewServico?.avaliacaoOrcamento === false) && (
+          <Button onClick={() => handleButtonClick()}>
+            <span> Avaliar </span>
+            <FontAwesomeIcon icon={faCheckSquare} />
+          </Button>
+        )}
       </div>
     </div>
   );

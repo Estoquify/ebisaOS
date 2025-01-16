@@ -7,14 +7,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IEndereco } from 'app/shared/model/endereco.model';
-import { getEntities as getEnderecos } from 'app/entities/endereco/endereco.reducer';
 import { IOrgao } from 'app/shared/model/orgao.model';
 import { getEntities as getOrgaos } from 'app/entities/orgao/orgao.reducer';
+import { getEntities as getMunicipios } from 'app/entities/municipio/municipio.reducer';
 import { IUnidade } from 'app/shared/model/unidade.model';
 import { updateEntity, createEntity, reset } from './unidade.reducer';
 import { faChevronLeft, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { toNumber } from 'lodash';
 import axios from 'axios';
+import { cepMask, numberMask } from 'app/shared/util/Misc';
+import { IMunicipio } from 'app/shared/model/municipio.model';
 
 export const UnidadeUpdate = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +26,7 @@ export const UnidadeUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const enderecos = useAppSelector(state => state.endereco.entities);
+  const municipios = useAppSelector(state => state.municipio.entities);
   const orgaos = useAppSelector(state => state.orgao.entities);
   const loading = useAppSelector(state => state.unidade.loading);
   const updating = useAppSelector(state => state.unidade.updating);
@@ -48,7 +50,8 @@ export const UnidadeUpdate = () => {
         .catch(err => {});
     }
 
-    dispatch(getEnderecos({}));
+    dispatch(getMunicipios({}));
+
     dispatch(getOrgaos({}));
   }, []);
 
@@ -66,7 +69,10 @@ export const UnidadeUpdate = () => {
 
     const entity = {
       ...unidadeData,
-      endereco: enderecos.find(it => it.id.toString() === unidadeData?.endereco?.id?.toString()),
+      endereco: {
+        ...unidadeData?.endereco,
+        municipios: municipios.find(it => it.id.toString() === unidadeData?.endereco?.municipio?.id?.toString()),
+      },
       orgao: orgaos.find(it => it.id.toString() === unidadeData?.orgao?.id?.toString()),
     };
 
@@ -82,7 +88,7 @@ export const UnidadeUpdate = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="ebisaOsApp.unidade.home.createOrEditLabel" data-cy="UnidadeCreateUpdateHeading">
-            {isNew ? "Criar Unidade" : "Editar Unidade"}
+            {isNew ? 'Criar Unidade' : 'Editar Unidade'}
           </h2>
         </Col>
       </Row>
@@ -92,82 +98,157 @@ export const UnidadeUpdate = () => {
             <p>Loading...</p>
           ) : (
             <div>
-              <Row>
-                <Col>
-                  <Label>Nome</Label>
-                  <Input
-                    label={translate('ebisaOsApp.unidade.nome')}
-                    id="unidade-nome"
-                    name="nome"
-                    data-cy="nome"
-                    type="text"
-                    placeholder="Nome"
-                    value={unidadeData?.nome}
-                    onChange={e => setUnidadeData({ ...unidadeData, nome: e.target.value })}
-                  />
-                </Col>
+              <div>
+                <Row>
+                  <Col>
+                    <Label>Nome Unidade</Label>
+                    <Input
+                      label={translate('ebisaOsApp.unidade.nome')}
+                      id="unidade-nome"
+                      name="nome"
+                      data-cy="nome"
+                      type="text"
+                      placeholder="Nome"
+                      value={unidadeData?.nome}
+                      onChange={e => setUnidadeData({ ...unidadeData, nome: e.target.value })}
+                    />
+                  </Col>
 
-                <Col>
-                  <Label>CNPJ</Label>
-                  <Input
-                    label={translate('ebisaOsApp.unidade.cnpj')}
-                    id="unidade-cnpj"
-                    name="cnpj"
-                    data-cy="cnpj"
-                    type="text"
-                    placeholder="CNPJ"
-                    value={unidadeData?.cnpj}
-                    onChange={e => setUnidadeData({ ...unidadeData, cnpj: e.target.value })}
-                  />
-                </Col>
+                  <Col>
+                    <Label>CNPJ Unidade</Label>
+                    <Input
+                      label={translate('ebisaOsApp.unidade.cnpj')}
+                      id="unidade-cnpj"
+                      name="cnpj"
+                      data-cy="cnpj"
+                      type="text"
+                      placeholder="CNPJ"
+                      value={unidadeData?.cnpj}
+                      onChange={e => setUnidadeData({ ...unidadeData, cnpj: e.target.value })}
+                    />
+                  </Col>
 
-                <Col>
-                  <Label>Endereço</Label>
-                  <Input
-                    id="unidade-endereco"
-                    name="endereco"
-                    data-cy="endereco"
-                    label={translate('ebisaOsApp.unidade.endereco')}
-                    type="select"
-                    placeholder="Endereço"
-                    value={unidadeData?.endereco?.id}
-                    onChange={e => setUnidadeData({ ...unidadeData, endereco: { ...unidadeData?.endereco, id: toNumber(e.target.value) } })}
-                  >
-                    <option value="" key="0" />
-                    {enderecos
-                      ? enderecos.map((otherEntity: IEndereco) => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity?.logradouro}
-                          </option>
-                        ))
-                      : null}
-                  </Input>
-                </Col>
-              </Row>
+                  <Col>
+                    <Label>Orgão Unidade</Label>
+                    <Input
+                      id="unidade-orgao"
+                      name="orgao"
+                      data-cy="orgao"
+                      label={translate('ebisaOsApp.unidade.orgao')}
+                      type="select"
+                      value={unidadeData?.orgao?.id}
+                      onChange={e => setUnidadeData({ ...unidadeData, orgao: { ...unidadeData?.orgao, id: toNumber(e.target.value) } })}
+                    >
+                      <option value="" key="0" />
+                      {orgaos
+                        ? orgaos.map((otherEntity: IOrgao) => (
+                            <option value={otherEntity.id} key={otherEntity.id}>
+                              {otherEntity?.nome}
+                            </option>
+                          ))
+                        : null}
+                    </Input>
+                  </Col>
+                </Row>
+              </div>
 
-              <Row>
-                <Col>
-                  <Label>Orgão</Label>
-                  <Input
-                    id="unidade-orgao"
-                    name="orgao"
-                    data-cy="orgao"
-                    label={translate('ebisaOsApp.unidade.orgao')}
-                    type="select"
-                    value={unidadeData?.orgao?.id}
-                    onChange={e => setUnidadeData({ ...unidadeData, orgao: { ...unidadeData?.orgao, id: toNumber(e.target.value) } })}
-                  >
-                    <option value="" key="0" />
-                    {orgaos
-                      ? orgaos.map((otherEntity: IOrgao) => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity?.nome}
-                          </option>
-                        ))
-                      : null}
-                  </Input>
-                </Col>
-              </Row>
+              <div>
+                <Row>
+                  <h4> Endereço: </h4>
+                </Row>
+                
+                <Row>
+                  <Col>
+                    <Label>Logradouro</Label>
+                    <Input
+                      label={translate('ebisaOsApp.endereco.logradouro')}
+                      id="endereco-logradouro"
+                      name="logradouro"
+                      data-cy="logradouro"
+                      placeholder="Logradouro"
+                      type="text"
+                      value={unidadeData?.endereco?.logradouro}
+                      onChange={e => setUnidadeData({ ...unidadeData, endereco: { ...unidadeData?.endereco, logradouro: e.target.value } })}
+                    />
+                  </Col>
+
+                  <Col>
+                    <Label>CEP</Label>
+                    <Input
+                      label={translate('ebisaOsApp.endereco.cep')}
+                      id="endereco-cep"
+                      name="cep"
+                      data-cy="cep"
+                      placeholder="CEP"
+                      type="text"
+                      value={unidadeData?.endereco?.cep}
+                      onChange={e =>
+                        setUnidadeData({ ...unidadeData, endereco: { ...unidadeData?.endereco, cep: cepMask(e.target.value) } })
+                      }
+                    />
+                  </Col>
+
+                  <Col>
+                    <Label>Numero</Label>
+                    <Input
+                      label={translate('ebisaOsApp.endereco.numero')}
+                      id="endereco-numero"
+                      name="numero"
+                      placeholder="Numero"
+                      data-cy="numero"
+                      type="text"
+                      value={unidadeData?.endereco?.numero}
+                      onChange={e =>
+                        setUnidadeData({ ...unidadeData, endereco: { ...unidadeData?.endereco, numero: numberMask(e.target.value) } })
+                      }
+                    />
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <Label>Bairro</Label>
+                    <Input
+                      label={translate('ebisaOsApp.endereco.bairro')}
+                      id="endereco-bairro"
+                      name="bairro"
+                      data-cy="bairro"
+                      placeholder="Bairro"
+                      type="text"
+                      value={unidadeData?.endereco?.bairro}
+                      onChange={e => setUnidadeData({ ...unidadeData, endereco: { ...unidadeData?.endereco, bairro: e.target.value } })}
+                    />
+                  </Col>
+
+                  <Col>
+                    <Label>Municipio</Label>
+                    <Input
+                      id="endereco-municipio"
+                      name="municipio"
+                      data-cy="municipio"
+                      label={translate('ebisaOsApp.endereco.municipio')}
+                      type="select"
+                      placeholder="Municipio"
+                      value={unidadeData?.endereco?.municipio?.id}
+                      onChange={e =>
+                        setUnidadeData({
+                          ...unidadeData,
+                          endereco: { ...unidadeData?.endereco, municipio: { id: toNumber(e.target.value) } },
+                        })
+                      }
+                    >
+                      <option value="" key="0" />
+                      {municipios
+                        ? municipios.map((otherEntity: IMunicipio) => (
+                            <option value={otherEntity.id} key={otherEntity.id}>
+                              {otherEntity?.nomeMunicipio}
+                            </option>
+                          ))
+                        : null}
+                    </Input>
+                  </Col>
+                </Row>
+              </div>
 
               <Row className="buttons-container">
                 <Col>

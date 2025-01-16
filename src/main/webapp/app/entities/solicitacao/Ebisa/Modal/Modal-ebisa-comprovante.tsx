@@ -49,7 +49,7 @@ const ModalEbisaComprovante = (props: IModalEbisaComprovante) => {
     <>
       <Modal isOpen={isOpen} toggle={() => handleReturnButton()} centered className="modal-ebisa-container">
         <ModalHeader>
-          <h4>Avaliar</h4>
+          <h4>Enviar Comprovante</h4>
         </ModalHeader>
         <ModalBody>
           <div>
