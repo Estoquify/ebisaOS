@@ -30,7 +30,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                          OR (:status = true AND (ava.aprovacao_ginfra = true AND ava.orcamento = true)) 
                  )))
                  AND seu.unidade_id = :idUnidade
-                 ORDER BY sol.aberta, sol.created_date
+                 ORDER BY CASE WHEN sol.aberta = true THEN 1 ELSE 2 END, sol.created_date
                  LIMIT :size OFFSET :page * :size
             """, nativeQuery = true)
     List<Object[]> getListagemSolicitacaoUnidadeRaw(@Param("pesquisa") String pesquisa, @Param("filtrarStatus") Boolean filtrarStatus, @Param("status") Boolean status, @Param("idUnidade") Long idUnidade, @Param("page") Integer page, @Param("size") Integer size);
