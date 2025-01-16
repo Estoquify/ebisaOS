@@ -25,7 +25,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
                  AND (:filtrarStatus = false
                     OR (:filtrarStatus = true 
-                       AND ((:status IS NULL AND ava.aprovacao_ginfra IS NULL) 
+                       AND ((:status IS NULL AND (ava.aprovacao_ginfra IS NULL OR ava.orcamento IS NULL)) 
                          OR (:status = false AND (ava.aprovacao_ginfra = false OR ava.orcamento = false))
                          OR (:status = true AND (ava.aprovacao_ginfra = true AND ava.orcamento = true)) 
                  )))
@@ -45,7 +45,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0)
                  AND (:filtrarStatus = false
                     OR (:filtrarStatus = true 
-                       AND ((:status IS NULL AND ava.aprovacao_ginfra IS NULL)
+                       AND ((:status IS NULL AND ava.aprovacao_ginfra IS NULL OR ava.orcamento IS NULL)
                          OR (:status = false AND (ava.aprovacao_ginfra = false OR ava.orcamento = false))
                          OR (:status = true AND (ava.aprovacao_ginfra = true AND ava.orcamento = true)) 
                  )))
