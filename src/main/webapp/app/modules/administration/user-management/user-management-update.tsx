@@ -10,8 +10,11 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { IUser } from 'app/shared/model/user.model';
 import { AUTHORITIES } from 'app/config/constants';
 import { cpfMask } from 'app/shared/util/Cpf-utils';
-import { isValidCPF, onlyLettersMask } from 'app/shared/util/Misc';
+import { isValidCPF, onlyLettersMask, removeMask } from 'app/shared/util/Misc';
 import { toast } from 'react-toastify';
+import { getEntities } from 'app/entities/setor-unidade/setor-unidade.reducer';
+import { ISetorUnidade } from 'app/shared/model/setor-unidade.model';
+import { toNumber } from 'lodash';
 
 export const UserManagementUpdate = () => {
   const dispatch = useAppDispatch();
@@ -26,8 +29,18 @@ export const UserManagementUpdate = () => {
   const loading = useAppSelector(state => state.userManagement.loading);
   const updating = useAppSelector(state => state.userManagement.updating);
   const authorities = useAppSelector(state => state.userManagement.authorities);
+  const setorUnidade: ISetorUnidade[] = useAppSelector(state => state?.setorUnidade?.entities);
 
-  const [userData, setUserData] = useState<IUser>({ login: '', firstName: '', lastName: '', email: '', authorities: [], password: '', setorUnidade: {}, langKey: 'pt-br' });
+  const [userData, setUserData] = useState<IUser>({
+    login: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    authorities: [],
+    password: '',
+    setorUnidade: { id: 0 },
+    langKey: 'pt-br',
+  });
   const [secondPassword, setSecondPassword] = useState<string>('');
 
   useEffect(() => {
@@ -44,10 +57,14 @@ export const UserManagementUpdate = () => {
 
   useEffect(() => {
     if (isNew) {
-      return
+      return;
     }
     setUserData({ ...user, password: '', langKey: 'pt-br' });
   }, [user]);
+
+  useEffect(() => {
+    dispatch(getEntities({}));
+  }, []);
 
   const handleClose = () => {
     navigate('/admin/user-management');
@@ -59,7 +76,8 @@ export const UserManagementUpdate = () => {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      setor: '',
+      password: '',
     };
 
     if (!userData.login || userData.login.length < 11) {
@@ -82,7 +100,11 @@ export const UserManagementUpdate = () => {
       errors.email = 'O email é obrigatório e deve ser válido.';
     }
 
-    if (!userData.password || userData.password.trim().length < 6 && isNew) {
+    if (userData?.setorUnidade?.id === 0) {
+      errors.setor = 'Informe um setor';
+    }
+
+    if (!userData.password || (userData.password.trim().length < 6 && isNew)) {
       errors.password = 'A senha deve conter pelo menos 6 caracteres.';
     }
 
@@ -105,10 +127,16 @@ export const UserManagementUpdate = () => {
   };
 
   const saveUser = () => {
+    const userDataFormated = {
+      ...userData,
+      login: removeMask(userData?.login),
+      setorUnidade: setorUnidade.find(e => e.id === userData?.setorUnidade?.id),
+    };
+
     if (isNew) {
-      dispatch(createUser(userData));
+      dispatch(createUser(userDataFormated));
     } else {
-      dispatch(updateUser(userData));
+      dispatch(updateUser(userDataFormated));
     }
     handleClose();
   };
@@ -188,6 +216,24 @@ export const UserManagementUpdate = () => {
                       ))}
                   </Input>
                 </Col>
+
+                <Col>
+                  <Label>Setor</Label>
+
+                  <Input
+                    type="select"
+                    value={userData?.setorUnidade?.id}
+                    onChange={e => setUserData({ ...userData, setorUnidade: { ...userData?.setorUnidade, id: toNumber(e.target.value) } })}
+                  >
+                    <option value={0}>Escolha um Setor</option>
+                    {setorUnidade &&
+                      setorUnidade?.map((data, key) => (
+                        <option value={data?.id} key={key}>
+                          {data?.nome}
+                        </option>
+                      ))}
+                  </Input>
+                </Col>
               </Row>
               {isNew && (
                 <Row>
@@ -212,19 +258,22 @@ export const UserManagementUpdate = () => {
                   </Col>
                 </Row>
               )}
-              <Button tag={Link} to="/admin/user-management" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
+
+              <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between', marginTop: '1em'}}>
+                <Button tag={Link} to="/admin/user-management" replace color="info">
+                  <FontAwesomeIcon icon="arrow-left" />
+                  &nbsp;
+                  <span className="d-none d-md-inline">
+                    <Translate contentKey="entity.action.back">Back</Translate>
+                  </span>
+                </Button>
                 &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" type="button" onClick={() => handleValidateFields()} disabled={isInvalid || updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
+                <Button color="primary" type="button" onClick={() => handleValidateFields()} disabled={isInvalid || updating}>
+                  <FontAwesomeIcon icon="save" />
+                  &nbsp;
+                  <Translate contentKey="entity.action.save">Save</Translate>
+                </Button>
+              </div>
             </div>
           )}
         </Col>

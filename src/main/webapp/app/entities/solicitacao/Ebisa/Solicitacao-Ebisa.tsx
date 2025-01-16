@@ -175,7 +175,7 @@ export const SolicitacaoEbisa = () => {
                     </div>
 
                     <div className="sheet-data-button-container">
-                      {data?.orcamento ? (
+                      {data?.orcamento && !filtrarFinalizados ? (
                         <Button className="sheet-data-button" onClick={() => setIdSolicitacao(data?.id)}>
                           <FontAwesomeIcon icon={faCheck} />
                           <span> Concluir </span>

@@ -104,6 +104,7 @@ const ModalGinfraAvaliarOrcamento = (props: IModalGinfra) => {
               <Col>
                 <Button
                   color={'success'}
+                  outline={dataAvaliacao?.aprovacao === false}
                   size="lg"
                   onClick={() => setDataAvalicao({ ...dataAvaliacao, aprovacao: true })}
                   disabled={!fileDownloaded}
@@ -116,6 +117,7 @@ const ModalGinfraAvaliarOrcamento = (props: IModalGinfra) => {
               <Col>
                 <Button
                   color={'danger'}
+                  outline={dataAvaliacao?.aprovacao === true}
                   size="lg"
                   onClick={() => setDataAvalicao({ ...dataAvaliacao, aprovacao: false })}
                   disabled={!fileDownloaded}

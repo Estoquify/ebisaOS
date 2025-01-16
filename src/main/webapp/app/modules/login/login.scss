@@ -96,4 +96,13 @@ $primary-color: var(--primary-color);
       }
     }
   }
+
+  > .login-container-footer {
+    width: 40%;
+    height: auto;
+
+    display: flex;
+
+    background: #fff;
+  }
 }
