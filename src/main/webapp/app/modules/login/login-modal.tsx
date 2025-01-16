@@ -45,21 +45,23 @@ const LoginModal = (props: ILoginModalProps) => {
               placeholder="CPF"
               onChange={e => setLoginItens({ ...loginItens, cpf: cpfMask(e.target.value) })}
               value={loginItens?.cpf}
+              onKeyDown={e => e.key === 'Enter' && handleLoginSubmit()} // Adiciona funcionalidade ao pressionar Enter
             />
             <Input
               type="password"
               placeholder="Senha"
               onChange={e => setLoginItens({ ...loginItens, senha: e.target.value })}
               value={loginItens?.senha}
+              onKeyDown={e => e.key === 'Enter' && handleLoginSubmit()} // Adiciona funcionalidade ao pressionar Enter
             />
           </div>
 
-          <div className="login-container-data-forgetPassword">
+          {/* <div className="login-container-data-forgetPassword">
             <span>
               Esqueceu a senha? <a>Clique aqui.</a>
             </span>
             <span>Últimas 24 horas</span>
-          </div>
+          </div> */}
 
           <div className="login-container-data-button">
             <Button type="submit" onClick={() => handleLoginSubmit()}>
@@ -68,7 +70,7 @@ const LoginModal = (props: ILoginModalProps) => {
           </div>
         </div>
       </div>
-      <div className='login-container-footer'>
+      <div className="login-container-footer">
         <Footer />
       </div>
     </div>

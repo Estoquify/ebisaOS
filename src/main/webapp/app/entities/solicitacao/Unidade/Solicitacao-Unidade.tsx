@@ -2,7 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Input, Row, Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEye, faCheck, faX, faHourglass, faPen, faChevronLeft, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faEye,
+  faCheck,
+  faX,
+  faHourglass,
+  faPen,
+  faChevronLeft,
+  faChevronRight,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from '../solicitacao.reducer';
@@ -29,10 +39,14 @@ export const SolicitacaoUnidade = () => {
   const [status, setStatus] = useState<boolean>(null);
 
   const getAllEntities = () => {
-    axios.get(`/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${10}&idUnidade=${setorUnidadeId}&pesquisa=${inputPesquisa}&filtrarStatus=${filtrarStatus}&status=${status}`).then(res => {
-      setSolicitacaoList(res?.data?.content);
-      setTotalPages(res?.data?.totalPages);
-    });
+    axios
+      .get(
+        `/api/solicitacaos/listaPageSolicitacaoUnidade?page=${pageAtual}&size=${10}&idUnidade=${setorUnidadeId}&pesquisa=${inputPesquisa}&filtrarStatus=${filtrarStatus}&status=${status}`,
+      )
+      .then(res => {
+        setSolicitacaoList(res?.data?.content);
+        setTotalPages(res?.data?.totalPages);
+      });
   };
 
   const handleInputPesquisaChange = (data: string) => {
@@ -46,7 +60,7 @@ export const SolicitacaoUnidade = () => {
       aprovados: true,
       negados: false,
     };
-  
+
     if (data === 'todas') {
       setFiltrarStatus(false);
     } else {
@@ -82,11 +96,11 @@ export const SolicitacaoUnidade = () => {
   };
 
   const handleNavigateByStatus = (data: ISolicitacao) => {
-    if (data?.aberta) {
-      navigate(`./${data?.id}`);
-    } else {
-      navigate(`./edit/${data.id}`);
-    }
+    // if (data?.aberta || data?.orcamento) {
+    navigate(`./${data?.id}`);
+    // } else {
+    //   navigate(`./edit/${data.id}`);
+    // }
   };
 
   const handleFormatDate = (data: ISolicitacao) => {
@@ -105,13 +119,12 @@ export const SolicitacaoUnidade = () => {
           <h2>Solicitações</h2>
         </Col>
 
-        
         <Col md={2} className="stock-home-header-search-container">
           <Input
             type="select"
             placeholder="Pesquisa"
-            value={filtrarStatus ? 'custom' : 'todas'} 
-            onChange={(e) => handleChangeFilter(e.target.value)}
+            value={filtrarStatus ? 'custom' : 'todas'}
+            onChange={e => handleChangeFilter(e.target.value)}
           >
             <option value="todas" key={1}>
               Pesquisar por Status
@@ -205,15 +218,14 @@ export const SolicitacaoUnidade = () => {
 
                     <div className="sheet-data-button-container">
                       <Button className="sheet-data-button" onClick={() => handleNavigateByStatus(data)}>
-                          <>
-                            <FontAwesomeIcon icon={faEye} />
-                            <span> Visualizar </span>
-                          </>
+                        <>
+                          <FontAwesomeIcon icon={faEye} />
+                          <span> Visualizar </span>
+                        </>
                       </Button>
                     </div>
                   </div>
-                ))
-              }
+                ))}
 
               {solicitacaoList?.length === 0 && <Alert color="info">Não existem nenhuma Solicitação criada</Alert>}
             </div>
