@@ -59,6 +59,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
                  LEFT JOIN public.unidade AS uni ON seu.unidade_id = uni.id
+                 LEFT JOIN public.arquivo AS arq ON arq.solicitacao_id = sol.id
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
