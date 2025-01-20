@@ -79,15 +79,15 @@ const SolicitacaoEbisaAvaliacao = () => {
         toast.error('Ops..., Ocorreu Algum erro inesperado, Tente novamente mais tarde');
       });
     // Caso a solicitação não tenha sido aceita
-    axios
-      .patch(`/api/avaliacaos/avaliacaoEbisaServico`, dataFormated)
-      .then(() => {
-        toast.success('Avaliação Realizada Com Sucesso!');
-        navigate('/solicitacao');
-      })
-      .catch(() => {
-        toast.error('Ops..., Ocorreu Algum erro inesperado, Tente novamente mais tarde');
-      });
+    // axios
+    //   .patch(`/api/avaliacaos/avaliacaoEbisaServico`, dataFormated)
+    //   .then(() => {
+    //     toast.success('Avaliação Realizada Com Sucesso!');
+    //     navigate('/solicitacao');
+    //   })
+    //   .catch(() => {
+    //     toast.error('Ops..., Ocorreu Algum erro inesperado, Tente novamente mais tarde');
+    //   });
   };
 
   const handleRemoveEquipe = (equipe: IEquipe) => {

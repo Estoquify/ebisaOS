@@ -66,7 +66,7 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  AND sol.aberta = true
                  AND ((:filtrarNegados = false 
                     AND ((ava.aprovacao_ginfra IS NULL)
-                       OR (ava.aprovacao_ginfra = true AND ava.orcamento IS NULL)))
+                       OR (ava.aprovacao_ginfra = true AND ava.orcamento IS NULL AND arq.id IS NOT NULL)))
                  OR (:filtrarNegados = true 
                     AND ava.orcamento = false))
                  ORDER BY sol.created_date
