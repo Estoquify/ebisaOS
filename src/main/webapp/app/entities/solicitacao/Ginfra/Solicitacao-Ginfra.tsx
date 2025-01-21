@@ -47,7 +47,7 @@ export const SolicitacaoGinfra = () => {
   };
 
   const handleChangeFilter = (data: string) => {
-    setFiltrarNegados(data === 'true' ? true : false);
+    setFiltrarNegados(data === 'true' ? true : data === 'false' ? false : null);
   };
 
   return (
@@ -63,7 +63,10 @@ export const SolicitacaoGinfra = () => {
               Aguardando Avaliação
             </option>
             <option value={'true'} key={2}>
-              Orçamentos Negados
+              OS Pausadas
+            </option>
+            <option value={'null'} key={3}>
+              OS Finalizadas
             </option>
           </Input>
         </Col>

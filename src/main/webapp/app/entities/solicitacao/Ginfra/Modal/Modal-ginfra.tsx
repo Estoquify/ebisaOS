@@ -94,7 +94,7 @@ const ModalGinfra = (props: IModalGinfra) => {
 
               <Col>
                 <Button color={'danger'} size="lg" onClick={() => setDataAvalicao({ ...dataAvaliacao, aprovacao: false })}>
-                  <span>Rejeitar</span>
+                  <span>Pausar</span>
                   <FontAwesomeIcon icon={faX} />
                 </Button>
               </Col>

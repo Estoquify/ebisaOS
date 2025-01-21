@@ -59,17 +59,20 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                  LEFT JOIN public.avaliacao AS ava ON ava.solicitacao_id = sol.id
                  LEFT JOIN public.setor_unidade AS seu ON sol.setor_unidade_id = seu.id
                  LEFT JOIN public.unidade AS uni ON seu.unidade_id = uni.id
-                 LEFT JOIN public.arquivo AS arq ON arq.solicitacao_id = sol.id
                  WHERE (:pesquisa IS NULL OR :pesquisa = ''
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
-                 AND sol.aberta = true
-                 AND ((:filtrarNegados = false 
+                 AND ((:filtrarNegados = false
+                    AND sol.aberta = true 
                     AND ((ava.aprovacao_ginfra IS NULL)
-                       OR (ava.aprovacao_ginfra = true AND ava.orcamento IS NULL AND arq.id IS NOT NULL)))
-                 OR (:filtrarNegados = true 
-                    AND ava.orcamento = false))
+                       OR (ava.aprovacao_ginfra = true AND ava.orcamento IS NULL AND EXISTS (
+                          SELECT 1 FROM public.arquivo arq WHERE arq.solicitacao_id = sol.id))))
+                 OR (:filtrarNegados = true
+                    AND sol.aberta = true
+                    AND (ava.aprovacao_ginfra = false AND (ava.orcamento IS NULL OR ava.orcamento = false)))
+                 OR (:filtrarNegados IS NULL
+                    AND (sol.aberta = false)))
                  ORDER BY sol.created_date
                  LIMIT :size OFFSET :page * :size
             """, nativeQuery = true)
@@ -85,12 +88,16 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(sol.titulo))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(seu.nome))) > 0
                     OR POSITION(upper(unaccent(:pesquisa)) IN upper(unaccent(uni.sigla))) > 0)
-                 AND sol.aberta = true
-                 AND ((:filtrarNegados = false 
+                 AND ((:filtrarNegados = false
+                    AND sol.aberta = true 
                     AND ((ava.aprovacao_ginfra IS NULL)
-                       OR (ava.aprovacao_ginfra = true AND ava.orcamento IS NULL)))
-                 OR (:filtrarNegados = true 
-                    AND ava.orcamento = false))
+                       OR (ava.aprovacao_ginfra = true AND ava.orcamento IS NULL AND EXISTS (
+                          SELECT 1 FROM public.arquivo arq WHERE arq.solicitacao_id = sol.id))))
+                 OR (:filtrarNegados = true
+                    AND sol.aberta = true
+                    AND (ava.aprovacao_ginfra = false AND (ava.orcamento IS NULL OR ava.orcamento = false)))
+                 OR (:filtrarNegados IS NULL
+                    AND (sol.aberta = false)))
             """, nativeQuery = true)
     Long countListagemSolicitacaoAvaliacaoGInfra(@Param("pesquisa") String pesquisa, @Param("filtrarNegados") Boolean filtrarNegados);
 
