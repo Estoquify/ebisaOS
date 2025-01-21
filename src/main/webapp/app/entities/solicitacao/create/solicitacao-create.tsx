@@ -21,56 +21,57 @@ import { toNumber } from 'lodash';
 import { getEntitiesByUnidadeId as getSetorUnidade } from 'app/entities/setor-unidade/setor-unidade.reducer';
 import { ISetorUnidade } from 'app/shared/model/setor-unidade.model';
 
-
 const SolicitacaoCreate = () => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const itens: IItem[] = useAppSelector(state => state?.item?.entities);
-  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id)
+  const setorUnidadeId = useAppSelector(state => state?.authentication?.account?.setorUnidade?.id);
 
   const [setorUnidadeList, setSetorUnidadeList] = useState<ISetorUnidade[]>([]);
   const [solicitacao, setSolicitacao] = useState<ISolicitacao>({ titulo: '', descricao: '' });
-  const [itensSelecionados, setItensSelecionados] = useState<IItemSelecionados[]>([])
+  const [itensSelecionados, setItensSelecionados] = useState<IItemSelecionados[]>([]);
 
   useEffect(() => {
     dispatch(getItens({}));
   }, []);
 
   useEffect(() => {
-    if(setorUnidadeId !== undefined) {
-      axios.get(`/api/setorUnidades/unidade/${setorUnidadeId}`)
-      .then((res) => {
-        setSetorUnidadeList(res?.data)
-      })
-      .catch((err) => {
-        toast.error("Não foi possivel identificar sua unidade tente novamente mais tarde")
-      })
+    if (setorUnidadeId !== undefined) {
+      axios
+        .get(`/api/setorUnidades/unidade/${setorUnidadeId}`)
+        .then(res => {
+          setSetorUnidadeList(res?.data);
+        })
+        .catch(err => {
+          toast.error('Não foi possivel identificar sua unidade tente novamente mais tarde');
+        });
     }
-  }, [setorUnidadeId])
+  }, [setorUnidadeId]);
 
   const handleCreateSolicitacao = () => {
-    const solicitacaoFixed: ISolicitacao = { ...solicitacao, setorUnidade: setorUnidadeList?.find(data => solicitacao?.setorUnidade?.id === data?.id)};
+    const solicitacaoFixed: ISolicitacao = {
+      ...solicitacao,
+      setorUnidade: setorUnidadeList?.find(data => solicitacao?.setorUnidade?.id === data?.id),
+    };
 
     const entityFixed: ISolicitacaoDTO = {
       itensSelecionados,
-      solicitacao: solicitacaoFixed
-    }
+      solicitacao: solicitacaoFixed,
+    };
 
-    axios.post(`/api/solicitacaos`, entityFixed).then((res) => {
-      toast.success("Solicitação criada com sucesso!")
-      navigate(-1)
-    })
+    axios.post(`/api/solicitacaos`, entityFixed).then(res => {
+      toast.success('Solicitação criada com sucesso!');
+      navigate(-1);
+    });
   };
-  
+
   const handleAddItem = (item: IItem) => {
     setItensSelecionados(prevItensSelecionados => {
       const itemExistente = prevItensSelecionados.find(data => data.item === item);
-  
+
       if (itemExistente) {
-        return prevItensSelecionados.map(data =>
-          data.item === item ? { ...data, quantidade: (data.quantidade || 0) + 1 } : data,
-        );
+        return prevItensSelecionados.map(data => (data.item === item ? { ...data, quantidade: (data.quantidade || 0) + 1 } : data));
       } else {
         return [...prevItensSelecionados, { item, quantidade: 1 }];
       }
@@ -80,21 +81,15 @@ const navigate = useNavigate();
   const handleRemoveItem = (item: IItem) => {
     setItensSelecionados(prevItensSelecionados => {
       const itemExistente = prevItensSelecionados.find(data => data.item === item);
-  
+
       if (itemExistente) {
-        if ((itemExistente.quantidade || 0) > 1) {
-          return prevItensSelecionados.map(data =>
-            data.item === item ? { ...data, quantidade: (data.quantidade || 0) - 1 } : data,
-          );
-        } else {
-          return prevItensSelecionados.filter(data => data.item !== item);
-        }
+        return prevItensSelecionados.filter(data => data.item !== item);
       }
-  
+
       return prevItensSelecionados;
     });
   };
-  
+
   const validateCreateSolicitacao = (solicitacaoData: ISolicitacao) => {
     const errors: string[] = [];
 
@@ -128,6 +123,21 @@ const navigate = useNavigate();
     }
   };
 
+  const handleUpdateQuantidade = (item: IItem, quantidade: number) => {
+    setItensSelecionados(prevItensSelecionados =>
+      prevItensSelecionados.map(data =>
+        data.item === item ? { ...data, quantidade: quantidade > 0 ? quantidade : 1 } : data,
+      ),
+    );
+  };
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, item: IItem) => {
+    const value = Number(e.target.value);
+    if (!isNaN(value)) {
+      handleUpdateQuantidade(item, value > 0 ? value : 1);
+    }
+  };
+
   const handleSelectTipoSolicitacao = (dadoTipoSolicitacao: string) => {
     const valorEnum = tipoSolicitacao[dadoTipoSolicitacao as keyof typeof tipoSolicitacao];
 
@@ -153,17 +163,13 @@ const navigate = useNavigate();
           </Col>
           {/* Input para escolher a unidade usado apenas para teste */}
           <Col>
-            <Label>
-              Setor
-            </Label>
+            <Label>Setor</Label>
             <Input
               type="select"
               onChange={e => setSolicitacao({ ...solicitacao, setorUnidade: { id: toNumber(e.target.value) } })}
               value={solicitacao?.setorUnidade?.id}
             >
-              <option value={0}>
-                Escolha um Setor
-              </option>
+              <option value={0}>Escolha um Setor</option>
               {setorUnidadeList &&
                 setorUnidadeList?.map((data, key) => (
                   <>
@@ -187,8 +193,6 @@ const navigate = useNavigate();
               <option value="Material">Material</option>
             </Input>
           </Col>
-
-          
         </Row>
 
         <Row>
@@ -258,7 +262,12 @@ const navigate = useNavigate();
                             <Button className="itens-container-icon-minus" onClick={() => handleRemoveItem(data?.item)}>
                               <FontAwesomeIcon icon={faMinus} />
                             </Button>
-                            <span>{data?.quantidade}</span>
+                            <Input
+                              type="text"
+                              value={data?.quantidade}
+                              onChange={e => handleInputChange(e, data?.item)}
+                              alt='Quantidade Item'
+                            />
                           </div>
                         </div>
                       </React.Fragment>
