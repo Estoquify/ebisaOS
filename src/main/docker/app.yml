@@ -16,7 +16,7 @@ services:
         - CMD
         - curl
         - -f
-        - http://localhost:8080/management/health
+        - http://localhost:8089/management/health
       interval: 5s
       timeout: 5s
       retries: 40
